@@ -1,5 +1,7 @@
 library(tidyverse)
 
+
+# OWRI - data formatting  -------------------------------------------------
 owri_db_1_proj_info <- readxl::read_excel('data-raw/OWRI_ExportToExcel_011023/OwriDbExcel_1of3.xlsx', sheet = "XlsProjectInfo") |> 
   filter(BasinActual == "Klamath")
 owri_db_1_results <- readxl::read_excel('data-raw/OWRI_ExportToExcel_011023/OwriDbExcel_1of3.xlsx', sheet = "XlsResult")
@@ -38,6 +40,38 @@ owri_gdoc_format <- owri_db_1_merge |>
          category, sub_category,
          recovery_domain, goal, project_benefit, 
          watershed, resource) 
+
+
+# FWS data formatting -----------------------------------------------------
+# https://www.fws.gov/program/klamath-basin-project-awards
+dta <- readxl::read_excel('data-raw/sdm_restoration_projects.xlsx')
+
+dta %>%
+  dplyr::group_by(item) %>%
+  dplyr::summarise(n = dplyr::n(), .groups = "drop") %>%
+  dplyr::filter(n > 1L) 
+
+tmp <- dta %>% 
+  group_by(item) %>%
+  mutate(rn = row_number()) %>%
+  pivot_wider(names_from = item, values_from = variable) |> 
+  separate(dollar, into = c("state", "dollar")) |> 
+  ungroup() |> 
+  mutate(project_id = 'Klamath Basin Project Awards',
+         grantee = "USFW",
+         subgrantee = NA, 
+         status = "New", 
+         project_lead = NA, 
+         other_lead = NA, 
+         category = NA, 
+         subcategory = NA, 
+         benefit = NA, 
+         resource = "https://www.fws.gov/program/klamath-basin-project-awards",
+         year = 2022) |> 
+  select(project_id, grantee, subgrantee, name, year, status, project_lead, 
+         other_lead, category, subcategory, state, description, benefit, resource)
+
+write_csv(tmp, 'data-raw/sdm_klamath_usfws_restoration_projects.csv')
 
 
 
