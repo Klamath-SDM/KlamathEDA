@@ -1,0 +1,14 @@
+input[type="number"] {
+  max-width: 80%;
+}
+
+div.outer {
+  position: fixed;
+  top: 5px;
+  left: 15px;
+  right: 15px;
+  bottom: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
