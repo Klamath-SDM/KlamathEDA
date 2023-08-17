@@ -31,58 +31,74 @@ ui <- fluidPage(
   theme = bs_theme(
     bootswatch = "yeti"),
   
-  div(class = 'outer',
-      tags$head(
-        includeCSS("styles.css")
-      ),
-      
-      titlePanel("Klamath SDM - Restoration Project Catalog"),
-
-      fluidRow(
-        
-        column(12,
-               leafletOutput("map", height = '500px')
-        ),
-        
-        column(12,
-               absolutePanel(
-                 top = 70, left = 20, height = "90%", width = 250,
-                 h4("Filter by Watershed", style = "color: white;"),
-                 # Add your filter inputs here
+  titlePanel("Klamath SDM - Restoration Project Catalog"),
+  h6("The following restoration projects were aggregated through literature review.
+           This dataset is not complete and will be updated as watershed-specific stakeholders
+           are engaged in the Klamath SDM process."),
+  
+  # Sidebar layout
+  sidebarLayout(
+    sidebarPanel(style = "background-color: #faf9f7;",
+                 h4("Filter by Watershed", style = "color: black;"),
                  selectInput("watershed", "", choices = unique(hucs$name)),
-                 actionButton("apply_filter", "Apply Filter")
-               )
-        )
-       
-      ),
-      
-      hr(),
-      
-      fluidRow(
-        column(12,
-               div(style = "height: 400px; overflow-y: scroll;",
-                   dataTableOutput("rest_table")
-               )
-        )
-      )
+                 actionButton("apply_filter", "Apply Filter"),
+                 br(),
+                 hr(),
+                 downloadButton("downloadData", "Download")
+                 
+    ),
+    mainPanel( 
+      leafletOutput('map')
+    )
+  ),
+  hr(),
+  br(),
+  fluidRow(
+    column(12,
+           div(style = "height: 400px; overflow-y: scroll;",
+               dataTableOutput("rest_table")
+           )
+    )
   )
 )
 
+js <- function(id){ 
+  c("console.log(table);",
+    "table.on('click', 'tr', function(){",
+    "  var index = this.rowIndex;",
+    sprintf("Shiny.setInputValue('%s', index, {priority: 'event'});", id),
+    "});"
+  )
+}
 
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
-  output$rest_table <- DT::renderDataTable(rest_proj |> select(-`Project Benefit`),
-                                        options = list(scrollX = TRUE),
-                                        rownames = FALSE)
+  output[["rest_table"]] <- renderDT({
+    datatable(rest_proj |> select(-`Project Benefit`), callback = JS(js("t1")),
+              options = list(scrollX = TRUE,
+                             dom = 't'),
+              filter = "top",
+              rownames = FALSE)
+  })
+  
+  observeEvent(input[["t1"]], {
+    showModal(
+      modalDialog(
+        
+        rest_proj |> slice(input[['t1']]) |> pull(`Project Benefit`)
+        
+      )
+    )
+  })
   
   
   output$map <- renderLeaflet({
     
     color_palette <- colorNumeric(palette = "YlOrRd", domain = c(1, 200))
     
-    leaflet(options = leafletOptions(zoomControl = FALSE)) |>
+    leaflet() |>
       addProviderTiles(providers$Esri.WorldTopoMap, group = "Map") |>
       addProviderTiles(providers$Esri.WorldImagery, group = "Satellite") |>
       addPolygons(data = summary_by_watershed, group = "hucs", popup = ~name,
@@ -92,6 +108,17 @@ server <- function(input, output) {
                 title = "Number of Projects")
     
   })
+  
+  
+  # Downloadable csv of selected dataset ----
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste0('restoration_projects', ".csv")
+    },
+    content = function(file) {
+      write_csv(rest_proj, file)
+    }
+  )
   
 }
 
