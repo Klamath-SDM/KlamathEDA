@@ -75,3 +75,79 @@ write_csv(tmp, 'data-raw/sdm_klamath_usfws_restoration_projects.csv')
 
 
 
+# ecoatlas ----------------------------------------------------------------
+# counties: Siskiyou, Klamath
+# https://api.ecoatlas.org/#route-projects
+# https://ecoatlas.org/regions/ecoregion/statewide
+library(httr)
+library(jsonlite)
+
+# Replace {region_type_key} with the actual region type key you want to use
+region_type_key <-  'adminregion' #"key":84,"name":"KTAP Reporting Zone 7 - Upper Klamath"
+
+# Construct the URL
+url <- paste0("https://api.ecoatlas.org/projects/")
+
+# Make the GET request
+response <- GET(url)
+content <- content(response, "text")
+
+projects_raw <- fromJSON(rawToChar(response$content), flatten = TRUE) 
+all_projects <- projects_raw$projects |> as_tibble()
+
+all_lat_long_name <- data.frame()
+for(i in 2576:length(all_projects$projectid)) {
+  print(i)
+  # Construct the URL
+  url <- paste0("https://api.ecoatlas.org/projects/", all_projects$projectid[i])
+  
+  # Make the GET request
+  response <- GET(url)
+  content <- content(response, "text")
+  
+  tmp <- fromJSON(rawToChar(response$content), flatten = TRUE) 
+  
+  tmp_tibble <- tmp$sites |> as_tibble() 
+  
+  if(nrow(tmp_tibble) > 0) {  
+    all_lat_long_name <- tmp_tibble |>  mutate(county = paste0(tmp$counties$name, collapse = "; "),
+                                project_type = paste0(tmp$project$projecttype, collapse = "; "),
+                                abstract = paste0(tmp$project$abstract, collapse = "; ")) |> 
+      bind_rows(all_lat_long_name)
+  }
+}
+
+write_csv(all_lat_long_name, "data-raw/ecoatlas_all_projects.csv")
+
+eco_atlas <- all_lat_long_name |> 
+  janitor::clean_names() |> 
+  select(site_name, site_siteid, site_status, site_latitude, site_longitude,
+         site_geom, county, abstract, project_type) |> 
+  filter(county %in% c('Klamath', 'Siskiyou')) |> 
+  rename(project_id = site_siteid, 
+         status = site_status, 
+         project_name = site_name, 
+         project_descripton = abstract,
+         project_benefit = project_type) |> 
+  mutate(resource = 'https://ecoatlas.org/regions/ecoregion/statewide/projects',
+         grantee = 'ecoatlas',
+         subgrantee = NA, 
+         year = NA, 
+         project_lead = NA, 
+         other_project_lead = NA, 
+         category = NA, 
+         sub_category = NA, 
+         recovery_domain = NA, 
+         river = NA, 
+         watershed = NA, 
+         HUC = NA,
+         goal = NA) |> 
+  select(project_id, grantee, subgrantee, 
+         project_name, year, 
+         status, project_lead, other_project_lead, 
+         category, sub_category,
+         recovery_domain, project_descripton, project_benefit, 
+         watershed, resource, site_latitude, site_longitude) |> 
+  glimpse()
+
+write_csv(eco_atlas, "data-raw/eco_atlas_klamath_siskiyou.csv")
