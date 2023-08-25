@@ -76,7 +76,6 @@ write_csv(tmp, 'data-raw/sdm_klamath_usfws_restoration_projects.csv')
 
 
 # ecoatlas ----------------------------------------------------------------
-# counties: Siskiyou, Klamath
 # https://api.ecoatlas.org/#route-projects
 # https://ecoatlas.org/regions/ecoregion/statewide
 library(httr)
@@ -119,11 +118,26 @@ for(i in 2576:length(all_projects$projectid)) {
 
 write_csv(all_lat_long_name, "data-raw/ecoatlas_all_projects.csv")
 
-eco_atlas <- all_lat_long_name |> 
+# filter eco atlas projects to klamath ----------------------------------
+hucs <- sf::read_sf('shiny/klamath_sdm_data_catalog/data/shapefiles/WBDHU8_Klamath_Rogue.shp') |> 
+  select(huc8, name) |> 
+  rename(HUC = huc8) |> 
+  mutate(HUC = as.numeric(HUC)) |> 
+  st_transform("+proj=longlat +datum=WGS84 +no_defs") |> st_zm()
+
+all_projects <- read_csv('data-raw/ecoatlas_all_projects.csv') |> 
   janitor::clean_names() |> 
-  select(site_name, site_siteid, site_status, site_latitude, site_longitude,
-         site_geom, county, abstract, project_type) |> 
-  filter(county %in% c('Klamath', 'Siskiyou')) |> 
+  filter(!is.na(site_latitude) | !is.na(site_longitude))
+filtered_projects <- all_projects[complete.cases(all_projects$site_longitude, all_projects$site_latitude), ]
+
+dissolve_hucs <- st_union(hucs)
+eco_atlas_sf <- st_as_sf(filtered_projects, coords = c("site_longitude", "site_latitude"), crs = 4326)
+
+filtered_projects <- st_intersection(eco_atlas_sf, dissolve_hucs) 
+
+eco_atlas <- st_join(filtered_projects, hucs) |> 
+  select(site_name, site_siteid, site_status,
+         site_geom, county, abstract, project_type, HUC) |> 
   rename(project_id = site_siteid, 
          status = site_status, 
          project_name = site_name, 
@@ -140,14 +154,13 @@ eco_atlas <- all_lat_long_name |>
          recovery_domain = NA, 
          river = NA, 
          watershed = NA, 
-         HUC = NA,
          goal = NA) |> 
   select(project_id, grantee, subgrantee, 
          project_name, year, 
          status, project_lead, other_project_lead, 
          category, sub_category,
          recovery_domain, project_descripton, project_benefit, 
-         watershed, resource, site_latitude, site_longitude) |> 
+         watershed, resource, county, HUC) |> 
   glimpse()
 
-write_csv(eco_atlas, "data-raw/eco_atlas_klamath_siskiyou.csv")
+write_csv(eco_atlas, "data-raw/eco_atlas_in_Klamath.csv")
