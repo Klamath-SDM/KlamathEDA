@@ -38,7 +38,37 @@ fluidPage(
              )
     ), 
     tabPanel("Fisheries Data",
-             #PLACEHOLDER
+             titlePanel("Salmon Monitoring Data Catalog"),
+             h6("Data discovery targeting salmon monitoring data was conducted 
+                through broad internet searches and literature review. Programs
+                collecting data for fisheries population estimates were recorded.
+                The majority of this data is not machine-readable and metadata including
+                location, timeframe, species, data type, and source were documented.
+                Available reports and documentation was downloaded and stored here (INSERT LINK)."),
+           sidebarLayout(
+             # filter by subbasin, data_type, species_group, timeframe
+             sidebarPanel(style = "background-color: #faf9f7;",
+                          h4("Filter by Data Type", style = "color: black;"),
+                          selectInput("data_type", "", choices = c('All Types', unique(monitoring_data_hucs$data_type))),
+                          #actionButton("apply_filter", "Apply Filter"),
+                          br(),
+                          hr()
+                          #downloadButton("downloadData", "Download")
+                          
+             ),
+             mainPanel( 
+               leafletOutput('map_monitoring')
+             )
+           ),
+           hr(),
+           br(),
+           fluidRow(
+             column(12,
+                    div(style = "height: 400px; overflow-y: scroll;",
+                        dataTableOutput("table_monitoring")
+                    )
+             )
+           )
              ),
     tabPanel("Habitat Data",
              #PLACEHOLDER

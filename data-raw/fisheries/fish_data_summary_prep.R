@@ -27,18 +27,29 @@ data_app_other <- data_catalog_raw |>
 # combine the formatted data
 data_app_all <- data_app |> 
   full_join(data_app_format |> select(-timeframe)) |> 
-  mutate(within_timeframe = case_when(!is.na(timeframe) & !is.na(start) & (timeframe >= start | timeframe <= end) ~ T,
-                                 T ~ F),
+  mutate(start = ifelse(is.na(start), as.numeric(timeframe), start),
+         end = ifelse(is.na(end), as.numeric(timeframe), end),
+         n_years = ifelse(start == end, 1, end-start),
          species_group = case_when(species %in% c("UTKR Chinook", "Fall Chinook", "chinook") ~ "chinook",
                                    species %in% c("Coho", "coho") ~ "coho",
                                    species %in% c("All Salmon","ALL", "coho, chinook, steelhead", 
                                                   "Chinook, Coho, Steelhead", "chinook, coho, steelhead") ~ "all salmonids",
                                    species %in% c("CCC Steelhead", "Steelhead") ~ "steelhead"),
+         species_group = str_to_title(species_group),
          source = case_when(source %in% c("KUROK", "Yurok") ~ "YUROK",
                             source == "NOAA Fisheries" ~ "NOAA",
                             !source %in% c("USFWS", "USGS", "CDFW", "USBR", "USFS", "ODFW", "TNC", "NOAA", "YUROK") ~ "OTHER",
-                            T ~ source)) 
-write_csv(data_app_all, "data-raw/fisheries/fish_data_synthesis.csv")
+                            T ~ source),
+         subbasin = case_when(subbasin %in% c("lower klamath river", "klamath", "mid klamath") ~ "lower klamath",
+                              subbasin == "upper klamath river" ~ "upper klamath",
+                              T ~ subbasin),
+         subbasin = str_to_title(subbasin),
+         data_type = str_to_title(data_type)) |> 
+  # remove the years/rows that fall within the greater timeframe so there aren't duplicates (e.g. we have 2006-2009 coho fish survival AND rows for 
+  # 2006, 2007, 2009, we don't want to count these twice)
+  select(-timeframe) |> 
+  distinct()
+write_csv(data_app_all, "shiny/klamath_sdm_data_catalog/data/fish_data_synthesis.csv")
 
 
 
