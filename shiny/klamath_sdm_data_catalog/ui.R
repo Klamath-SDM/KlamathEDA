@@ -50,8 +50,9 @@ fluidPage(
              sidebarPanel(style = "background-color: #faf9f7;",
                           h4("Filter by Data Type", style = "color: black;"),
                           selectInput("data_type", "", choices = c('All Types', unique(monitoring_data_hucs$data_type))),
-                          #actionButton("apply_filter", "Apply Filter"),
                           br(),
+                          h4("Filter by Species", style = "color: black;"),
+                          selectInput("species", "", choices = c('All Species', unique(filter(monitoring_data_hucs, !is.na(species_group))$species_group))),
                           hr()
                           #downloadButton("downloadData", "Download")
                           

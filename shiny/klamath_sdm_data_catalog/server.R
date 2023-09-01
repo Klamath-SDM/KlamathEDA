@@ -49,11 +49,19 @@ function(input, output) {
   
   # Filter monitoring data based on selections
   selected_monitoring <- reactive({
-    if(input$data_type == "All Types") {
+    if(input$data_type == "All Types" & input$species == "All Species") {
       dat <- monitoring_data_hucs
+    }
+    else if(input$data_type == "All Types" & input$species != "All Species") {
+      dat <- monitoring_data_hucs |> 
+        filter(species_group %in% input$species)
+    } else if(input$data_type != "All Types" & input$species == "All Species") {
+      dat <- monitoring_data_hucs |> 
+        filter(data_type %in% input$data_type)
     } else {
     dat <- monitoring_data_hucs |> 
-      filter(data_type %in% input$data_type)
+      filter(data_type %in% input$data_type,
+             species_group %in% input$species)
     }
     dat
     })
