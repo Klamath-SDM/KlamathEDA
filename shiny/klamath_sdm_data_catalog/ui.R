@@ -15,9 +15,10 @@ fluidPage(
            are engaged in the Klamath SDM process."), #TODO: update text here
              sidebarLayout(
                sidebarPanel(style = "background-color: #faf9f7;",
+                            h4("Filter by Data Type", style = "color: black;"),
+                            selectInput("rest_data_type", "", choices = c('All Types', unique(rest_proj$Category))),
                             h4("Filter by Watershed", style = "color: black;"),
                             selectInput("watershed", "", choices = c('All Watersheds', unique(hucs$name))),
-                            actionButton("apply_filter", "Apply Filter"),
                             br(),
                             hr(),
                             downloadButton("downloadData", "Download")
