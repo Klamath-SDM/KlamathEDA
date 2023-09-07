@@ -11,14 +11,14 @@ function(input, output) {
       dat <- all_rest_data
     } else if (input$rest_data_type == "All Types" & input$watershed != "All Watersheds") {
       dat <- all_rest_data |> 
-        filter(name %in% input$watershed)
+        filter(Watershed %in% input$watershed)
     } else if (input$rest_data_type != "All Types" & input$watershed == "All Watersheds") {
       dat <- all_rest_data |> 
         filter(Category %in% input$rest_data_type)
     } else {
       dat <- all_rest_data |> 
         filter(Category %in% input$rest_data_type, 
-               name %in% input$watershed)
+               Watershed %in% input$watershed)
     } 
   })
   
@@ -43,7 +43,7 @@ function(input, output) {
   
   output$map <- renderLeaflet({
     summary_by_watershed <- selected_restoration() |> 
-      group_by(HUC, name, geometry) |> 
+      group_by(HUC, Watershed, geometry) |> 
       summarise(n_projects = n()) |> 
       st_as_sf()
     
@@ -52,7 +52,7 @@ function(input, output) {
     leaflet() |>
       addProviderTiles(providers$Esri.WorldTopoMap, group = "Map") |>
       addProviderTiles(providers$Esri.WorldImagery, group = "Satellite") |>
-      addPolygons(data = summary_by_watershed, group = "hucs", popup = ~paste0("Watershed: ", name, "<br>", 
+      addPolygons(data = summary_by_watershed, group = "hucs", popup = ~paste0("Watershed: ", Watershed, "<br>", 
                                                                                "No. Projects: ", n_projects),
                   color = "darkgrey", fillColor = ~color_palette(n_projects),
                   fillOpacity = 0.5)  |> 
@@ -72,6 +72,12 @@ function(input, output) {
     }
   )
   
+  
+  # habitat data tab:  ------------------------------------------------------
+  
+  output$hab_data <- renderDT({
+    datatable(hab_data)
+  })
   
   # Fisheries Monitoring: -------------------------------------------------------------
   

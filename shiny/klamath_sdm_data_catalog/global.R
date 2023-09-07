@@ -22,7 +22,8 @@ rest_proj <- readxl::read_excel(here::here("shiny", "klamath_sdm_data_catalog", 
 
 hucs <- sf::read_sf(here::here("shiny", "klamath_sdm_data_catalog", "data", "shapefiles", "WBDHU8_Klamath_Rogue.shp")) |> 
   select(huc8, name) |> 
-  rename(HUC = huc8) |> 
+  rename(HUC = huc8,
+         Watershed = name) |> 
   mutate(HUC = as.numeric(HUC)) |> 
   st_transform("+proj=longlat +datum=WGS84 +no_defs") |> st_zm()
 
@@ -38,9 +39,15 @@ js <- function(id){
 }
 
 
+# habitat data ------------------------------------------------------------
+
+hab_data <- readxl::read_excel(here::here("shiny", "klamath_sdm_data_catalog", "data", "Preliminary Data Catalog.xlsx"), sheet = "Habitat Data") 
+
+
 # monitoring data ---------------------------------------------------------
 
 monitoring_data <- read_csv(here::here("shiny", "klamath_sdm_data_catalog", "data", "fish_data_synthesis.csv"))
 
-monitoring_data_hucs <- left_join(monitoring_data, hucs, by = c("subbasin" = "name")) |> 
+monitoring_data_hucs <- left_join(monitoring_data, hucs, by = c("subbasin" = "Watershed")) |> 
   filter(!is.na(data_type), !is.na(start))
+

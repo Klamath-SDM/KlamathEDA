@@ -16,9 +16,9 @@ fluidPage(
              sidebarLayout(
                sidebarPanel(style = "background-color: #faf9f7;",
                             h4("Filter by Data Type", style = "color: black;"),
-                            selectInput("rest_data_type", "", choices = c('All Types', unique(rest_proj$Category))),
+                            selectInput("rest_data_type", "", choices = c('All Types', unique(all_rest_data$Category))),
                             h4("Filter by Watershed", style = "color: black;"),
-                            selectInput("watershed", "", choices = c('All Watersheds', unique(hucs$name))),
+                            selectInput("watershed", "", choices = c('All Watersheds', unique(all_rest_data$Watershed))),
                             br(),
                             hr(),
                             downloadButton("downloadData", "Download")
@@ -73,7 +73,34 @@ fluidPage(
            )
              ),
     tabPanel("Habitat Data",
-             #PLACEHOLDER
+                      titlePanel("Habitat Data Catalog"),
+                      h6("TODO"), #TODO: update text here
+                      sidebarLayout(
+                        sidebarPanel(style = "background-color: #faf9f7;",
+                                     h4("Filter by Data Type", style = "color: black;"),
+                                     selectInput("hab_data_type", "", choices = c('All Types', unique(hab_data$data_collection_type))),
+                                     h4("Filter by Species", style = "color: black;"),
+                                     selectInput("species", "", choices = c('All Species', unique(hab_data$species))),
+                                     br(),
+                                     hr(),
+                                     #downloadButton("downloadData", "Download")
+                                     
+                        ),
+                        mainPanel( 
+                          div(style = "height: 400px; overflow-y: scroll;",
+                              dataTableOutput("hab_data")
+                          )
+                        )
+                      ),
+                      hr(),
+                      br()
+                      # fluidRow(
+                      #   column(12,
+                      #          div(style = "height: 400px; overflow-y: scroll;",
+                      #              dataTableOutput("hab_data")
+                      #          )
+                      #   )
+                      # )
              )
   )
 )
