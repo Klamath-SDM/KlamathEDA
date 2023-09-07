@@ -10,39 +10,17 @@ Lower Klamath,Escapement,UTKR Chinook,USFWS,2010,2010,1,Chinook
 Lower Klamath,Escapement,UTKR Chinook,USFWS,2011,2011,1,Chinook
 Lower Klamath,Escapement,UTKR Chinook,USFWS,2014,2014,1,Chinook
 Lower Klamath,Escapement,UTKR Chinook,USFWS,2020,2020,1,Chinook
-Lower Klamath,Fish Survival,Coho,USGS,2006,2009,3,Coho
-Lower Klamath,Management,All Salmon,CDFW,2003,2003,1,All Salmonids
+Trinity,Escapement,Steelhead,CDFW,1975,1975,1,Steelhead
+Lower Klamath,Fish Health/Survival,Coho,USGS,2006,2009,3,Coho
 Lower Klamath,Juvenile Monitoring,NA,USFWS,2017,2017,1,NA
-Trinity,Escapement,All Salmon,CDFW,2010,2010,1,All Salmonids
-Lower Klamath,Flow,NA,NOAA,NA,NA,NA,NA
-Lower Klamath,Water Temperature,NA,OTHER,2012,2012,1,NA
-Lower Klamath,Fish Health,NA,YUROK,2003,2003,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2000,2000,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2002,2002,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2006,2006,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2007,2007,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2008,2008,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2009,2009,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2010,2010,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2011,2011,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2012,2012,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2013,2013,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2014,2014,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2015,2015,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2016,2016,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2017,2017,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2018,2018,1,NA
-Lower Klamath,Water Quality,NA,YUROK,2019,2019,1,NA
-Lower Klamath,Operations,NA,USBR,2023,2023,1,NA
-Trinity,Fish Survival,Coho,USGS,2008,2008,1,Coho
-Trinity,Habitat,UTKR Chinook,USFWS,2013,2013,1,Chinook
-Trinity,Habitat,UTKR Chinook,USFWS,2014,2014,1,Chinook
-Trinity,Habitat,UTKR Chinook,USFWS,2018,2018,1,Chinook
-Trinity,Habitat,UTKR Chinook,USFWS,2011,2011,1,Chinook
-Trinity,Habitat,UTKR Chinook,USFWS,2010,2010,1,Chinook
-Trinity,Habitat,NA,USFWS,2020,2020,1,NA
-Trinity,Habitat,UTKR Chinook,USFWS,2015,2015,1,Chinook
-Trinity,Water Temperature,All Salmon,CDFW,2016,2016,1,All Salmonids
+Trinity,Juvenile Monitoring,NA,YUROK,2000,2000,1,NA
+Lower Klamath,Fish Health/Survival,NA,YUROK,2003,2003,1,NA
+Trinity,Escapement,All Salmon,CDFW,2000,2000,1,All Salmonids
+Trinity,Escapement,All Salmon,CDFW,2001,2001,1,All Salmonids
+Trinity,Escapement,"coho, chinook, steelhead",CDFW,2001,2001,1,All Salmonids
+Trinity,Escapement,Steelhead,CDFW,2002,2002,1,Steelhead
+Trinity,Escapement,"coho, chinook, steelhead",CDFW,2002,2002,1,All Salmonids
+Trinity,Escapement,All Salmon,CDFW,2003,2003,1,All Salmonids
 Lower Klamath,Escapement,NA,CDFW,2015,2015,1,NA
 Lower Klamath,Escapement,NA,CDFW,2016,2016,1,NA
 Lower Klamath,Escapement,NA,CDFW,2017,2017,1,NA
@@ -57,24 +35,19 @@ Lower Klamath,Hatchery,Fall Chinook,CDFW,2010,2010,1,Chinook
 Lower Klamath,Hatchery,All Salmon,CDFW,2011,2011,1,All Salmonids
 Lower Klamath,Hatchery,All Salmon,CDFW,2012,2012,1,All Salmonids
 Lower Klamath,Hatchery,All Salmon,CDFW,2013,2013,1,All Salmonids
-Salmon,Fish Population Estimates,Fall Chinook,CDFW,2004,2004,1,Chinook
+Trinity,Escapement,All Salmon,CDFW,2004,2004,1,All Salmonids
 Scott,Escapement,All Salmon,CDFW,2020,2020,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2018,2018,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2019,2019,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2021,2021,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2022,2022,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2020,2020,1,All Salmonids
-Lower Klamath,Fish Population Estimates,CCC Steelhead,CDFW,2014,2014,1,Steelhead
-Scott,Water Quality,NA,OTHER,NA,NA,NA,NA
-Shasta,Water Quality,NA,OTHER,1991,2012,21,NA
+Trinity,Escapement,Steelhead,CDFW,2004,2004,1,Steelhead
+Trinity,Escapement,"coho, chinook, steelhead",CDFW,2004,2004,1,All Salmonids
+Trinity,Escapement,All Salmon,CDFW,2005,2005,1,All Salmonids
+Trinity,Escapement,Steelhead,CDFW,2005,2005,1,Steelhead
+Trinity,Escapement,"coho, chinook, steelhead",CDFW,2005,2005,1,All Salmonids
 Lower Klamath,Juvenile Monitoring,Coho,OTHER,2012,2012,1,Coho
 Lower Klamath,Juvenile Monitoring,Coho,YUROK,2008,2008,1,Coho
 Lower Klamath,Juvenile Monitoring,Coho,YUROK,2009,2009,1,Coho
 Lower Klamath,Escapement,Coho,USFWS,2006,2006,1,Coho
 Lower Klamath,Escapement,chinook,OTHER,2013,2013,1,Chinook
-Trinity,Escapement,UTKR Chinook,USFWS,2022,2022,1,Chinook
-Lower Klamath,Fish Population Estimates,UTKR Chinook,USGS,2019,2019,1,Chinook
-Lower Klamath,Fish Population Estimates,UTKR Chinook,OTHER,2019,2019,1,Chinook
+Trinity,Escapement,All Salmon,CDFW,2006,2006,1,All Salmonids
 Lower Klamath,Juvenile Monitoring,NA,USFWS,2021,2021,1,NA
 Lower Klamath,Juvenile Monitoring,UTKR Chinook,USFWS,2022,2022,1,Chinook
 Lower Klamath,Juvenile Monitoring,NA,USFWS,2007,2007,1,NA
@@ -92,21 +65,17 @@ Lower Klamath,Juvenile Monitoring,NA,USFWS,2020,2020,1,NA
 Lower Klamath,Juvenile Monitoring,Coho,USFWS,2022,2022,1,Coho
 Lower Klamath,Juvenile Monitoring,ALL,USFWS,2021,2021,1,All Salmonids
 Lower Klamath,Juvenile Monitoring,NA,USFWS,2014,2014,1,NA
-Trinity,Escapement,All Salmon,CDFW,2009,2009,1,All Salmonids
-Trinity,Fish Population Estimates,All Salmon,CDFW,2019,2019,1,All Salmonids
-Trinity,Juvenile Monitoring,All Salmon,CDFW,2011,2011,1,All Salmonids
-Trinity,Juvenile Monitoring,NA,YUROK,2000,2000,1,NA
-Trinity,Juvenile Monitoring,NA,USFWS,2009,2009,1,NA
+Trinity,Escapement,Steelhead,CDFW,2006,2006,1,Steelhead
 Trinity,Juvenile Monitoring,NA,USFWS,2007,2007,1,NA
+Trinity,Escapement,All Salmon,CDFW,2007,2007,1,All Salmonids
+Trinity,Escapement,Steelhead,CDFW,2007,2007,1,Steelhead
+Trinity,Fish Health/Survival,Coho,USGS,2008,2008,1,Coho
 Trinity,Juvenile Monitoring,NA,USFWS,2008,2008,1,NA
-Trinity,Juvenile Monitoring,NA,YUROK,2010,2010,1,NA
-Trinity,Juvenile Monitoring,NA,USFWS,2011,2011,1,NA
-Trinity,Juvenile Monitoring,NA,USFWS,2013,2013,1,NA
-Trinity,Juvenile Monitoring,NA,USFWS,2014,2014,1,NA
-Trinity,Juvenile Monitoring,NA,USFWS,2015,2015,1,NA
-Trinity,Juvenile Monitoring,NA,USFWS,2016,2016,1,NA
+Trinity,Escapement,All Salmon,CDFW,2008,2008,1,All Salmonids
+Trinity,Escapement,Steelhead,CDFW,2008,2008,1,Steelhead
+Trinity,Escapement,All Salmon,CDFW,2009,2009,1,All Salmonids
+Trinity,Juvenile Monitoring,NA,USFWS,2009,2009,1,NA
 Lower Klamath,Juvenile Monitoring,NA,YUROK,2008,2008,1,NA
-Trinity,Escapement,CCC Steelhead,CDFW,2015,2015,1,Steelhead
 Lower Klamath,Escapement,Steelhead,CDFW,2004,2004,1,Steelhead
 Lower Klamath,Escapement,Steelhead,CDFW,2005,2005,1,Steelhead
 Lower Klamath,Escapement,Steelhead,CDFW,2006,2006,1,Steelhead
@@ -159,22 +128,19 @@ Shasta,Escapement,All Salmon,CDFW,2006,2006,1,All Salmonids
 Shasta,Escapement,All Salmon,CDFW,2008,2008,1,All Salmonids
 Shasta,Escapement,All Salmon,CDFW,2009,2009,1,All Salmonids
 Shasta,Escapement,All Salmon,CDFW,2001,2001,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2000,2000,1,All Salmonids
-Trinity,Escapement,Steelhead,CDFW,2002,2002,1,Steelhead
-Trinity,Escapement,All Salmon,CDFW,2003,2003,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2004,2004,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2005,2005,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2006,2006,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2007,2007,1,All Salmonids
+Trinity,Escapement,Steelhead,CDFW,2009,2009,1,Steelhead
+Trinity,Escapement,All Salmon,CDFW,2010,2010,1,All Salmonids
+Trinity,Juvenile Monitoring,NA,YUROK,2010,2010,1,NA
+Trinity,Juvenile Monitoring,All Salmon,CDFW,2011,2011,1,All Salmonids
+Trinity,Juvenile Monitoring,NA,USFWS,2011,2011,1,NA
 Trinity,Escapement,All Salmon,CDFW,2011,2011,1,All Salmonids
 Trinity,Escapement,All Salmon,CDFW,2012,2012,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2014,2014,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2015,2015,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2016,2016,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2017,2017,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2001,2001,1,All Salmonids
-Trinity,Escapement,All Salmon,CDFW,2008,2008,1,All Salmonids
+Trinity,Juvenile Monitoring,NA,USFWS,2013,2013,1,NA
 Trinity,Escapement,All Salmon,CDFW,2013,2013,1,All Salmonids
+Trinity,Escapement,Steelhead,CDFW,2013,2013,1,Steelhead
+Trinity,Juvenile Monitoring,NA,USFWS,2014,2014,1,NA
+Trinity,Escapement,All Salmon,CDFW,2014,2014,1,All Salmonids
+Trinity,Escapement,chinook,USFWS,2014,2014,1,Chinook
 Lower Klamath,Escapement,Coho,USFWS,2008,2008,1,Coho
 Lower Klamath,Escapement,All Salmon,CDFW,2016,2016,1,All Salmonids
 Lower Klamath,Escapement,All Salmon,CDFW,2018,2018,1,All Salmonids
@@ -194,64 +160,47 @@ Scott,Escapement,All Salmon,CDFW,2008,2008,1,All Salmonids
 Scott,Escapement,All Salmon,CDFW,2012,2012,1,All Salmonids
 Shasta,Escapement,All Salmon,CDFW,2011,2011,1,All Salmonids
 Shasta,Escapement,All Salmon,CDFW,2016,2016,1,All Salmonids
-Trinity,Escapement,Steelhead,CDFW,2004,2004,1,Steelhead
-Trinity,Escapement,Steelhead,CDFW,2005,2005,1,Steelhead
-Trinity,Escapement,Steelhead,CDFW,2006,2006,1,Steelhead
-Trinity,Escapement,Steelhead,CDFW,2007,2007,1,Steelhead
-Trinity,Escapement,Steelhead,CDFW,2008,2008,1,Steelhead
-Trinity,Escapement,Steelhead,CDFW,2009,2009,1,Steelhead
-Trinity,Escapement,Steelhead,CDFW,2013,2013,1,Steelhead
-Trinity,Escapement,Steelhead,CDFW,1975,1975,1,Steelhead
-Trinity,Escapement,UTKR Chinook,USFWS,2017,2017,1,Chinook
-Trinity,Escapement,UTKR Chinook,USFWS,2018,2018,1,Chinook
-Trinity,Escapement,UTKR Chinook,USFWS,2019,2019,1,Chinook
-Trinity,Escapement,chinook,USFWS,2014,2014,1,Chinook
-Trinity,Escapement,chinook,USFWS,2015,2015,1,Chinook
-Trinity,Escapement,chinook,USFWS,2016,2016,1,Chinook
-Trinity,Escapement,chinook,USFWS,2018,2018,1,Chinook
-Trinity,Escapement,chinook,USFWS,2019,2019,1,Chinook
-Trinity,Escapement,chinook,USFWS,2020,2020,1,Chinook
-Trinity,Escapement,chinook,USFWS,2021,2021,1,Chinook
-Trinity,Escapement,"coho, chinook",CDFW,2022,2022,1,NA
-Trinity,Escapement,"coho, chinook",CDFW,2020,2020,1,NA
-Trinity,Escapement,NA,CDFW,2021,2021,1,NA
-Trinity,Escapement,"coho, chinook, steelhead",CDFW,2001,2001,1,All Salmonids
-Trinity,Escapement,"coho, chinook, steelhead",CDFW,2002,2002,1,All Salmonids
-Trinity,Escapement,"coho, chinook, steelhead",CDFW,2004,2004,1,All Salmonids
-Trinity,Escapement,"coho, chinook, steelhead",CDFW,2005,2005,1,All Salmonids
 Trinity,Escapement,"coho, chinook, steelhead",CDFW,2014,2014,1,All Salmonids
+Trinity,Juvenile Monitoring,NA,USFWS,2015,2015,1,NA
+Trinity,Escapement,CCC Steelhead,CDFW,2015,2015,1,Steelhead
+Trinity,Escapement,All Salmon,CDFW,2015,2015,1,All Salmonids
+Trinity,Escapement,chinook,USFWS,2015,2015,1,Chinook
 Trinity,Escapement,"coho, chinook, steelhead",CDFW,2015,2015,1,All Salmonids
+Trinity,Juvenile Monitoring,NA,USFWS,2016,2016,1,NA
+Trinity,Escapement,All Salmon,CDFW,2016,2016,1,All Salmonids
+Trinity,Escapement,chinook,USFWS,2016,2016,1,Chinook
 Trinity,Escapement,"coho, chinook, steelhead",CDFW,2016,2016,1,All Salmonids
+Trinity,Escapement,All Salmon,CDFW,2017,2017,1,All Salmonids
+Trinity,Escapement,UTKR Chinook,USFWS,2017,2017,1,Chinook
 Trinity,Escapement,"coho, chinook, steelhead",CDFW,2017,2017,1,All Salmonids
+Trinity,Escapement,All Salmon,CDFW,2018,2018,1,All Salmonids
+Trinity,Escapement,UTKR Chinook,USFWS,2018,2018,1,Chinook
+Trinity,Escapement,chinook,USFWS,2018,2018,1,Chinook
 Trinity,Escapement,"coho, chinook, steelhead",CDFW,2018,2018,1,All Salmonids
+Trinity,Escapement,All Salmon,CDFW,2019,2019,1,All Salmonids
+Trinity,Escapement,UTKR Chinook,USFWS,2019,2019,1,Chinook
+Trinity,Escapement,chinook,USFWS,2019,2019,1,Chinook
 Trinity,Escapement,"coho, chinook, steelhead",CDFW,2019,2019,1,All Salmonids
+Trinity,Escapement,All Salmon,CDFW,2020,2020,1,All Salmonids
+Trinity,Escapement,chinook,USFWS,2020,2020,1,Chinook
+Trinity,Escapement,"coho, chinook",CDFW,2020,2020,1,NA
+Trinity,Escapement,All Salmon,CDFW,2021,2021,1,All Salmonids
+Trinity,Escapement,chinook,USFWS,2021,2021,1,Chinook
+Trinity,Escapement,NA,CDFW,2021,2021,1,NA
+Trinity,Escapement,All Salmon,CDFW,2022,2022,1,All Salmonids
+Trinity,Escapement,UTKR Chinook,USFWS,2022,2022,1,Chinook
+Trinity,Escapement,"coho, chinook",CDFW,2022,2022,1,NA
 Lower Klamath,Escapement,UTKR Chinook,YUROK,2004,2004,1,Chinook
 Lower Klamath,Escapement,UTKR Chinook,YUROK,2005,2005,1,Chinook
-Upper Klamath,Water Quality,NA,OTHER,2010,2010,1,NA
 Lower Klamath,Escapement,Coho,YUROK,2004,2004,1,Coho
-Lower Klamath,Fish Population Estimates,NA,ODFW,2000,2000,1,NA
-Lower Klamath,Fish Population Estimates,"Chinook, Coho, Steelhead",CDFW,2018,2018,1,All Salmonids
-Lower Klamath,NA,All Salmon,CDFW,1998,1998,1,All Salmonids
 Lower Klamath,Escapement,UTKR Chinook,OTHER,2012,2012,1,Chinook
-Lower Klamath,Habitat,Coho,YUROK,2013,2013,1,Coho
-Lower Klamath,Fish Population Estimates,NA,USGS,2022,2022,1,NA
 Lower Klamath,Hatchery,NA,CDFW,NA,NA,NA,NA
-Shasta,Water Temperature,NA,OTHER,NA,NA,NA,NA
-Trinity,Habitat,NA,USFWS,2019,2019,1,NA
 Lower Klamath,Escapement,chinook,OTHER,2001,2010,9,Chinook
-Trinity,Escapement,"chinook, coho, steelhead",OTHER,2014,2015,1,All Salmonids
-Upper Klamath Lake,Water Quality,NA,OTHER,1980,2023,43,NA
-Williamson,Water Quality,NA,TNC,2010,2023,13,NA
-Shasta,Flow,NA,OTHER,1957,2023,66,NA
-Lower Klamath,Water Temperature,chinook,OTHER,2014,2015,1,Chinook
-Trinity,Water Temperature,chinook,OTHER,2014,2015,1,Chinook
-Lost,Fish Population Estimates,NA,OTHER,1995,2023,28,NA
-Williamson,Fish Population Estimates,NA,OTHER,2006,2023,17,NA
-Upper Klamath Lake,Fish Population Estimates,NA,OTHER,1995,2023,28,NA
-Lost,Fish Population Estimates,NA,OTHER,2015,2023,8,NA
-Sprague,Water Quality,NA,OTHER,1980,2023,43,NA
 Lower Klamath,Escapement,coho,OTHER,2001,2005,4,Coho
-Trinity,Habitat,chinook,OTHER,2002,2011,9,Chinook
-Lower Klamath,Water Temperature,NA,OTHER,2002,2003,1,NA
-Shasta,Fish Population Estimates,NA,OTHER,2000,2023,23,NA
-Upper Klamath Lake,Fish Population Estimates,NA,USGS,1995,2023,28,NA
+Trinity,Juvenile Monitoring,All Salmon,USFWS,1989,2023,34,All Salmonids
+Trinity,Escapement,"chinook, coho, steelhead",OTHER,2014,2015,1,All Salmonids
+Lower Klamath,Juvenile Monitoring,"Chinook, Coho, Steelhead",USFWS,2000,2023,23,All Salmonids
+Scott,Juvenile Monitoring,"Chinook, Coho, Steelhead",CDFW,2001,2023,22,All Salmonids
+Shasta,Juvenile Monitoring,"Chinook, Coho, Steelhead",CDFW,2001,2023,22,All Salmonids
+Trinity,Escapement,All Salmon,OTHER,1993,2023,30,All Salmonids
+Lower Klamath,Escapement,Chinook,OTHER,1993,2023,30,NA

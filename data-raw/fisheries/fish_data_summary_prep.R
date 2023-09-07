@@ -44,11 +44,15 @@ data_app_all <- data_app |>
                               subbasin == "upper klamath river" ~ "upper klamath",
                               T ~ subbasin),
          subbasin = str_to_title(subbasin),
-         data_type = str_to_title(data_type)) |> 
+         data_type = str_to_title(data_type),
+         data_type = ifelse(data_type %in% c("Fish Survival", "Fish Health"), "Fish Health/Survival", data_type)) |> 
   # remove the years/rows that fall within the greater timeframe so there aren't duplicates (e.g. we have 2006-2009 coho fish survival AND rows for 
   # 2006, 2007, 2009, we don't want to count these twice)
   select(-timeframe) |> 
-  distinct()
+  distinct() |> 
+  filter(data_type %in% c("Escapement", "Juvenile Monitoring", "Fish Health/Survival", "Hatchery", "Fish Population Esimtates"))
+
+unique(data_app_all$data_type)
 write_csv(data_app_all, "shiny/klamath_sdm_data_catalog/data/fish_data_synthesis.csv")
 
 
