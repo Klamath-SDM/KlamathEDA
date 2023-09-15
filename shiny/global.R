@@ -7,7 +7,7 @@ library(bslib)
 
 options(scipen=999)
 
-rest_proj <- readxl::read_excel(here::here("shiny", "klamath_sdm_data_catalog", "data", "Preliminary Data Catalog.xlsx"), sheet = "Habitat Restoration Projects") |> 
+rest_proj <- readxl::read_excel(here::here("data", "Preliminary Data Catalog.xlsx"), sheet = "Habitat Restoration Projects") |> 
   select(`Project Name`, `Project Benefit`, `Recovery Domains`, Category, Year, Status, Grantee, HUC, Resource) |>
   filter(!(Category %in% c("Tribal Capacity", "Planning", "Design", "Unknown/Unspecified"))) |> 
   mutate(Category = case_when(Category == "Salmonid Habitat Restoration and Acquisition" ~ "Restoration", 
@@ -20,7 +20,7 @@ rest_proj <- readxl::read_excel(here::here("shiny", "klamath_sdm_data_catalog", 
   tidyr::unnest(HUC) |> 
   mutate(HUC = as.numeric(HUC)) 
 
-hucs <- sf::read_sf(here::here("shiny", "klamath_sdm_data_catalog", "data", "shapefiles", "WBDHU8_Klamath_Rogue.shp")) |> 
+hucs <- sf::read_sf(here::here("data", "shapefiles", "WBDHU8_Klamath_Rogue.shp")) |> 
   select(huc8, name) |> 
   rename(HUC = huc8,
          Watershed = name) |> 
@@ -41,12 +41,12 @@ js <- function(id){
 
 # habitat data ------------------------------------------------------------
 
-hab_data <- readxl::read_excel(here::here("shiny", "klamath_sdm_data_catalog", "data", "Preliminary Data Catalog.xlsx"), sheet = "Habitat Data") 
+hab_data <- readxl::read_excel(here::here("data", "Preliminary Data Catalog.xlsx"), sheet = "Habitat Data") 
 
 
 # monitoring data ---------------------------------------------------------
 
-monitoring_data <- read_csv(here::here("shiny", "klamath_sdm_data_catalog", "data", "fish_data_synthesis.csv"))
+monitoring_data <- read_csv(here::here("data", "fish_data_synthesis.csv"))
 
 monitoring_data_hucs <- left_join(monitoring_data, hucs, by = c("subbasin" = "Watershed")) |> 
   filter(!is.na(data_type), !is.na(start))
