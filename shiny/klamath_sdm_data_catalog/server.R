@@ -2,8 +2,28 @@ library(shiny)
 
 function(input, output) {
   
+  
+  # Restoration Tab: --------------------------------------------------------
+  
+  # Filter restoration projects 
+  selected_restoration <- reactive({
+    if(input$rest_data_type == "All Types" & input$watershed == "All Watersheds") {
+      dat <- all_rest_data
+    } else if (input$rest_data_type == "All Types" & input$watershed != "All Watersheds") {
+      dat <- all_rest_data |> 
+        filter(Watershed %in% input$watershed)
+    } else if (input$rest_data_type != "All Types" & input$watershed == "All Watersheds") {
+      dat <- all_rest_data |> 
+        filter(Category %in% input$rest_data_type)
+    } else {
+      dat <- all_rest_data |> 
+        filter(Category %in% input$rest_data_type, 
+               Watershed %in% input$watershed)
+    } 
+  })
+  
   output[["rest_table"]] <- renderDT({
-    datatable(rest_proj |> select(-`Project Benefit`), callback = JS(js("t1")),
+    datatable(selected_restoration() |> select(-`Project Benefit`), callback = JS(js("t1")),
               options = list(scrollX = TRUE,
                              dom = 't'),
               filter = "top",
@@ -14,7 +34,7 @@ function(input, output) {
     showModal(
       modalDialog(
         
-        rest_proj |> slice(input[['t1']]) |> pull(`Project Benefit`)
+        selected_restoration() |> slice(input[['t1']]) |> pull(`Project Benefit`)
         
       )
     )
@@ -22,16 +42,21 @@ function(input, output) {
   
   
   output$map <- renderLeaflet({
+    summary_by_watershed <- selected_restoration() |> 
+      group_by(HUC, Watershed, geometry) |> 
+      summarise(n_projects = n()) |> 
+      st_as_sf()
     
-    color_palette <- colorNumeric(palette = "YlOrRd", domain = c(1, 200))
+    color_palette <- colorNumeric(palette = "YlOrRd", domain = c(1, max(summary_by_watershed$n_projects)))
     
     leaflet() |>
       addProviderTiles(providers$Esri.WorldTopoMap, group = "Map") |>
       addProviderTiles(providers$Esri.WorldImagery, group = "Satellite") |>
-      addPolygons(data = summary_by_watershed, group = "hucs", popup = ~name,
+      addPolygons(data = summary_by_watershed, group = "hucs", popup = ~paste0("Watershed: ", Watershed, "<br>", 
+                                                                               "No. Projects: ", n_projects),
                   color = "darkgrey", fillColor = ~color_palette(n_projects),
                   fillOpacity = 0.5)  |> 
-      addLegend("bottomright", pal = color_palette, values = summary_by_watershed$n_projects,
+      addLegend("bottomright", pal = color_palette, values = c(1, summary_by_watershed$n_projects),
                 title = "Number of Projects")
     
   })
@@ -43,9 +68,18 @@ function(input, output) {
       paste0('restoration_projects', ".csv")
     },
     content = function(file) {
-      write_csv(rest_proj, file)
+      write_csv(selected_restoration(), file)
     }
   )
+  
+  
+  # habitat data tab:  ------------------------------------------------------
+  
+  output$hab_data <- renderDT({
+    datatable(hab_data)
+  })
+  
+  # Fisheries Monitoring: -------------------------------------------------------------
   
   # Filter monitoring data based on selections
   selected_monitoring <- reactive({
@@ -59,12 +93,12 @@ function(input, output) {
       dat <- monitoring_data_hucs |> 
         filter(data_type %in% input$data_type)
     } else {
-    dat <- monitoring_data_hucs |> 
-      filter(data_type %in% input$data_type,
-             species_group %in% input$species)
+      dat <- monitoring_data_hucs |> 
+        filter(data_type %in% input$data_type,
+               species_group %in% input$species)
     }
     dat
-    })
+  })
   
   # monitoring data map
   output$map_monitoring <- renderLeaflet({
