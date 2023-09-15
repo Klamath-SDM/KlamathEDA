@@ -12,7 +12,7 @@ fluidPage(
              titlePanel("Restoration Project Catalog"),
              h6("The following restoration projects were aggregated through literature review.
            This dataset is not complete and will be updated as watershed-specific stakeholders
-           are engaged in the Klamath SDM process."),
+           are engaged in the Klamath SDM process."), #TODO: update text here
              sidebarLayout(
                sidebarPanel(style = "background-color: #faf9f7;",
                             h4("Filter by Watershed", style = "color: black;"),

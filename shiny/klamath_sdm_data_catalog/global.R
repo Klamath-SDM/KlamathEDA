@@ -11,7 +11,7 @@ rest_proj <- readxl::read_excel(here::here("shiny", "klamath_sdm_data_catalog", 
   select(`Project Name`, `Project Benefit`, `Recovery Domains`, Category, Year, Status, Grantee, HUC, Resource) |>
   mutate(HUC = strsplit(HUC, ";\\s*")) %>%
   tidyr::unnest(HUC) |> 
-  mutate(HUC = as.numeric(HUC))
+  mutate(HUC = as.numeric(HUC)) 
 
 hucs <- sf::read_sf(here::here("shiny", "klamath_sdm_data_catalog", "data", "shapefiles", "WBDHU8_Klamath_Rogue.shp")) |> 
   select(huc8, name) |> 
