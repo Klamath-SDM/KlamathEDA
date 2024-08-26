@@ -1,0 +1,268 @@
+subbasin,data_type,species,timeframe,source,start,end,within_timeframe,species_group
+klamath,escapement,UTKR Chinook,2015,USFWS,NA,NA,FALSE,chinook
+klamath,escapement,UTKR Chinook,2019,USFWS,NA,NA,FALSE,chinook
+klamath,escapement,UTKR Chinook,2021,USFWS,NA,NA,FALSE,chinook
+klamath,escapement,UTKR Chinook,2022,USFWS,NA,NA,FALSE,chinook
+klamath,escapement,UTKR Chinook,2016,USFWS,NA,NA,FALSE,chinook
+klamath,escapement,UTKR Chinook,2018,USFWS,NA,NA,FALSE,chinook
+klamath,escapement,UTKR Chinook,2009,USFWS,NA,NA,FALSE,chinook
+klamath,escapement,UTKR Chinook,2010,USFWS,NA,NA,FALSE,chinook
+klamath,escapement,UTKR Chinook,2011,USFWS,NA,NA,FALSE,chinook
+klamath,escapement,UTKR Chinook,2014,USFWS,NA,NA,FALSE,chinook
+klamath,escapement,UTKR Chinook,2020,USFWS,NA,NA,FALSE,chinook
+klamath,fish survival,Coho,2008,USGS,2006,2009,TRUE,coho
+klamath,management,All Salmon,2003,CDFW,NA,NA,FALSE,all salmonids
+lower klamath,juvenile monitoring,NA,2017,USFWS,NA,NA,FALSE,NA
+trinity,escapement,All Salmon,2010,CDFW,NA,NA,FALSE,all salmonids
+mid klamath,flow,NA,NA,NOAA,NA,NA,FALSE,NA
+klamath,water temperature,NA,2012,OTHER,NA,NA,FALSE,NA
+klamath,fish health,NA,2003,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2000,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2002,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2006,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2007,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2008,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2009,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2010,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2011,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2012,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2013,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2014,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2015,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2016,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2017,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2018,YUROK,NA,NA,FALSE,NA
+klamath,water quality,NA,2019,YUROK,NA,NA,FALSE,NA
+klamath,operations,NA,2023,USBR,NA,NA,FALSE,NA
+trinity,fish survival,Coho,2008,USGS,NA,NA,FALSE,coho
+trinity,habitat,UTKR Chinook,2013,USFWS,NA,NA,FALSE,chinook
+trinity,habitat,UTKR Chinook,2014,USFWS,NA,NA,FALSE,chinook
+trinity,habitat,UTKR Chinook,2018,USFWS,NA,NA,FALSE,chinook
+trinity,habitat,UTKR Chinook,2011,USFWS,NA,NA,FALSE,chinook
+trinity,habitat,UTKR Chinook,2010,USFWS,NA,NA,FALSE,chinook
+trinity,habitat,NA,2020,USFWS,NA,NA,FALSE,NA
+trinity,habitat,UTKR Chinook,2015,USFWS,NA,NA,FALSE,chinook
+trinity,water temperature,All Salmon,2016,CDFW,NA,NA,FALSE,all salmonids
+klamath,escapement,NA,2015,CDFW,NA,NA,FALSE,NA
+klamath,escapement,NA,2016,CDFW,NA,NA,FALSE,NA
+klamath,escapement,NA,2017,CDFW,NA,NA,FALSE,NA
+klamath,escapement,NA,2018,CDFW,NA,NA,FALSE,NA
+klamath,hatchery,All Salmon,2006,CDFW,NA,NA,FALSE,all salmonids
+klamath,hatchery,All Salmon,2007,CDFW,NA,NA,FALSE,all salmonids
+klamath,hatchery,All Salmon,2005,CDFW,NA,NA,FALSE,all salmonids
+klamath,hatchery,Fall Chinook,2007,CDFW,NA,NA,FALSE,chinook
+klamath,hatchery,All Salmon,2008,CDFW,NA,NA,FALSE,all salmonids
+klamath,hatchery,All Salmon,2009,CDFW,NA,NA,FALSE,all salmonids
+klamath,hatchery,Fall Chinook,2010,CDFW,NA,NA,FALSE,chinook
+klamath,hatchery,All Salmon,2011,CDFW,NA,NA,FALSE,all salmonids
+klamath,hatchery,All Salmon,2012,CDFW,NA,NA,FALSE,all salmonids
+klamath,hatchery,All Salmon,2013,CDFW,NA,NA,FALSE,all salmonids
+salmon,fish population estimates,Fall Chinook,2004,CDFW,NA,NA,FALSE,chinook
+scott,escapement,All Salmon,2020,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2018,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2019,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2021,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2022,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2020,CDFW,NA,NA,FALSE,all salmonids
+klamath,fish population estimates,CCC Steelhead,2014,CDFW,NA,NA,FALSE,steelhead
+scott,water quality,NA,NA,OTHER,NA,NA,FALSE,NA
+shasta,water quality,NA,2017,OTHER,1991,2012,TRUE,NA
+klamath,juvenile monitoring,Coho,2012,OTHER,NA,NA,FALSE,coho
+klamath,juvenile monitoring,Coho,2008,YUROK,NA,NA,FALSE,coho
+klamath,fish survival,Coho,2011,USGS,2006,2009,TRUE,coho
+lower klamath,juvenile monitoring,Coho,2009,YUROK,NA,NA,FALSE,coho
+klamath,escapement,Coho,2006,USFWS,NA,NA,FALSE,coho
+klamath,escapement,chinook,2013,OTHER,NA,NA,FALSE,chinook
+trinity,escapement,UTKR Chinook,2022,USFWS,NA,NA,FALSE,chinook
+klamath,fish population estimates,UTKR Chinook,2019,USGS,NA,NA,FALSE,chinook
+klamath,fish population estimates,UTKR Chinook,2019,OTHER,NA,NA,FALSE,chinook
+klamath,juvenile monitoring,NA,2021,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,UTKR Chinook,2022,USFWS,NA,NA,FALSE,chinook
+klamath,juvenile monitoring,NA,2007,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,NA,2008,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,NA,2009,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,NA,2010,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,NA,2011,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,NA,2012,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,NA,2013,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,NA,2015,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,NA,2016,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,NA,2017,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,NA,2018,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,NA,2019,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,NA,2020,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,Coho,2022,USFWS,NA,NA,FALSE,coho
+klamath,fish survival,Coho,2006,USGS,2006,2009,TRUE,coho
+klamath,fish survival,Coho,2009,USGS,2006,2009,TRUE,coho
+klamath,fish survival,Coho,2007,USGS,2006,2009,TRUE,coho
+lower klamath,juvenile monitoring,ALL,2021,USFWS,NA,NA,FALSE,all salmonids
+lower klamath,juvenile monitoring,NA,2016,USFWS,NA,NA,FALSE,NA
+lower klamath,juvenile monitoring,NA,2015,USFWS,NA,NA,FALSE,NA
+lower klamath,juvenile monitoring,NA,2014,USFWS,NA,NA,FALSE,NA
+lower klamath,juvenile monitoring,NA,2013,USFWS,NA,NA,FALSE,NA
+trinity,escapement,All Salmon,2009,CDFW,NA,NA,FALSE,all salmonids
+trinity,fish population estimates,All Salmon,2019,CDFW,NA,NA,FALSE,all salmonids
+trinity,juvenile monitoring,All Salmon,2011,CDFW,NA,NA,FALSE,all salmonids
+trinity,juvenile monitoring,NA,2000,YUROK,NA,NA,FALSE,NA
+trinity,juvenile monitoring,NA,2009,USFWS,NA,NA,FALSE,NA
+trinity,juvenile monitoring,NA,2007,USFWS,NA,NA,FALSE,NA
+trinity,juvenile monitoring,NA,2008,USFWS,NA,NA,FALSE,NA
+trinity,juvenile monitoring,NA,2010,YUROK,NA,NA,FALSE,NA
+trinity,juvenile monitoring,NA,2011,USFWS,NA,NA,FALSE,NA
+trinity,juvenile monitoring,NA,2013,USFWS,NA,NA,FALSE,NA
+trinity,juvenile monitoring,NA,2014,USFWS,NA,NA,FALSE,NA
+trinity,juvenile monitoring,NA,2015,USFWS,NA,NA,FALSE,NA
+trinity,juvenile monitoring,NA,2016,USFWS,NA,NA,FALSE,NA
+klamath,juvenile monitoring,NA,2008,YUROK,NA,NA,FALSE,NA
+trinity,escapement,CCC Steelhead,2015,CDFW,NA,NA,FALSE,steelhead
+klamath,escapement,Steelhead,2004,CDFW,NA,NA,FALSE,steelhead
+klamath,escapement,Steelhead,2005,CDFW,NA,NA,FALSE,steelhead
+klamath,escapement,Steelhead,2006,CDFW,NA,NA,FALSE,steelhead
+klamath,escapement,Steelhead,2007,CDFW,NA,NA,FALSE,steelhead
+klamath,escapement,Steelhead,2008,CDFW,NA,NA,FALSE,steelhead
+klamath,escapement,Steelhead,2010,USFS,NA,NA,FALSE,steelhead
+klamath,escapement,Steelhead,2011,USFS,NA,NA,FALSE,steelhead
+klamath,escapement,Steelhead,2012,USFS,NA,NA,FALSE,steelhead
+klamath,escapement,Steelhead,2013,USFS,NA,NA,FALSE,steelhead
+klamath,escapement,All Salmon,2006,CDFW,NA,NA,FALSE,all salmonids
+klamath,escapement,All Salmon,2008,CDFW,NA,NA,FALSE,all salmonids
+klamath,escapement,All Salmon,2012,CDFW,NA,NA,FALSE,all salmonids
+klamath,escapement,All Salmon,2011,CDFW,NA,NA,FALSE,all salmonids
+klamath,escapement,Steelhead,2009,CDFW,NA,NA,FALSE,steelhead
+salmon,escapement,ALL,1998,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,1999,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,2000,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,2001,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,2002,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,2003,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,2004,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,2011,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,2012,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,2013,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,2014,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,2015,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,2016,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,2017,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,All Salmon,2008,CDFW,NA,NA,FALSE,all salmonids
+salmon,escapement,All Salmon,2007,CDFW,NA,NA,FALSE,all salmonids
+salmon,escapement,All Salmon,2009,CDFW,NA,NA,FALSE,all salmonids
+salmon,escapement,All Salmon,2010,CDFW,NA,NA,FALSE,all salmonids
+salmon,escapement,ALL,2010,OTHER,NA,NA,FALSE,all salmonids
+salmon,escapement,All Salmon,2011,CDFW,NA,NA,FALSE,all salmonids
+salmon,escapement,All Salmon,2012,CDFW,NA,NA,FALSE,all salmonids
+salmon,escapement,All Salmon,2013,CDFW,NA,NA,FALSE,all salmonids
+scott,escapement,All Salmon,2018,CDFW,NA,NA,FALSE,all salmonids
+scott,escapement,All Salmon,2009,CDFW,NA,NA,FALSE,all salmonids
+scott,escapement,All Salmon,2010,CDFW,NA,NA,FALSE,all salmonids
+scott,escapement,All Salmon,2013,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2010,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2012,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2013,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2018,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2002,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2003,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2004,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2005,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2006,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2008,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2009,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2001,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2000,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,Steelhead,2002,CDFW,NA,NA,FALSE,steelhead
+trinity,escapement,All Salmon,2003,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2004,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2005,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2006,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2007,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2011,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2012,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2014,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2015,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2016,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2017,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2001,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2008,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,All Salmon,2013,CDFW,NA,NA,FALSE,all salmonids
+klamath,escapement,Coho,2008,USFWS,NA,NA,FALSE,coho
+klamath,escapement,All Salmon,2016,CDFW,NA,NA,FALSE,all salmonids
+klamath,escapement,All Salmon,2018,CDFW,NA,NA,FALSE,all salmonids
+klamath,escapement,UTKR Chinook,2022,CDFW,NA,NA,FALSE,chinook
+lower klamath river,escapement,All Salmon,2009,CDFW,NA,NA,FALSE,all salmonids
+lower klamath river,escapement,Steelhead,2009,CDFW,NA,NA,FALSE,steelhead
+lower klamath river,escapement,All Salmon,2012,YUROK,NA,NA,FALSE,all salmonids
+salmon,escapement,UTKR Chinook,2005,OTHER,NA,NA,FALSE,chinook
+scott,escapement,All Salmon,2017,CDFW,NA,NA,FALSE,all salmonids
+scott,escapement,Coho,2007,CDFW,NA,NA,FALSE,coho
+scott,escapement,Coho,2006,CDFW,NA,NA,FALSE,coho
+scott,escapement,Coho,2012,CDFW,NA,NA,FALSE,coho
+scott,escapement,Coho,2013,CDFW,NA,NA,FALSE,coho
+scott,escapement,Coho,2010,CDFW,NA,NA,FALSE,coho
+scott,escapement,Coho,2011,CDFW,NA,NA,FALSE,coho
+scott,escapement,Coho,2009,CDFW,NA,NA,FALSE,coho
+scott,escapement,All Salmon,2008,CDFW,NA,NA,FALSE,all salmonids
+scott,escapement,All Salmon,2012,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2011,CDFW,NA,NA,FALSE,all salmonids
+shasta,escapement,All Salmon,2016,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,Steelhead,2004,CDFW,NA,NA,FALSE,steelhead
+trinity,escapement,Steelhead,2005,CDFW,NA,NA,FALSE,steelhead
+trinity,escapement,Steelhead,2006,CDFW,NA,NA,FALSE,steelhead
+trinity,escapement,Steelhead,2007,CDFW,NA,NA,FALSE,steelhead
+trinity,escapement,Steelhead,2008,CDFW,NA,NA,FALSE,steelhead
+trinity,escapement,Steelhead,2009,CDFW,NA,NA,FALSE,steelhead
+trinity,escapement,Steelhead,2013,CDFW,NA,NA,FALSE,steelhead
+trinity,escapement,Steelhead,1975,CDFW,NA,NA,FALSE,steelhead
+trinity,escapement,UTKR Chinook,2017,USFWS,NA,NA,FALSE,chinook
+trinity,escapement,UTKR Chinook,2018,USFWS,NA,NA,FALSE,chinook
+trinity,escapement,UTKR Chinook,2019,USFWS,NA,NA,FALSE,chinook
+trinity,escapement,chinook,2014,USFWS,NA,NA,FALSE,chinook
+trinity,escapement,chinook,2015,USFWS,NA,NA,FALSE,chinook
+trinity,escapement,chinook,2016,USFWS,NA,NA,FALSE,chinook
+trinity,escapement,chinook,2018,USFWS,NA,NA,FALSE,chinook
+trinity,escapement,chinook,2019,USFWS,NA,NA,FALSE,chinook
+trinity,escapement,chinook,2020,USFWS,NA,NA,FALSE,chinook
+trinity,escapement,chinook,2021,USFWS,NA,NA,FALSE,chinook
+trinity,escapement,"coho, chinook",2022,CDFW,NA,NA,FALSE,NA
+trinity,escapement,"coho, chinook",2020,CDFW,NA,NA,FALSE,NA
+trinity,escapement,NA,2021,CDFW,NA,NA,FALSE,NA
+trinity,escapement,"coho, chinook, steelhead",2001,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,"coho, chinook, steelhead",2002,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,"coho, chinook, steelhead",2004,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,"coho, chinook, steelhead",2005,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,"coho, chinook, steelhead",2014,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,"coho, chinook, steelhead",2015,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,"coho, chinook, steelhead",2016,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,"coho, chinook, steelhead",2017,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,"coho, chinook, steelhead",2018,CDFW,NA,NA,FALSE,all salmonids
+trinity,escapement,"coho, chinook, steelhead",2019,CDFW,NA,NA,FALSE,all salmonids
+lower klamath river,escapement,UTKR Chinook,2004,YUROK,NA,NA,FALSE,chinook
+lower klamath river,escapement,UTKR Chinook,2005,YUROK,NA,NA,FALSE,chinook
+upper klamath river,water quality,NA,2010,OTHER,NA,NA,FALSE,NA
+klamath,escapement,Coho,2004,YUROK,NA,NA,FALSE,coho
+klamath,fish population estimates,NA,2000,ODFW,NA,NA,FALSE,NA
+klamath,fish population estimates,"Chinook, Coho, Steelhead",2018,CDFW,NA,NA,FALSE,all salmonids
+klamath,NA,All Salmon,1998,CDFW,NA,NA,FALSE,all salmonids
+klamath,escapement,UTKR Chinook,2012,OTHER,NA,NA,FALSE,chinook
+lower klamath river,escapement,UTKR Chinook,2018,USFWS,NA,NA,FALSE,chinook
+lower klamath river,habitat,Coho,2013,YUROK,NA,NA,FALSE,coho
+lower klamath river,fish population estimates,NA,2022,USGS,NA,NA,FALSE,NA
+mid klamath,hatchery,NA,NA,CDFW,NA,NA,FALSE,NA
+shasta,water temperature,NA,NA,OTHER,NA,NA,FALSE,NA
+trinity,habitat,NA,2019,USFWS,NA,NA,FALSE,NA
+mid klamath,escapement,chinook,NA,OTHER,2001,2010,FALSE,chinook
+trinity,escapement,"chinook, coho, steelhead",NA,OTHER,2014,2015,FALSE,all salmonids
+upper klamath lake,water quality,NA,NA,OTHER,1980,2023,FALSE,NA
+williamson,water quality,NA,NA,TNC,2010,2023,FALSE,NA
+shasta,flow,NA,NA,OTHER,1957,2023,FALSE,NA
+klamath,water temperature,chinook,NA,OTHER,2014,2015,FALSE,chinook
+trinity,water temperature,chinook,NA,OTHER,2014,2015,FALSE,chinook
+lost,fish population estimates,NA,NA,OTHER,1995,2023,FALSE,NA
+williamson,fish population estimates,NA,NA,OTHER,2006,2023,FALSE,NA
+upper klamath lake,fish population estimates,NA,NA,OTHER,1995,2023,FALSE,NA
+lost,fish population estimates,NA,NA,OTHER,2015,2023,FALSE,NA
+sprague,water quality,NA,NA,OTHER,1980,2023,FALSE,NA
+klamath,escapement,coho,NA,OTHER,2001,2005,FALSE,coho
+trinity,habitat,chinook,NA,OTHER,2002,2011,FALSE,chinook
+klamath,water temperature,NA,NA,OTHER,2002,2003,FALSE,NA
+shasta,fish population estimates,NA,NA,OTHER,2000,2023,FALSE,NA
+upper klamath lake,fish population estimates,NA,NA,USGS,1995,2023,FALSE,NA
+upper klamath lake,water quality,NA,NA,OTHER,1980,2023,FALSE,NA
