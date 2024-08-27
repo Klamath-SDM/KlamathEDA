@@ -1,6 +1,6 @@
 # Klamath Basin Exploratory Data Analysis
 
-This repository hosts scripts related to exploratory data analysis of environmental data in the Klamath Basin. Through the data aggregation and analysis, this organization will host scripts and models necessary for the Klamath Basin Structured Decision Making process. 
+This repository hosts scripts related to exploratory data analysis of environmental data in the Klamath Basin. Through the data aggregation and analysis, this repository will host scripts and models necessary for the Klamath Basin Structured Decision Making process. 
 
 ## Current contents 
 
