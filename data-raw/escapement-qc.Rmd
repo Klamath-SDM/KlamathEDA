@@ -12,19 +12,201 @@ library(googleCloudStorageR)
 library(ggplot2)
 library(scales)
 library (RColorBrewer)
+library(readxl)
+library(janitor)
 ```
-# Klamath River Escapement Survey Data  
+# Klamath River basin - Salmon River Carcass Mark Recapture Survey Data  
+
+The goal of this markdown is to:
+   (1) identify what types of data are included, 
+   (2) data quality, 
+   (3) resolve quality issues where we can, 
+   (4) make data more usable
 
 ## Description of Monitoring Data
 
+Upper Salmon River Carcass Mark Recapture Spawning Grounds Surveys. Located on the Upper Salmon River (above Nordheimer Campground), including Upper Mainstem, and North and South Forks of the Salmon River and tributaries.
+
+   
 **Timeframe:** 
 
+**Completeness of Record throughout timeframe:** 
 
-**Completeness of Record throughout timeframe:**  
-
-
-
-**Sampling Location:** 
-
+**Sampling Location:**
 
 **Data Contact:** 
+
+Any additional info?
+
+## Access Data
+
+```{r, eval=FALSE}
+# read raw data file
+salmon_river_recapture_22 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 1) |> 
+  glimpse()
+```
+
+Read in data from source, glimpse raw data and domain description sheet: 
+```{r}
+# read in data to clean 
+salmon_river_recapture <- salmon_river_recapture |> 
+  clean_names() |> 
+  glimpse()
+```
+
+## Data transformations
+
+```{r}
+# For different excel sheets for each year read in and combine years here
+salmon_river_recapture_22 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 1) |> 
+  clean_names() |> 
+  mutate(path = as.numeric(path),
+         tag_app = as.numeric(tag_app),
+         recap = as.numeric(recap),
+         clips = as.character(clips),
+         headtag = as.character(headtag)) |>
+  glimpse()
+
+salmon_river_recapture_21 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 2) |> 
+  clean_names() |> 
+  glimpse()
+
+salmon_river_recapture_20 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 3) |> 
+  clean_names() |> 
+  mutate(path = as.numeric(path),
+         tag_app = as.numeric(tag_app),
+         recap = as.numeric(recap),
+         clips = as.character(clips),
+         headtag = as.character(headtag)) |>
+  glimpse()
+
+salmon_river_recapture_19 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 4) |> 
+  clean_names() |> 
+  mutate(path = as.numeric(path),
+         tag_app = as.numeric(tag_app),
+         recap = as.numeric(recap),
+         clips = as.character(clips),
+         headtag = as.character(headtag)) |>
+  glimpse()
+
+salmon_river_recapture_18 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 5) |> 
+  clean_names() |> 
+  mutate(path = as.numeric(path), # 4 fields with text indicating "no survey", setting those as NA
+         tag_app = as.numeric(tag_app),
+         recap = as.numeric(recap), # there is a slash on 2018-11-20 (6106/7725), turning into NA
+         clips = as.character(clips),
+         headtag = as.character(headtag)) |>
+  glimpse()
+
+salmon_river_recapture_17 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 2, sheet = 6) |> 
+  clean_names() |> 
+  mutate(tag_app = as.numeric(tag_app),
+         clips = as.character(clip),
+         headtag = as.character(headtag)) |>
+  glimpse()
+
+salmon_river_recapture_16 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 7) |> 
+  clean_names() |> 
+  mutate(clips = as.character(clip),
+         headtag = as.character(headtag)) |>
+  rename(path = path_number) |> 
+  select(- clip) |> 
+  glimpse()
+
+salmon_river_recapture_15 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 8) |> 
+  clean_names() |> 
+  raname(path = path_number,
+         clips = clip) |> 
+  mutate(headtag = as.character(head_tag_number))
+  glimpse()
+
+salmon_river_recapture_14 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 9) |> # check headtag vs head_tag_number
+  clean_names() |> 
+  glimpse()
+
+salmon_river_recapture_13 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 10) |> 
+  clean_names() |> 
+  glimpse()
+
+salmon_river_recapture_12 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 11) |> 
+  clean_names() |> 
+  glimpse()
+
+salmon_river_recapture_11 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 12) |> # missing  rel_chop field
+  clean_names() |> 
+  glimpse()
+```
+
+```{r}
+# Snake case, 
+# keeping date, path, fl, sex, spawn, tag_app, recap, rel_chop, clips, headtag 
+# Columns are appropriate types
+# Remove redundant columns
+```
+
+## Explore Numeric Variables: {.tabset}
+
+```{r}
+# Filter clean data to show only numeric variables 
+```
+
+### Variable: `[name]`
+
+**Plotting [Variable] over Period of Record**
+
+```{r}
+# Make whatever plot is appropriate 
+# maybe 2+ plots are appropriate
+```
+
+**Numeric Summary of [Variable] over Period of Record**
+
+```{r}
+# Table with summary statistics
+```
+
+**NA and Unknown Values**
+
+Provide a stat on NA or unknown values
+
+## Explore Categorical variables: {.tabset}
+
+General notes: If there is an opportunity to turn yes no into boolean do so, but not if you loose value 
+
+```{r}
+# Filter clean data to show only categorical variables
+```
+
+
+### Variable: `[name]`
+```{r}
+#table() 
+```
+
+Fix inconsistencies with spelling, capitalization, and abbreviations. 
+
+```{r}
+# Fix any inconsistencies with categorical variables
+```
+
+**Create lookup rda for [variable] encoding:** 
+```{r}
+# Create named lookup vector
+# Name rda [watershed]_[data type]_[variable_name].rda
+# save rda to data/ 
+```
+
+**NA and Unknown Values**
+
+Provide a stat on NA or unknown values
+
+## Summary of identified issues
+
+* List things that are funky but that we don't feel like should be changed without more investigation
+
+## Save cleaned data back to /data folder 
+
+```{r}
+# Write to /data folder
+# Name file [watershed]_[data type].csv
+```
