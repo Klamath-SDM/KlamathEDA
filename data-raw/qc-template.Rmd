@@ -1,0 +1,120 @@
+---
+title: "Klamath [Data type] [QC]"
+author: "[Your name]"
+date: "[Date]"
+output: rmarkdown::github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, fig.width=15, fig.height=10)
+library(tidyverse)
+library(lubridate)
+library(googleCloudStorageR)
+library(ggplot2)
+library(scales)
+```
+
+# Klamath [Data type long version]
+
+## Description of Monitoring Data
+
+**Timeframe:** 
+
+**Completeness of Record throughout timeframe:** 
+
+**Sampling Location:**
+
+**Data Contact:** 
+
+Any additional info?
+
+## Access Data
+
+```{r, eval=FALSE}
+# read raw data file
+
+```
+
+Read in data from source, glimpse raw data and domain description sheet: 
+```{r}
+# read in data to clean 
+```
+
+## Data transformations
+
+```{r}
+# For different excel sheets for each year read in and combine years here
+```
+
+```{r}
+# Snake case, 
+# Columns are appropriate types
+# Remove redundant columns
+```
+
+## Explore Numeric Variables: {.tabset}
+
+```{r}
+# Filter clean data to show only numeric variables 
+```
+
+### Variable: `[name]`
+
+**Plotting [Variable] over Period of Record**
+
+```{r}
+# Make whatever plot is appropriate 
+# maybe 2+ plots are appropriate
+```
+
+**Numeric Summary of [Variable] over Period of Record**
+
+```{r}
+# Table with summary statistics
+```
+
+**NA and Unknown Values**
+
+Provide a stat on NA or unknown values
+
+## Explore Categorical variables: {.tabset}
+
+General notes: If there is an opportunity to turn yes no into boolean do so, but not if you loose value 
+
+```{r}
+# Filter clean data to show only categorical variables
+```
+
+
+### Variable: `[name]`
+```{r}
+#table() 
+```
+
+Fix inconsistencies with spelling, capitalization, and abbreviations. 
+
+```{r}
+# Fix any inconsistencies with categorical variables
+```
+
+**Create lookup rda for [variable] encoding:** 
+```{r}
+# Create named lookup vector
+# Name rda [watershed]_[data type]_[variable_name].rda
+# save rda to data/ 
+```
+
+**NA and Unknown Values**
+
+Provide a stat on NA or unknown values
+
+## Summary of identified issues
+
+* List things that are funky but that we don't feel like should be changed without more investigation
+
+## Save cleaned data back to /data folder 
+
+```{r}
+# Write to /data folder
+# Name file [watershed]_[data type].csv
+```
