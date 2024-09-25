@@ -4,7 +4,7 @@ author: "Badhia Yunes Katz"
 date: "09/24/2024"
 output: rmarkdown::github_document
 ---
-```{r}
+```{r,include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 library(tidyverse)
 library(lubridate)
@@ -18,6 +18,7 @@ library(janitor)
 # Klamath River basin - Salmon River Carcass Mark Recapture Survey Data  
 
 The goal of this markdown is to:
+
    (1) identify what types of data are included, 
    (2) data quality, 
    (3) resolve quality issues where we can, 
@@ -28,25 +29,19 @@ The goal of this markdown is to:
 Upper Salmon River Carcass Mark Recapture Spawning Grounds Surveys. Located on the Upper Salmon River (above Nordheimer Campground), including Upper Mainstem, and North and South Forks of the Salmon River and tributaries.
 
    
-**Timeframe:** 
+**Timeframe:** 2011-10-14 to 2022-12-09
 
-**Completeness of Record throughout timeframe:** 
+**Completeness of Record throughout timeframe:** data collected only during months of Oct-December
 
-**Sampling Location:**
+**Sampling Location:** Upper Salmon River Carcass Mark Recapture Spawning Grounds Surveys. Located on the Upper Salmon River (above Nordheimer Campground), including Upper Mainstem, and North and South Forks of the Salmon River and tributaries.
 
-**Data Contact:** 
+**Data Contact:** [Dan Troxel](mailto::dan.troxel@wildlife.ca.gov)
 
 Any additional info?
 
 ## Access Data
 
-```{r, eval=FALSE}
-# read raw data file
-salmon_river_recapture_22 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 1) |> 
-  glimpse()
-```
-
-Read in data from source, glimpse raw data and domain description sheet: 
+Read in data shared by Morgan Knechtle, but publicly available at [California Open Data Portal](https://data.ca.gov/dataset/fall-chinook-escapement-klamath-basin-watershed) 
 
 ## Data transformations
 
@@ -345,7 +340,7 @@ recapture <- recapture |> #check if this assumption makes sense
     sex %in% c(46, "N", "U", "Y") ~ "unknown"
   )) 
   # Create the plot
-  ggplot(recapture_clean, aes(x = month(date, label = TRUE), fill = sex)) +
+  ggplot(recapture, aes(x = month(date, label = TRUE), fill = sex)) +
   geom_bar() +
   facet_wrap(~year(date)) +
   theme_minimal() + 
@@ -376,22 +371,26 @@ Fix inconsistencies with spelling, capitalization, and abbreviations.
 
 ```{r}
 # Fix any inconsistencies with categorical variables
-recapture |> 
+recapture <- recapture |> 
     mutate(spawn = case_when(
     spawn %in% c("Y", "y") ~ "yes",
     spawn %in% c("N", "n") ~ "no",
-    spawn == "T" ~ "blank"
-  )) |> 
+    spawn == "T" ~ "blank" # TODO, assuming T - blank, check if this is true
+  ))
+
+recapture |> 
   ggplot(aes(x = month(date), fill = spawn)) +
-  geom_bar()
+  facet_wrap(~year(date), scales = "free") +
+  geom_bar(position = "dodge", na.rm = FALSE) +
+  scale_x_continuous(breaks = 1:12, labels = month.abb) +  
+  labs(x = "Month", y = "Count", title = "Side-by-Side Counts by Spawn Type Across Months and Years") +
+  theme_minimal()
 ```
 
-#TODO note to self, left off here
-
-```{r}
+```{r,waraning=FALSE}
 recapture |> 
-  ggplot(aes(date, spawn)) +
-  geom_point()
+  ggplot(aes(spawn, fl)) +
+  geom_boxplot()
 ```
 
 
@@ -406,9 +405,12 @@ recapture |>
 
 There are `r is.na(recapture$spawn) |> sum()` NA values
 
-### Variable: `[name]`
+### Variable: `clips`
+
+description of hatchery marks - e.g. fin clip, jaw clip
+
 ```{r}
-#table() 
+table(recapture$clips) #TODO figure out what this means 
 ```
 
 Fix inconsistencies with spelling, capitalization, and abbreviations. 
@@ -426,8 +428,50 @@ Fix inconsistencies with spelling, capitalization, and abbreviations.
 
 **NA and Unknown Values**
 
-Provide a stat on NA or unknown values
+There are `r is.na(recapture$clips) |> sum()` NA values
 
+
+### Variable: `headtag`
+```{r}
+table(recapture$headtag) # there are only two values, not worth qc'ing
+```
+
+
+**NA and Unknown Values**
+
+There are `r is.na(recapture$headtag) |> sum()` NA values
+
+
+### Variable: `rel_chop`
+
+release or re-released tagged fish, or chopped untagged fish
+
+```{r}
+table(recapture$rel_chop)
+```
+
+Fix inconsistencies with spelling, capitalization, and abbreviations. 
+
+```{r}
+# Fix any inconsistencies with categorical variables
+recapture <- recapture |> 
+    mutate(rel_chop = case_when(
+    rel_chop %in% c("c", "C") ~ "chop",
+    rel_chop %in% c("r", "R") ~ "re-released",
+    rel_chop == "RC" ~ "unknown" 
+  )) 
+```
+
+**Create lookup rda for [variable] encoding:** 
+```{r}
+# Create named lookup vector
+# Name rda [watershed]_[data type]_[variable_name].rda
+# save rda to data/ 
+```
+
+**NA and Unknown Values**
+
+There are `r is.na(recapture$rel_chop) |> sum()` NA values
 
 
 ## Summary of identified issues
