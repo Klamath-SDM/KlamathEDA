@@ -47,12 +47,6 @@ salmon_river_recapture_22 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon Ri
 ```
 
 Read in data from source, glimpse raw data and domain description sheet: 
-```{r}
-# read in data to clean 
-salmon_river_recapture <- salmon_river_recapture |> 
-  clean_names() |> 
-  glimpse()
-```
 
 ## Data transformations
 
@@ -64,11 +58,13 @@ salmon_river_recapture_22 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon Ri
          tag_app = as.numeric(tag_app),
          recap = as.numeric(recap),
          clips = as.character(clips),
-         headtag = as.character(headtag)) |>
+         headtag = as.character(headtag)) |> 
   glimpse()
 
 salmon_river_recapture_21 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 2) |> 
   clean_names() |> 
+  mutate(path = as.numeric(path),
+         tag_app = as.numeric(tag_app)) |> 
   glimpse()
 
 salmon_river_recapture_20 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 3) |> 
@@ -103,6 +99,7 @@ salmon_river_recapture_17 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon Ri
   mutate(tag_app = as.numeric(tag_app),
          clips = as.character(clip),
          headtag = as.character(headtag)) |>
+  select(-c(clip)) |> 
   glimpse()
 
 salmon_river_recapture_16 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 7) |> 
@@ -115,39 +112,62 @@ salmon_river_recapture_16 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon Ri
 
 salmon_river_recapture_15 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 8) |> 
   clean_names() |> 
-  raname(path = path_number,
+  rename(path = path_number,
          clips = clip) |> 
-  mutate(headtag = as.character(head_tag_number))
+  mutate(headtag = as.character(head_tag_number)) |>
+  select(-c(head_tag_number)) |> 
   glimpse()
 
 salmon_river_recapture_14 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 9) |> # check headtag vs head_tag_number
   clean_names() |> 
+  mutate(headtag = as.character(head_tag_number),
+         clips = as.character(clip),
+         fl = as.numeric(fl)) |> 
+  rename(path = path_number) |> 
+  select(-c(head_tag_number, clip)) |> # removing since it is the same
   glimpse()
 
 salmon_river_recapture_13 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 10) |> 
   clean_names() |> 
+  mutate(headtag = as.character(head_tag_number), 
+         clips = as.character(clip)) |>
+  rename(path = path_number) |> 
+  select(-c(head_tag_number, clip)) |>
   glimpse()
 
 salmon_river_recapture_12 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 11) |> 
   clean_names() |> 
+  mutate(fl = as.numeric(fl),
+         headtag = as.character(head_tag_number)) |> 
+  rename(path = path_number,
+         tag_app = j_tag_applied,
+         recap = j_tag_recap,
+         clips = ad_clip_y_n,
+         rel_chop = release_chop) |> 
+  select(-c(head_tag_number)) |> 
   glimpse()
 
 salmon_river_recapture_11 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 12) |> # missing  rel_chop field
   clean_names() |> 
+  mutate(headtag = as.character(headtag)) |> 
+  rename(path = path_number,
+         clips = clip) |> 
   glimpse()
 ```
 
 ```{r}
-# Snake case, 
-# keeping date, path, fl, sex, spawn, tag_app, recap, rel_chop, clips, headtag 
-# Columns are appropriate types
-# Remove redundant columns
+# combining years
+recapture <- bind_rows(salmon_river_recapture_11, salmon_river_recapture_12, salmon_river_recapture_13, salmon_river_recapture_14, salmon_river_recapture_15, salmon_river_recapture_16, salmon_river_recapture_17, salmon_river_recapture_18, salmon_river_recapture_19, salmon_river_recapture_20, salmon_river_recapture_21, salmon_river_recapture_22)
 ```
+
 
 ## Explore Numeric Variables: {.tabset}
 
 ```{r}
 # Filter clean data to show only numeric variables 
+recapture |> 
+  select_if(is.numeric) |> 
+  colnames()
 ```
 
 ### Variable: `[name]`
