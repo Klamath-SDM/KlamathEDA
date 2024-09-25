@@ -1,0 +1,30 @@
+---
+title: "Klamath escapement data qc"
+author: "Badhia Yunes Katz"
+date: "09/24/2024"
+output: rmarkdown::github_document
+---
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+library(tidyverse)
+library(lubridate)
+library(googleCloudStorageR)
+library(ggplot2)
+library(scales)
+library (RColorBrewer)
+```
+# Klamath River Escapement Survey Data  
+
+## Description of Monitoring Data
+
+**Timeframe:** 
+
+
+**Completeness of Record throughout timeframe:**  
+
+
+
+**Sampling Location:** 
+
+
+**Data Contact:** 
