@@ -50,7 +50,7 @@ Read in data from source, glimpse raw data and domain description sheet:
 
 ## Data transformations
 
-```{r}
+```{r,include=FALSE}
 # For different excel sheets for each year read in and combine years here
 salmon_river_recapture_22 <- read_xlsx("data-raw/adult-escapement-cdfw/Salmon River Carcass Mark Recapture 2011-2022.xlsx", skip = 1, sheet = 1) |> 
   clean_names() |> 
@@ -170,24 +170,154 @@ recapture |>
   colnames()
 ```
 
-### Variable: `[name]`
-
-**Plotting [Variable] over Period of Record**
+Temporal coverage
 
 ```{r}
+range(recapture$date)
+```
+
+### Variable: `path`
+
+1-Fresh, 2-Not Fresh, 3-Recapture, 4-Unretrievable
+
+**Plotting path over Period of Record**
+
+```{r, warning=FALSE}
 # Make whatever plot is appropriate 
+ggplot(recapture, aes(date, path)) +
+  geom_point()
+
+ggplot(recapture, aes(x = path)) +
+  geom_bar() +
+  labs(title = "Count of Observations per Path", x = "Path", y = "Count") +
+  theme_minimal()
+
+ggplot(recapture, aes(x = path)) +
+  geom_bar() +
+  facet_wrap(~year(date)) +
+  labs(title = "Count of Observations per Path", x = "Path", y = "Count") +
+  theme_minimal()
+
+ggplot(recapture, aes(x = month(date, label = TRUE), fill = path)) + 
+  geom_bar() +
+  facet_wrap(~year(date)) +
+  labs(x = "Month", y = "Count", title = "Distribution of Paths by Month Across Years") +
+  theme_minimal()
+
 # maybe 2+ plots are appropriate
 ```
 
-**Numeric Summary of [Variable] over Period of Record**
+**Numeric Summary of path over Period of Record**
 
 ```{r}
 # Table with summary statistics
+summary(recapture$path)
 ```
 
 **NA and Unknown Values**
 
-Provide a stat on NA or unknown values
+There are `r is.na(recapture$path) |> sum()` NA values
+
+
+### Variable: `fl`
+
+**Plotting path over Period of Record**
+```{r}
+range(recapture$fl, na.rm = TRUE)
+
+ggplot(recapture, aes(date, fl)) + #noticing one outlier
+  geom_point()
+
+# removing outlier and plotting again
+
+recapture |> 
+  filter(fl <600) |> 
+  ggplot(aes(date, fl)) + 
+  geom_point() +
+  labs(x = "Date", y = "Folk Length", title = "Folk length vs Date") +
+  theme_minimal()
+```
+```{r}
+# remonving fl outlier
+recapture <- recapture |> 
+  mutate(fl = ifelse(fl > 600, NA, fl)) 
+
+range(recapture$fl, na.rm = TRUE)
+
+```
+
+```{r,warning=FALSE}
+recapture |> 
+ggplot(aes(x = fl)) + 
+  geom_histogram(breaks=seq(0, 200, by=2)) + 
+  scale_x_continuous(breaks=seq(0, 200, by=25)) +
+  theme_minimal() +
+  labs(title = "Fork length distribution") + 
+  theme_minimal() 
+  
+recapture |> 
+  mutate(sex = case_when(sex %in% c("F", "f") ~ "female",
+                         sex %in% c("M", "m") ~ "male",
+                         sex %in% c(46, "N", "U", "Y",NA) ~ "unknown")) |> 
+  ggplot(aes(x = sex, y = fl)) +
+  geom_boxplot() +
+  # facet_wrap(~disposition) +
+  theme_minimal() + 
+  labs(y = "fork length (mm)", x = "sex")
+
+# recapture |> 
+#   ggplot(aes(x = sex, y = fl)) + # sex seems to have more than M and F. Will check this below
+#   geom_bar()
+```
+**Numeric Summary of path over Period of Record**
+
+```{r}
+# Table with summary statistics
+summary(recapture$fl)
+```
+
+**NA and Unknown Values**
+
+There are `r is.na(recapture$fl) |> sum()` NA values
+
+
+### Variable: `tag_app`
+
+"unique tag # attached to carcass upon first encounter"
+
+
+**Plotting path over Period of Record**
+
+```{r, warning = FALSE}
+recapture |> 
+  ggplot(aes(date, tag_app)) +
+  geom_point()
+
+#TODO - think of another plot
+```
+
+**NA and Unknown Values**
+
+There are `r is.na(recapture$tag_app) |> sum()` NA values
+
+### Variable: `recap`
+
+"unique tag # of tag on carcass during recapture"
+
+**Plotting path over Period of Record**
+
+```{r, warning = FALSE}
+recapture |> 
+  ggplot(aes(date, recap)) +
+  geom_point()
+
+#TODO - think of another plot
+```
+
+**NA and Unknown Values**
+
+There are `r is.na(recapture$recap) |> sum()` NA values
+
 
 ## Explore Categorical variables: {.tabset}
 
@@ -195,8 +325,86 @@ General notes: If there is an opportunity to turn yes no into boolean do so, but
 
 ```{r}
 # Filter clean data to show only categorical variables
+recapture |>  select_if(is.character) |>  colnames()
 ```
 
+
+### Variable: `sex`
+```{r}
+table(recapture$sex) # f - female, m - male, not sure what others are
+```
+
+Fix inconsistencies with spelling, capitalization, and abbreviations. 
+
+```{r}
+# Fix any inconsistencies with categorical variables
+recapture <- recapture |> #check if this assumption makes sense
+  mutate(sex = case_when(
+    sex %in% c("F", "f") ~ "female",
+    sex %in% c("M", "m") ~ "male",
+    sex %in% c(46, "N", "U", "Y") ~ "unknown"
+  )) 
+  # Create the plot
+  ggplot(recapture_clean, aes(x = month(date, label = TRUE), fill = sex)) +
+  geom_bar() +
+  facet_wrap(~year(date)) +
+  theme_minimal() + 
+  labs(y = "Count", x = "Month", title = "Total Counts of Each Sex Type by Month") +
+  scale_fill_manual(values = c("female" = "pink", "male" = "lightblue", "unknown" = "gray")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+**Create lookup rda for [variable] encoding:** 
+```{r}
+# Create named lookup vector
+# Name rda [watershed]_[data type]_[variable_name].rda
+# save rda to data/ 
+```
+
+**NA and Unknown Values**
+
+There are `r is.na(recapture$sex) |> sum()` NA values
+
+### Variable: `spawn`
+```{r}
+table(recapture$spawn) # will assume T - Blank #TODO check if this is ok
+#Y-yes, N-no, or blank
+```
+
+Fix inconsistencies with spelling, capitalization, and abbreviations. 
+
+```{r}
+# Fix any inconsistencies with categorical variables
+recapture |> 
+    mutate(spawn = case_when(
+    spawn %in% c("Y", "y") ~ "yes",
+    spawn %in% c("N", "n") ~ "no",
+    spawn == "T" ~ "blank"
+  )) |> 
+  ggplot(aes(x = month(date), fill = spawn)) +
+  geom_bar()
+```
+
+#TODO note to self, left off here
+
+```{r}
+recapture |> 
+  ggplot(aes(date, spawn)) +
+  geom_point()
+```
+
+
+**Create lookup rda for [variable] encoding:** 
+```{r}
+# Create named lookup vector
+# Name rda [watershed]_[data type]_[variable_name].rda
+# save rda to data/ 
+```
+
+**NA and Unknown Values**
+
+There are `r is.na(recapture$spawn) |> sum()` NA values
 
 ### Variable: `[name]`
 ```{r}
@@ -219,6 +427,8 @@ Fix inconsistencies with spelling, capitalization, and abbreviations.
 **NA and Unknown Values**
 
 Provide a stat on NA or unknown values
+
+
 
 ## Summary of identified issues
 
