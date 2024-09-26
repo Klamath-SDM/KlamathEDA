@@ -1,0 +1,268 @@
+---
+title: "Shasta - Klamath basin escapement data qc"
+author: "[Your name]"
+date: "[Date]"
+output: rmarkdown::github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, fig.width=15, fig.height=10)
+library(tidyverse)
+library(lubridate)
+library(googleCloudStorageR)
+library(ggplot2)
+library(scales)
+```
+
+# Klamath [Data type long version]
+
+## Description of Monitoring Data
+
+**Timeframe:** 
+
+**Completeness of Record throughout timeframe:** 
+
+**Sampling Location:**
+
+**Data Contact:** 
+
+Any additional info?
+
+## Access Data
+
+```{r, eval=FALSE}
+# For different excel sheets for each year read in and combine years here
+shasta_22 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 25) |>
+  clean_names() |> 
+  mutate(date = as.Date(as.numeric(date), origin = "1899-12-30"),
+         segment_number = as.numeric(segment_number),
+         coho = as.character(coho),
+         coho_jack = as.character(coho_jack),
+         sthd_1_2_lber = as.character(sthd_1_2_lber),
+         ukn = as.character(ukn),
+         other = as.character(other),
+         clip_confidence_1_or_2 = as.character(clip_confidence_1_or_2))|> 
+  glimpse()
+
+shasta_21 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 24) |>
+  clean_names() |> 
+  mutate(segment_number = as.numeric(segment_number),
+         coho = as.character(coho),
+         coho_jack = as.character(coho_jack),
+         sthd_1_2_lber = as.character(sthd_1_2_lber),
+         ukn = as.character(ukn),
+         other = as.character(other),
+         clip_confidence_1_or_2 = as.character(clip_confidence_1_or_2))|>
+  glimpse
+
+shasta_20 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 23) |>
+  clean_names() |> 
+  mutate(segment_number = as.numeric(segment_number),
+         coho = as.character(coho),
+         coho_jack = as.character(coho_jack),
+         sthd_1_2_lber = as.character(sthd_1_2_lber),
+         ukn = as.character(ukn),
+         other = as.character(other),
+         clip_confidence_1_or_2 = as.character(clip_confidence_1_or_2))|> 
+  glimpse()
+
+shasta_19 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 22) |>
+  clean_names() |> 
+  mutate(coho = as.character(coho),
+         coho_jack = as.character(coho_jack),
+         sthd_1_2_lber = as.character(sthd_1_2_lber),
+         ukn = as.character(ukn),
+         other = as.character(other),
+         clip_confidence_1_or_2 = as.character(clip_confidence_1_or_2),
+         comments = NA_character_)|>
+  glimpse()
+
+shasta_18 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 21) |>
+  clean_names() |> 
+  mutate(segment_number = as.numeric(segment_number),
+         chin_jack = as.character(chin_jack),
+         coho = as.character(coho),
+         coho_jack = as.character(coho_jack),
+         sthd_1_2_lber = as.character(sthd_1_2_lber),
+         ukn = as.character(ukn),
+         other = as.character(other),
+         clip_confidence_1_or_2 = as.character(clip_confidence_1_or_2))|>
+  glimpse()
+
+shasta_17 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 20) |>
+  clean_names() |> 
+  mutate(coho_jack = as.character(coho_jack),
+         sthd_1_2_lber = as.character(sthd_1_2_lber),
+         ukn = as.character(ukn),
+         other = as.character(other),
+         clip_confidence_1_or_2 = NA_character_)|>
+  glimpse()
+
+shasta_16 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 19) |>
+  clean_names() |> 
+  mutate(coho = as.character(coho),
+         coho_jack = as.character(coho_jack),
+         ukn = as.character(ukn),
+         other = as.character(other),
+         clip_confidence_1_or_2 = NA_character_)|>
+  glimpse()
+
+shasta_15 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 18) |>
+  clean_names() |> 
+  mutate(coho = as.character(coho),
+         coho_jack = as.character(coho_jack),
+         ukn = as.character(ukn),
+         other = as.character(other),
+         clip_confidence_1_or_2 = NA_character_)|>
+  rename(attached_lam = attache_d_lam) |> 
+  glimpse()
+
+shasta_14 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 17) |>
+  clean_names() |> 
+  mutate(coho = as.character(coho),
+         coho_jack = as.character(coho_jack),
+         ukn = as.character(ukn),
+         other = as.character(other),
+         clip_confidence_1_or_2 = NA_character_)|>
+  rename(attached_lam = attache_d_lam) |>
+  glimpse()
+
+shasta_13 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 16) |>
+  clean_names() |> 
+  mutate(segment_number = as.numeric(segment_number),
+         ukn = as.character(ukn),
+         other = as.character(other),
+         clip_confidence_1_or_2 = NA_character_)|>
+  rename(attached_lam = attache_d_lam) |>
+  glimpse()
+
+shasta_12 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 15) |>
+  clean_names() |> 
+  mutate(segment_number = as.numeric(segment_number),
+         coho = as.character(coho),
+         coho_jack = as.character(coho_jack),
+         sthd = as.character(sthd),
+         sthd_1_2_lber = as.character(sthd_1_2_lber),
+         clip_confidence_1_or_2 = NA_character_)|>
+  rename(attached_lam = attache_d_lam,
+         hour = ho_ur) |>
+  glimpse()
+
+shasta_11 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 14) |>
+  clean_names() |> 
+  mutate(segment_number = NA_integer_,
+         hour = as.numeric(hour),
+         min = as.numeric(min),
+         sec = as.numeric(sec),
+         coho = as.character(coho),
+         coho_jack = as.character(coho_jack),
+         clip_confidence_1_or_2 = NA_character_)|>
+  rename(attached_lam = lam,
+         ukn = ukn_12) |> 
+  select(-ukn_15) |> 
+  glimpse()
+
+shasta_10 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 13) |>
+  clean_names() |> 
+  mutate(segment_number = NA_integer_,
+         hour = as.numeric(hour),
+         min = as.numeric(min),
+         sec = as.numeric(sec),
+         coho = as.character(coho),
+         coho_jack = as.character(coho_jack),
+         clip_confidence_1_or_2 = NA_character_,
+         attached_lam = as.numeric(lam))|> #TODO check because should e character but there are some number
+  rename(ukn = ukn_12) |>
+  select(-c(ukn_15, lam)) |> #all NA's
+  glimpse()
+
+test <- bind_rows(shasta_10, shasta_11, shasta_12, shasta_13,shasta_14,shasta_15,shasta_16, shasta_17, shasta_18, shasta_19, shasta_20, shasta_21, shasta_22) |> 
+  glimpse()
+
+range(test$date, na.rm = TRUE) #TODO add earier years
+
+```
+
+Read in data from source, glimpse raw data and domain description sheet: 
+```{r}
+# read in data to clean 
+```
+
+## Data transformations
+
+```{r}
+# For different excel sheets for each year read in and combine years here
+```
+
+```{r}
+# Snake case, 
+# Columns are appropriate types
+# Remove redundant columns
+```
+
+## Explore Numeric Variables: {.tabset}
+
+```{r}
+# Filter clean data to show only numeric variables 
+```
+
+### Variable: `[name]`
+
+**Plotting [Variable] over Period of Record**
+
+```{r}
+# Make whatever plot is appropriate 
+# maybe 2+ plots are appropriate
+```
+
+**Numeric Summary of [Variable] over Period of Record**
+
+```{r}
+# Table with summary statistics
+```
+
+**NA and Unknown Values**
+
+Provide a stat on NA or unknown values
+
+## Explore Categorical variables: {.tabset}
+
+General notes: If there is an opportunity to turn yes no into boolean do so, but not if you loose value 
+
+```{r}
+# Filter clean data to show only categorical variables
+```
+
+
+### Variable: `[name]`
+```{r}
+#table() 
+```
+
+Fix inconsistencies with spelling, capitalization, and abbreviations. 
+
+```{r}
+# Fix any inconsistencies with categorical variables
+```
+
+**Create lookup rda for [variable] encoding:** 
+```{r}
+# Create named lookup vector
+# Name rda [watershed]_[data type]_[variable_name].rda
+# save rda to data/ 
+```
+
+**NA and Unknown Values**
+
+Provide a stat on NA or unknown values
+
+## Summary of identified issues
+
+* List things that are funky but that we don't feel like should be changed without more investigation
+
+## Save cleaned data back to /data folder 
+
+```{r}
+# Write to /data folder
+# Name file [watershed]_[data type].csv
+```

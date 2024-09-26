@@ -1,5 +1,5 @@
 ---
-title: "Klamath escapement data qc"
+title: "Salmon River - Klamath basin escapement data qc"
 author: "Badhia Yunes Katz"
 date: "09/24/2024"
 output: rmarkdown::github_document
