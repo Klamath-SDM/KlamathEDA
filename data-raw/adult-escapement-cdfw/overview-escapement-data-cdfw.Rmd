@@ -21,10 +21,14 @@ This data was shared by [Morgan Knechtle](mailto::Morgan.Knechtle@wildlife.ca.go
 
 Adult salmonid data collected from various areas within the Klamath basin watershed. Various tributaries are monitored using video systems (Bogus Creek, Shasta River, Scott River), other areas are monitored using redd/carcass surveys, and Iron gate Hatchery adult returns. The main purpose of the data is to estimate escapement of fall Chinook slamon, although data on other species (steelhead, coho salmon) also collected.
 
-### Data Available {.tabset} 
+## Data Available {.tabset} 
 
+- Bogus Creek carcass spawning 
+- Upper Salmon River Carcass Mark Recapture Spawning
+- Andrampus fish counts and Bio data - Adult Salmon returning to Iron Gate Hatchery 
+- Video Fish Counting Facilities - Scott River, Shasta River and Bogust Creek
 
-#### Bogus Creek carcass spawning 
+### Bogus Creek carcass spawning 
 
  - Title: Bogus Creek carcass spawning 
  - Extent: Survey is located on Bogus Creek from the confluence with the Klamath River upstream 3.6 miles.
@@ -65,7 +69,7 @@ Cleaning implications:
   - Systematic sample rate
  
  
-#### Upper Salmon River Carcass Mark Recapture Spawning
+### Upper Salmon River Carcass Mark Recapture Spawning
  
  - Title: Upper Salmon River Carcass Mark Recapture Spawning Grounds Surveys 
  - Extent: Survey is located on the Upper Salmon River (above Nordheimer Campground), including Upper Mainstem, and North and South Forks of the Salmon River and tributaries.
@@ -85,7 +89,7 @@ str(salmon_carcass)
 Cleaning implications:
 
  - Data in the xlsx is distributed by year per tab
- - Column names accross the different years are pretty similar
+ - Column names across the different years are pretty similar
  
  - Fields definition list:
  
@@ -99,4 +103,115 @@ Cleaning implications:
     - release or re-released tagged fish, or chopped untagged fish
     - description of hatchery marks
     - unique identified tag applied upon recovery of known hatchery origin fish
+
+### Andrampus fish counts and Bio data - Adult Salmon returning to Iron Gate Hatchery 
+
+ - Title: Anadramous fish counts and bio data collected from adult salmon returning to Iron Gate Hatchery
+ - Extent: 
+ - Description: Adult Coho and Chinook Salmon are trapped and spawned at Iron Gate Hatchery. After fish are spawned they exit the building on a conveyer belt where crews collect scale, length, sex, and adipose clip disposition from a subsample of fish. All adipose fin clipped fish heads are collected for coded wire tag extraction
+ - Initial collection: October 2003 
+ - Final collection: December 2022
+ - Fields included: 
+ 
+```{r, echo=FALSE}
+# pulling up just sheet 1 of xlsx
+salmon_igh <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Data_IGH Dataset 2003 through 2022_DG April 6 2023.xlsx", sheet = 1)
+
+str(salmon_igh)
+```
+
+- Name of xlsx file: DMP Data_IGH Dataset 2003 through 2022_DG April 6 2023.xlsx
+ 
+Cleaning implications:
+
+ - Data in the xlsx is distributed by year per tab
+ - Column names across the different years are pretty similar. Data of 2003 is missing the "clip" column
+ 
+ - Fields definition list: 
+ 
+    - Date that original data were collected
+    - Species observed on site
+    - Was the sample  part of the systematic sampling or was it a non random ad clipped fish (all ad clipped fish heads are collected).
+    - Sex of the fish
+    - Measured length from tip of snout deepest part of fork in tail in centimeters
+    - Does fish have a fin clip?
+    - The unique ID number on the tag placed in bag with fish snouts collected from adipose fin clipped fish for later coded wire tag extraction
+    - The coded wire tag number that was extracted from a fish snout and decoded, these tag codes contain hatchery production information
+    - Sampling rate for selecting random samples, subsampling is used to collect data from the a small set of fish to represent the entire run. 
+
+
+### Video Fish Counting Facilities - Scott River, Shasta River and Bogust Creek
+
+ - Title: Chinook Salmon and Coho Salmon observed at Scott River, Shasta River and Bogus Creek adult fish counting facilities.
+ - Extent: Scott River, Shasta River and Bogus Creek adult fish counting facilities
+ - Description: Annually adult video fish counting facilities are operated during the Klamath River fall Chinook Salmon, Southern Oregon Northern California Coho Salmon adult migration to estimate abundance  
+ - Date range data collection: Adult fish counting facilities are operated on the Scott River (2007-2022), Shasta River (1999-2022) and Bogus Creek (2003-2022)
+ - Fields included: 
+    - Shasta River (slightly different across different years)
+ 
+```{r, echo=FALSE}
+# pulling up sheet 1 of xlsx - year 1998
+shasta_video_1998 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 1)
+
+str(shasta_video_1998)
+
+# pulling up sheet 1 of xlsx - year 2021
+shasta_video_2021 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP Shasta River Video 1999_2022.xlsx", sheet = 24)
+
+str(shasta_video_2021)
+```
+Cleaning implications:
+
+ - Data in the xlsx is distributed by year per tab
+ - Column names across the different years are pretty similar. Data of 2003 is missing the "COHO jack", "STHD 1/2 pounder", "Clip Confidence (1 or 2)", "unknown" columns
+ 
+    - Bogus Creek (2003-2022) (earlier years have less data collected)
+ 
+```{r, echo=FALSE}
+# pulling up sheet 1 of xlsx - year 2003
+bogus_video_2003 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP_Bogus Creek Video 2003_2022.xlsx", sheet = 1)
+
+str(bogus_video_2003)
+
+# pulling up sheet 1 of xlsx - year 2021
+bogus_video_2022 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP_Bogus Creek Video 2003_2022.xlsx", sheet = 20)
+
+str(bogus_video_2022)
+```
+
+  - Scott River Video (2008_2022)
+ 
+```{r, echo=FALSE}
+# pulling up sheet 1 of xlsx - year 2008
+scott_video_2008 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP_Scott River Video 2007_2022.xlsx", sheet = 1)
+
+str(scott_video_2008)
+
+# pulling up sheet 1 of xlsx - year 2022
+scott_video_2022 <- read_xlsx("data-raw/adult-escapement-cdfw/DMP_Scott River Video 2007_2022.xlsx", sheet = 15)
+
+str(scott_video_2022)
+```
+
+ - Fields definition list: 
+
+    - Date that original data were collected
+    - Segment number for date
+    - The numerical hour of the observation
+    - The numerical minute of the observation
+    - The numerical second of the observation
+    - Up or Down observation of Adult Chinook
+    - Up or Down observation of Jack Chinook
+    - Up or Down observation of Adult Coho
+    - Up or Down observation of Jack Coho
+    - Up or Down observation of adult Steelhead
+    - Up or Down observation of 1/2 pounder steelhead
+    - The number of lamprey attached to the fish
+    - Up or Down observation
+    - Up or Down observation
+    - Description of observed clip
+    - How confident is the clip determination
+    - General comments about observation
+
+- Name of xlsx files: DMP Shasta River Video 1999_2022.xlsx; DMP_Bogus Creek Video 2003_2022.xlsx; DMP_Scott River Video 2007_2022.xlsx
 
