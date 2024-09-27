@@ -1,0 +1,35 @@
+---
+title: "Fall Chinook Escapement - Klamath Basin Watershed"
+author: "[Your name]"
+date: "[Date]"
+output: rmarkdown::github_document
+---
+
+
+The purpose of this markdown is to give an overview of the types of data available, temporal coverage, geographic coverage, and to get an idea of the amount of work that it would take us to clean it up and use it. 
+
+This data was shared by [Morgan Knechtle](mailto::Morgan.Knechtle@wildlife.ca.gov) and it is publicly available at [California Open Data Portal](https://data.ca.gov/dataset/fall-chinook-escapement-klamath-basin-watershed) 
+
+### Overview
+
+Adult salmonid data collected from various areas within the Klamath basin watershed. Various tributaries are monitored using video systems (Bogus Creek, Shasta River, Scott River), other areas are monitored using redd/carcass surveys, and Iron gate Hatchery adult returns. The main purpose of the data is to estimate escapement of fall Chinook slamon, although data on other species (steelhead, coho salmon) also collected.
+
+**Data Available:**  
+
+#### Bogus Creek carcass spawning 
+
+ - Title: Bogus Creek carcass spawning 
+ - Extent: Survey is located on Bogus Creek from the confluence with the Klamath River upstream 3.6 miles.
+ - Description: Data includes daily carcass recoveries from spawning grounds surveys. Biological data from carcasses includes date recovered, species, condition, reach collected, observed clips, fork length and biological sample collected.  Date utilized to describe population estimated at adult fish counting facility.
+ - Initial collection: October 2008
+ - Final collection: December 2022
+ - Fields included: 
+ - Name of xlsx file: DMP_Bogus Creek Carcass Data 2008_2022.xlsx
+ 
+Cleaning implications:
+
+ - Data in the xlsx is distributed by year per tab 
+ - 2013 - 2022 data has the same fields, 2008 - 2012 are missing "condition" column. There are some minimal inconsistencies with column names accross years  
+ 
+ 
+ 
