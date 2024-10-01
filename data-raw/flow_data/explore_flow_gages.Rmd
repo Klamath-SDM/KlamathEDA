@@ -32,9 +32,9 @@ colors_full <-  c("#9A8822", "#F5CDB4", "#F8AFA8", "#FDDDA0", "#74A089", #Royal 
 
 
 ## Some potential gages to look at 
-### 
+
 ### 11509500 - Klamath River at Keno Or
-### 11516530 - Klamath River Below John C Boyle Powerplant
+### 11510700 - Klamath River Below John C Boyle Powerplant
 ### 11516530 - Klamath River Below Iorngate Dam 
 ### 11520500 - Klamath River Nr Seiad Valley CA
 ### 11523000 - Klamath River A Orleans 
@@ -43,3 +43,78 @@ colors_full <-  c("#9A8822", "#F5CDB4", "#F8AFA8", "#FDDDA0", "#74A089", #Royal 
 
 ## Compare Gage Sources
 
+```{r}
+kr_at_keno_or <- dataRetrieval::readNWISdv(11509500, "00060", startDate = "1950-01-01") |> 
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter 
+         order = 1,
+         gage_agency = "USGS",
+         gage_number = "11509500",
+         parameter = "flow",
+         statistic = "mean" # if query returns instantaneous data then report a min, mean, and max
+         )
+kr_blw_powerplant <- dataRetrieval::readNWISdv(11510700, "00060", startDate = "1995-01-01") |> 
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter 
+         order = 2,
+         gage_agency = "USGS",
+         gage_number = "11510700",
+         parameter = "flow",
+         statistic = "mean" # if query returns instantaneous data then report a min, mean, and max
+         ) 
+kr_blw_iorngage <- dataRetrieval::readNWISdv(11516530, "00060", startDate = "1950-01-01") |> 
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter 
+         order = 3,
+         gage_agency = "USGS",
+         gage_number = "11516530",
+         parameter = "flow",
+         statistic = "mean" # if query returns instantaneous data then report a min, mean, and max
+         ) 
+kr_nr_seiad_valley <- dataRetrieval::readNWISdv(11520500, "00060", startDate = "1950-01-01") |> 
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter 
+         order = 4,
+         gage_agency = "USGS",
+         gage_number = "11520500",
+         parameter = "flow",
+         statistic = "mean" # if query returns instantaneous data then report a min, mean, and max
+         ) 
+kr_at_orleans <- dataRetrieval::readNWISdv(11523000, "00060", startDate = "1950-01-01") |> 
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter 
+         order = 5,
+         gage_agency = "USGS",
+         gage_number = "11523000",
+         parameter = "flow",
+         statistic = "mean" # if query returns instantaneous data then report a min, mean, and max
+         ) 
+kr_nr_klamath <- dataRetrieval::readNWISdv(11530500, "00060", startDate = "1950-01-01") |> 
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter 
+         order = 6,
+         gage_agency = "USGS",
+         gage_number = "11530500",
+         parameter = "flow",
+         statistic = "mean" # if query returns instantaneous data then report a min, mean, and max
+         ) 
+
+all_kalamth_usgs_gages <- bind_rows(kr_at_keno_or, kr_blw_powerplant, kr_blw_iorngage, kr_nr_seiad_valley, 
+                                    kr_at_orleans, kr_nr_klamath) |> 
+  glimpse()
+```
+## Plot Klamath USGS Gages
+```{r}
+all_kalamth_usgs_gages |> ggplot(aes(x = date, y = value, color = as.character(order))) + 
+  geom_line() + 
+  scale_color_manual(values = colors_full) +
+  facet_wrap(~order) +
+  theme_minimal()
+
+```
