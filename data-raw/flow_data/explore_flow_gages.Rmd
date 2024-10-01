@@ -18,6 +18,8 @@ library(googleCloudStorageR)
 library(tidyverse)
 library(SRJPEdata)
 library(lubridate)
+library(sf)
+library(leaflet)
 
 colors_full <-  c("#9A8822", "#F5CDB4", "#F8AFA8", "#FDDDA0", "#74A089", #Royal 2
                   "#899DA4", "#C93312", "#DC863B", # royal 1 (- 3)
@@ -122,6 +124,21 @@ all_kalamth_usgs_gages <- bind_rows(kr_at_keno_or, kr_blw_powerplant, kr_blw_ior
   glimpse()
 ```
 ## Plot Klamath USGS Gages
+
+```{r}
+# Filter to keep only one unique gage per location
+unique_gage_data <- all_kalamth_usgs_gages |> 
+  distinct(gage_number, latitude, longitude, .keep_all = TRUE)
+
+unique_gage_sf <- unique_gage_data |> 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+leaflet(unique_gage_sf) |> 
+  addTiles() |> 
+  addCircleMarkers(label = ~gage_number)
+```
+
+
 ```{r}
 all_kalamth_usgs_gages |> ggplot(aes(x = date, y = value, color = as.character(order))) + 
   geom_line() + 
