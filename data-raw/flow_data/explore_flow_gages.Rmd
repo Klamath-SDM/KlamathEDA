@@ -35,12 +35,13 @@ colors_full <-  c("#9A8822", "#F5CDB4", "#F8AFA8", "#FDDDA0", "#74A089", #Royal 
 
 ## Some potential gages to look at (Main stream Klamath)
 
-### 11509500 - Klamath River at Keno Or
-### 11510700 - Klamath River Below John C Boyle Powerplant
-### 11516530 - Klamath River Below Iorngate Dam 
-### 11520500 - Klamath River Nr Seiad Valley CA
-### 11523000 - Klamath River A Orleans 
-### 11530500 - Klamath River Near Klamath (Furthest Downstream)
+  - 11509500 - Klamath River at Keno Or
+  - 11510700 - Klamath River Below John C Boyle Powerplant
+  - 11516530 - Klamath River Below Iorngate Dam 
+  - 11520500 - Klamath River Nr Seiad Valley CA
+  - 11523000 - Klamath River A Orleans 
+  - 11530500 - Klamath River Near Klamath (Furthest Downstream)
+  
 ## Pull Gage Data  
 
 ## Compare Gage Sources
@@ -228,10 +229,121 @@ Potential gages
   - 11525655 TRINITY R BL LIMEKILN GULCH NR DOUGLAS CITY CA
   - 11525854 TRINITY R A DOUGLAS CITY CA
   - 11526250 TRINITY R A JUNCTION CITY CA
-  -  11526400 TRINITY R AB NF TRINITY R NR HELENA CA
+  - 11526400 TRINITY R AB NF TRINITY R NR HELENA CA
   - 11527000 TRINITY R NR BURNT RANCH CA
-  - 11528700 SF TRINITY R BL HYAMPOM CA
-  - Indian C NR Douglas City CA - 11525670
+  
+```{r}
+tr_sf <- dataRetrieval::readNWISdv(11528700, "00060") |>  # 1965/10/01 - 2024/09/03
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "trinity river", # south fork
+         order = 5,
+         gage_agency = "USGS",
+         gage_number = "11528700",
+         parameter = "flow",
+         statistic = "mean", # if query returns instantaneous data then report a min, mean, and max
+         latitude = dataRetrieval::readNWISsite("11528700")$dec_lat_va, # directly add lat
+         longitude = dataRetrieval::readNWISsite("11528700")$dec_long_va # directly add lon
+         ) 
+range(tr_sf$date)
+
+tr_hoopa <- dataRetrieval::readNWISdv(11530000, "00060") |> 
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "trinity river",
+         gage_agency = "USGS",
+         gage_number = "11530000",
+         parameter = "flow",
+         statistic = "mean", # if query returns instantaneous data then report a min, mean, and max
+         latitude = dataRetrieval::readNWISsite("11530000")$dec_lat_va, # directly add lat
+         longitude = dataRetrieval::readNWISsite("11530000")$dec_long_va # directly add lon
+         ) 
+tr_ab_coffee <- dataRetrieval::readNWISdv(11523200, "00060") |> 
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "trinity river",
+         gage_agency = "USGS",
+         gage_number = "11523200",
+         parameter = "flow",
+         statistic = "mean", # if query returns instantaneous data then report a min, mean, and max
+         latitude = dataRetrieval::readNWISsite("11523200")$dec_lat_va, # directly add lat
+         longitude = dataRetrieval::readNWISsite("11523200")$dec_long_va # directly add lon
+         ) 
+tr_lewiston <- dataRetrieval::readNWISdv(11525500, "00060") |> 
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "trinity river",
+         gage_agency = "USGS",
+         gage_number = "11525500",
+         parameter = "flow",
+         statistic = "mean", # if query returns instantaneous data then report a min, mean, and max
+         latitude = dataRetrieval::readNWISsite("11525500")$dec_lat_va, # directly add lat
+         longitude = dataRetrieval::readNWISsite("11525500")$dec_long_va # directly add lon
+         ) 
+tr_douglas <- dataRetrieval::readNWISdv(11525655, "00060") |> 
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "trinity river",
+         gage_agency = "USGS",
+         gage_number = "11525655",
+         parameter = "flow",
+         statistic = "mean", # if query returns instantaneous data then report a min, mean, and max
+         latitude = dataRetrieval::readNWISsite("11525655")$dec_lat_va, # directly add lat
+         longitude = dataRetrieval::readNWISsite("11525655")$dec_long_va # directly add lon
+         ) 
+tr_city <- dataRetrieval::readNWISdv(11526250, "00060") |> 
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "trinity river",
+         gage_agency = "USGS",
+         gage_number = "11526250",
+         parameter = "flow",
+         statistic = "mean", # if query returns instantaneous data then report a min, mean, and max
+         latitude = dataRetrieval::readNWISsite("11526250")$dec_lat_va, # directly add lat
+         longitude = dataRetrieval::readNWISsite("11526250")$dec_long_va # directly add lon
+         ) 
+tr_helena <- dataRetrieval::readNWISdv(11526400, "00060") |> 
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "trinity river",
+         gage_agency = "USGS",
+         gage_number = "11526400",
+         parameter = "flow",
+         statistic = "mean", # if query returns instantaneous data then report a min, mean, and max
+         latitude = dataRetrieval::readNWISsite("11526400")$dec_lat_va, # directly add lat
+         longitude = dataRetrieval::readNWISsite("11526400")$dec_long_va # directly add lon
+         ) 
+tr_brun <- dataRetrieval::readNWISdv(11527000, "00060") |> 
+  select(date = Date, value =  X_00060_00003) |>  # rename to value
+  as_tibble() |> 
+  mutate(stream = "trinity river",
+         gage_agency = "USGS",
+         gage_number = "11527000",
+         parameter = "flow",
+         statistic = "mean", # if query returns instantaneous data then report a min, mean, and max
+         latitude = dataRetrieval::readNWISsite("11527000")$dec_lat_va, # directly add lat
+         longitude = dataRetrieval::readNWISsite("11527000")$dec_long_va # directly add lon
+         ) 
+
+all_trinity_usgs_gages <- bind_rows(tr_sf, tr_hoopa, tr_ab_coffee, tr_lewiston, tr_douglas, tr_city, tr_helena, tr_brun) |>
+  glimpse()
+```
+## Plot Trinity USGS Gages
+
+```{r}
+# Filter to keep only one unique gage per location
+unique_gage_trinity <- all_trinity_usgs_gages |> 
+  distinct(gage_number, latitude, longitude, .keep_all = TRUE)
+
+unique_gage_tr <- unique_gage_trinity |> 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+leaflet(unique_gage_tr) |> 
+  addTiles() |> 
+    addCircleMarkers(
+    popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number)
+  )
+```
   
 ## South Fork Trinity
   
@@ -265,6 +377,7 @@ Sprague River Near Chiloquin, OR - 11501000
 
 List of USGS gages in Klamath watershed: 
 
+  - Indian C NR Douglas City CA - 11525670
 Indian C NR Happy Camp CA - 11521500
 Shasta R NR Montague CA - 11517000
 Shasta R NR Yreka CA - 11517500
