@@ -41,7 +41,7 @@ colors_full <-  c("#9A8822", "#F5CDB4", "#F8AFA8", "#FDDDA0", "#74A089", #Royal 
 ### 11520500 - Klamath River Nr Seiad Valley CA
 ### 11523000 - Klamath River A Orleans 
 ### 11530500 - Klamath River Near Klamath (Furthest Downstream)
-## Pull Gage Data 
+## Pull Gage Data  
 
 ## Compare Gage Sources
 
@@ -231,7 +231,7 @@ Potential gages
   -  11526400 TRINITY R AB NF TRINITY R NR HELENA CA
   - 11527000 TRINITY R NR BURNT RANCH CA
   - 11528700 SF TRINITY R BL HYAMPOM CA
-  
+  - Indian C NR Douglas City CA - 11525670
   
 ## South Fork Trinity
   
@@ -259,4 +259,21 @@ Potential gages
 
 ## Sprague 
 
+Sprague River Near Chiloquin, OR - 11501000
+
 ## Lost
+
+List of USGS gages in Klamath watershed: 
+
+Indian C NR Happy Camp CA - 11521500
+Shasta R NR Montague CA - 11517000
+Shasta R NR Yreka CA - 11517500
+Klamath Straits Drain Near Worden, OR - 11509340
+Ady Canal Above Lower Klamath Nwr, Near Worden, OR - 11509250
+North Canal at Highway 97, Near Midland, OR - 11509105
+Link River at Klamath Falls, OR - 11507500
+Williamson River Blw Sprague River NR Chiloquin,or - 11502500
+Crystal Creek Near Rocky Point, OR - 11504270
+Fourmile Canal Near Klamath Agency, OR - 11504260
+Sevenmile Cnl at Dike RD Br, NR Klamath Agency, OR - 11504290
+Williamson River Blw Sprague River NR Chiloquin,or - 11502500
