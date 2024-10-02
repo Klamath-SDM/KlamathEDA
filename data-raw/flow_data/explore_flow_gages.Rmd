@@ -33,7 +33,7 @@ colors_full <-  c("#9A8822", "#F5CDB4", "#F8AFA8", "#FDDDA0", "#74A089", #Royal 
 ## Define Geographic Extent 
 
 
-## Some potential gages to look at 
+## Some potential gages to look at (Main stream Klamath)
 
 ### 11509500 - Klamath River at Keno Or
 ### 11510700 - Klamath River Below John C Boyle Powerplant
@@ -217,3 +217,46 @@ temp_coverage <- all_kalamth_usgs_gages |>
 
 ```
 
+## Trinity 
+
+Potential gages
+
+  - 11528700 SF TRINITY R BL HYAMPOM CA
+  - 11530000 TRINITY R A HOOPA CA
+  - 11523200 TRINITY R AB COFFEE C NR TRINITY CENTER CA
+  - 11525500 TRINITY R A LEWISTON CA
+  - 11525655 TRINITY R BL LIMEKILN GULCH NR DOUGLAS CITY CA
+  - 11525854 TRINITY R A DOUGLAS CITY CA
+  - 11526250 TRINITY R A JUNCTION CITY CA
+  -  11526400 TRINITY R AB NF TRINITY R NR HELENA CA
+  - 11527000 TRINITY R NR BURNT RANCH CA
+  - 11528700 SF TRINITY R BL HYAMPOM CA
+  
+  
+## South Fork Trinity
+  
+## Middle Rogue
+
+## Upper Rogue
+
+## Williamson
+
+## #pplegate 
+
+## Upper Klamath
+
+## Lower Klamath
+
+## Upper Klamath Lake
+
+## Scott
+
+  - 11519500 SCOTT R NR FORT JONES CA
+
+## Salmon
+
+  - 11522500 SALMON R A SOMES BAR CA
+
+## Sprague 
+
+## Lost
