@@ -146,4 +146,74 @@ all_kalamth_usgs_gages |> ggplot(aes(x = date, y = value, color = as.character(o
   facet_wrap(~order) +
   theme_minimal()
 
+
+all_kalamth_usgs_gages |> 
+  ggplot(aes(x = date, y = value, color = gage_number)) + 
+  geom_line() + 
+  scale_color_manual(values = colors_full) +
+  theme_minimal()
 ```
+
+Exploring NA values
+
+```{r}
+date_range_summary <- all_kalamth_usgs_gages |> 
+  group_by(gage_number) |> 
+  summarize(
+    min_date = min(date),  
+    max_date = max(date),  
+    record_count = n()) |> 
+  ungroup()  
+
+```
+
+```{r}
+# looking for date gaps
+kr_at_keno_or |> 
+  ggplot(aes(date, value)) +
+  geom_line()
+
+kr_blw_powerplant |> 
+  ggplot(aes(date, value)) +
+  geom_line()
+
+kr_blw_iorngage |> 
+  ggplot(aes(date, value)) +
+  geom_line()
+
+kr_nr_seiad_valley |> 
+  ggplot(aes(date, value)) +
+  geom_line()
+
+kr_at_orleans |> 
+  ggplot(aes(date, value)) +
+  geom_line()
+
+kr_nr_klamath |> 
+  ggplot(aes(date, value)) +
+  geom_line()
+
+
+# date_gaps_per_gage <- all_kalamth_usgs_gages %>%
+#   group_by(gage_number) %>%
+#   summarize(
+#     min_date = min(date, na.rm = TRUE),
+#     max_date = max(date, na.rm = TRUE)
+#   ) %>%
+#   rowwise() %>%
+#   mutate(
+#     full_date_range = list(seq.Date(from = min_date, to = max_date, by = "day"))
+#   ) %>%
+#   unnest(full_date_range) %>%
+#   rename(date = full_date_range) %>%
+#   select(gage_number, date)
+# 
+
+#creating a map to show temporal coverage
+
+temp_coverage <- all_kalamth_usgs_gages |> 
+  mutate(min_date = min(date),
+         max_date = max(date))
+
+```
+
