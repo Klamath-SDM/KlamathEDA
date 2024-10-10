@@ -112,7 +112,7 @@ fluidPage(
                sidebarPanel(style = "background-color: #faf9f7;",
                             h4("Filter by Data Type", style = "color: black;"),
                             # TODO we should update the "choices" to use the data object - eg wnique(water_data_catalog$data_type)
-                            selectInput("data_type", "", choices = c('All Types','Flow', 'Water Temperature'),
+                            selectInput("data_type", "", choices = c('All Types','Flow', 'Water Temperature')),
                             br(),
                             h4("Filter by Watershed", style = "color: black;"),
                             # TODO we should update the "choices" to use the data object - eg wnique(water_data_catalog$data_type)
@@ -125,7 +125,7 @@ fluidPage(
                  # update when we have the map ready
                  #leafletOutput('water_data_location_map')
                )
-             )),
+             ),
              hr(),
              br(),
              fluidRow(
@@ -135,5 +135,5 @@ fluidPage(
                       )
                )
              )
-    ),
+    )
   )
