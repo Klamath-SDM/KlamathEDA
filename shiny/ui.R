@@ -101,6 +101,39 @@ fluidPage(
                       #          )
                       #   )
                       # )
+             ),
+    tabPanel("Water Data",
+             titlePanel("Water Data Catalog"),
+             h6("This catalog summarizes measured flow, temperature, and water quality data
+                collected within the Basin. Please INSERT LINK (flow Rmd) and INSERT LINK (temp Rmd)
+                for more detailed data exploration."),
+             sidebarLayout(
+               # filter by subbasin, data_type, species_group, timeframe
+               sidebarPanel(style = "background-color: #faf9f7;",
+                            h4("Filter by Data Type", style = "color: black;"),
+                            # TODO we should update the "choices" to use the data object - eg wnique(water_data_catalog$data_type)
+                            selectInput("data_type", "", choices = c('All Types','Flow', 'Water Temperature'),
+                            br(),
+                            h4("Filter by Watershed", style = "color: black;"),
+                            # TODO we should update the "choices" to use the data object - eg wnique(water_data_catalog$data_type)
+                            selectInput("watershed", "", choices = c('All Watersheds', 'Klamath River', 'Shasta River','Trinity River')),
+                            hr()
+                            #downloadButton("downloadData", "Download")
+                            
+               ),
+               mainPanel( 
+                 # update when we have the map ready
+                 #leafletOutput('water_data_location_map')
+               )
+             )),
+             hr(),
+             br(),
+             fluidRow(
+               column(12,
+                      #div(style = "height: 400px; overflow-y: scroll;",
+                          #dataTableOutput("table_water_data")
+                      )
+               )
              )
+    ),
   )
-)
