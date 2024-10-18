@@ -50,7 +50,7 @@ kr_at_keno_or <- dataRetrieval::readNWISdv(11509500, "00060", startDate = "1950-
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
   mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter 
-         order = 1,
+         # order = 1,
          gage_agency = "USGS",
          gage_number = "11509500",
          parameter = "flow",
@@ -62,7 +62,7 @@ kr_blw_powerplant <- dataRetrieval::readNWISdv(11510700, "00060", startDate = "1
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
   mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter 
-         order = 2,
+         # order = 2,
          gage_agency = "USGS",
          gage_number = "11510700",
          parameter = "flow",
@@ -74,7 +74,7 @@ kr_blw_iorngage <- dataRetrieval::readNWISdv(11516530, "00060", startDate = "195
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
   mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter 
-         order = 3,
+         # order = 3,
          gage_agency = "USGS",
          gage_number = "11516530",
          parameter = "flow",
@@ -86,7 +86,7 @@ kr_nr_seiad_valley <- dataRetrieval::readNWISdv(11520500, "00060", startDate = "
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
   mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter 
-         order = 4,
+         # order = 4,
          gage_agency = "USGS",
          gage_number = "11520500",
          parameter = "flow",
@@ -98,7 +98,7 @@ kr_at_orleans <- dataRetrieval::readNWISdv(11523000, "00060", startDate = "1950-
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
   mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter 
-         order = 5,
+         # order = 5,
          gage_agency = "USGS",
          gage_number = "11523000",
          parameter = "flow",
@@ -110,7 +110,7 @@ kr_nr_klamath <- dataRetrieval::readNWISdv(11530500, "00060", startDate = "1950-
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
   mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter 
-         order = 6,
+         # order = 6,
          gage_agency = "USGS",
          gage_number = "11530500",
          parameter = "flow",
@@ -146,10 +146,10 @@ leaflet(unique_gage_sf) |>
 ### Date coverage
 
 ```{r}
-all_kalamth_usgs_gages |> ggplot(aes(x = date, y = value, color = as.character(order))) + 
+all_kalamth_usgs_gages |> ggplot(aes(x = date, y = value, color = as.character(gage_number))) + 
   geom_line() + 
   scale_color_manual(values = colors_full) +
-  facet_wrap(~order) +
+  facet_wrap(~gage_number) +
   theme_minimal()
 
 
@@ -406,6 +406,28 @@ scott <- dataRetrieval::readNWISdv(11519500, "00060") |>
          ) 
 
 ```
+
+### Map Plot Scott USGS
+
+```{r}
+scott_usgs_dates <- scott |> 
+  group_by(gage_number) |> 
+  summarise(min_date = min(date), max_date = max(date))
+
+# Add the date information to the unique gages
+unique_gage_scott<- scott |> 
+  distinct(gage_number, latitude, longitude, .keep_all = TRUE) |> 
+  left_join(scott_usgs_dates, by = "gage_number")
+
+unique_gage_scott_sf <- unique_gage_scott |> 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+leaflet(unique_gage_scott_sf) |> 
+  addTiles() |> 
+    addCircleMarkers(
+    popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date)
+  )
+```
   
 ## Shasta
 
@@ -453,10 +475,10 @@ unique_gage_shasta<- all_usgs_shasta |>
   distinct(gage_number, latitude, longitude, .keep_all = TRUE) |> 
   left_join(shasta_usgs_dates, by = "gage_number")
 
-unique_gage_shas <- unique_gage_shasta |> 
+unique_gage_shas_sf <- unique_gage_shasta |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
-leaflet(unique_gage_shas) |> 
+leaflet(unique_gage_shas_sf) |> 
   addTiles() |> 
     addCircleMarkers(
     popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date)
@@ -515,10 +537,10 @@ unique_gage_data_salmon <- salmon_usgs_gage |>
   distinct(gage_number, latitude, longitude, .keep_all = TRUE) |> 
   left_join(salmon_gage_dates, by = "gage_number")
 
-unique_gage_data_salmon <- unique_gage_data_salmon |> 
+unique_gage_data_salmon_sf <- unique_gage_data_salmon |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
-leaflet(unique_gage_data_salmon) |> 
+leaflet(unique_gage_data_salmon_sf) |> 
   addTiles() |> 
   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
 ```
@@ -571,12 +593,12 @@ sprague_gage_dates <- sprague_usgs_gage |>
 
 unique_gage_data_sprague <- sprague_usgs_gage |> 
   distinct(gage_number, latitude, longitude, .keep_all = TRUE) |> 
-  left_join(salmon_gage_dates, by = "gage_number")
+  left_join(sprague_gage_dates, by = "gage_number")
 
-unique_gage_data_sprague <- unique_gage_data_sprague |> 
+unique_gage_data_sprague_sf <- unique_gage_data_sprague |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
-leaflet(unique_gage_data_sprague) |> 
+leaflet(unique_gage_data_sprague_sf) |> 
   addTiles() |> 
   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
 ```
@@ -677,11 +699,11 @@ all_indian_usgs_gages |> ggplot(aes(x = date, y = value, color = gage_number)) +
   - Fourmile Canal Near Klamath Agency, OR - 11504260
   - Sevenmile Cnl at Dike RD Br, NR Klamath Agency, OR - 11504290
 
-```{r}
+```{r, include=FALSE}
 other_usgs_or1 <- dataRetrieval::readNWISdv(11509340, "00060") |> 
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
-  mutate(stream = "",
+  mutate(stream = "other",
          gage_agency = "USGS",
          gage_number = "11509340",
          parameter = "flow",
@@ -692,7 +714,7 @@ other_usgs_or1 <- dataRetrieval::readNWISdv(11509340, "00060") |>
 other_usgs_or2 <- dataRetrieval::readNWISdv(11509250, "00060") |> 
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
-  mutate(stream = "",
+  mutate(stream = "other",
          gage_agency = "USGS",
          gage_number = "11509250",
          parameter = "flow",
@@ -703,7 +725,7 @@ other_usgs_or2 <- dataRetrieval::readNWISdv(11509250, "00060") |>
 other_usgs_or3 <- dataRetrieval::readNWISdv(11509105, "00060") |> 
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
-  mutate(stream = "",
+  mutate(stream = "other",
          gage_agency = "USGS",
          gage_number = "11509105",
          parameter = "flow",
@@ -714,7 +736,7 @@ other_usgs_or3 <- dataRetrieval::readNWISdv(11509105, "00060") |>
 other_usgs_or4 <- dataRetrieval::readNWISdv(11507500, "00060") |> 
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
-  mutate(stream = "",
+  mutate(stream = "other",
          gage_agency = "USGS",
          gage_number = "11507500",
          parameter = "flow",
@@ -725,7 +747,7 @@ other_usgs_or4 <- dataRetrieval::readNWISdv(11507500, "00060") |>
 other_usgs_or5 <- dataRetrieval::readNWISdv(11502500, "00060") |> 
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
-  mutate(stream = "",
+  mutate(stream = "other",
          gage_agency = "USGS",
          gage_number = "11502500",
          parameter = "flow",
@@ -737,7 +759,7 @@ other_usgs_or5 <- dataRetrieval::readNWISdv(11502500, "00060") |>
 other_usgs_or6 <- dataRetrieval::readNWISdv(11504260, "00060") |> 
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
-  mutate(stream = "",
+  mutate(stream = "other",
          gage_agency = "USGS",
          gage_number = "11504260",
          parameter = "flow",
@@ -748,7 +770,7 @@ other_usgs_or6 <- dataRetrieval::readNWISdv(11504260, "00060") |>
 other_usgs_or7 <- dataRetrieval::readNWISdv(11504290, "00060") |> 
   select(date = Date, value =  X_00060_00003) |>  # rename to value
   as_tibble() |> 
-  mutate(stream = "",
+  mutate(stream = "other",
          gage_agency = "USGS",
          gage_number = "11504290",
          parameter = "flow",
@@ -762,7 +784,7 @@ all_or_usgs_gages <- bind_rows(other_usgs_or1, other_usgs_or2, other_usgs_or3, o
 ```
 ### Map Plot Trinity USGS Gages
 
-```{r}
+```{r, echo=FALSE}
 # Filter to keep only one unique gage per location
 
 gage_dates_or <- all_or_usgs_gages |> 
@@ -774,10 +796,10 @@ unique_gage_or <- all_or_usgs_gages |>
   distinct(gage_number, latitude, longitude, .keep_all = TRUE) |> 
   left_join(gage_dates_or, by = "gage_number")
 
-unique_gage_or <- unique_gage_or |> 
+unique_gage_or_sf <- unique_gage_or |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
-leaflet(unique_gage_or) |> 
+leaflet(unique_gage_or_sf) |> 
   addTiles() |> 
     addCircleMarkers(
     popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date)
@@ -786,7 +808,7 @@ leaflet(unique_gage_or) |>
 
 ### Date coverage
 
-```{r}
+```{r, include=FALSE}
 all_or_usgs_gages |> ggplot(aes(x = date, y = value, color = gage_number)) + 
   geom_line() + 
   scale_color_manual(values = colors_full) +
@@ -806,3 +828,38 @@ date_range_summary_or <- all_or_usgs_gages |>
   ungroup()  |> 
   glimpse()
 ```
+
+## Combing all streams 
+
+```{r, include=FALSE}
+kl_basin <- bind_rows(unique_gage_data_kl, unique_gage_trinity, unique_gage_scott, unique_gage_shasta, unique_gage_data_salmon, unique_gage_data_sprague, unique_gage_data_indian, unique_gage_or)
+
+#clean field names
+kl_basin_table <- kl_basin |> 
+  mutate(mean_flow_cfs = value,
+         data_source = gage_agency,
+         earliest_data = min_date,
+         latest_data = max_date) |> 
+  select(c(mean_flow_cfs, data_source, gage_number, stream, earliest_data, latest_data, latitude, longitude)) |> 
+  glimpse()
+
+```
+
+```{r, echo=FALSE}
+kl_basin_sf <- kl_basin_table |> 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+leaflet(kl_basin_sf) |> 
+  addTiles() |> 
+    addCircleMarkers(
+    popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Latest Date: ", latest_data, "<br>Earliest Date: ", earliest_data)
+  )
+```
+
+Save clean table
+
+```{r}
+# write.csv(kl_basin_table, "data/
+```
+
+
