@@ -54,3 +54,5 @@ monitoring_data_hucs <- left_join(monitoring_data, hucs, by = c("subbasin" = "Wa
 # water data --------------------------------------------------------------
 # placeholder for reading in our data needed for the water data tab
 # Use the data from flow Rmd that Badhia is working on (save to shiny/data)
+
+flow_data <- read_csv(here::here("shiny", "data", "flow_table.csv"))
