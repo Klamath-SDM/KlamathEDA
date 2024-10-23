@@ -76,22 +76,10 @@ canal <- dataRetrieval::readNWISdv(11504260, "00010") |>
          longitude = dataRetrieval::readNWISsite("11504290")$dec_long_va # directly add lon
          )
 
-keno <- dataRetrieval::readNWISdv(11509500, "00010") |> 
-  select(date = Date, value =  X_00010_00003) |>  # rename to value
-  as_tibble() |>
-  mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter
-         gage_agency = "USGS",
-         gage_number = "11509500",
-         parameter = "temperature",
-         statistic = "mean", # if query returns instantaneous data then report a min, mean, and max
-         latitude = dataRetrieval::readNWISsite("11509500")$dec_lat_va, # directly add lat
-         longitude = dataRetrieval::readNWISsite("11509500")$dec_long_va # directly add lon
-         ) 
-
 jackson <- dataRetrieval::readNWISdv(11491470, "00010") |> 
   select(date = Date, value =  X_00010_00003) |>  # rename to value
   as_tibble() |>
-  mutate(stream = "jackson river", # add additional columns for stream, gage info, and parameter
+  mutate(stream = "jackson creek", # add additional columns for stream, gage info, and parameter
          gage_agency = "USGS",
          gage_number = "11491470",
          parameter = "temperature",
@@ -111,7 +99,24 @@ irving <- dataRetrieval::readNWISdv(11491450, "00010") |>
          longitude = dataRetrieval::readNWISsite("11491450")$dec_long_va # directly add lon
          ) 
 
-all_points <- bind_rows(sprague, william, wood, canal, klamath_fl, keno, jackson, irving)
+random_points <- bind_rows(sprague, william, wood, canal, keno, jackson, irving)
+```
+
+```{r}
+random_points_dates <- random_points |> 
+  group_by(gage_number) |> 
+  summarise(min_date = min(date), max_date = max(date))
+
+unique_gage_random <- random_points |> 
+  distinct(gage_number, latitude, longitude, .keep_all = TRUE) |> 
+  left_join(random_points_dates, by = "gage_number")
+
+unique_gage_random_sf <- unique_gage_random |> 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+leaflet(unique_gage_random_sf) |> 
+  addTiles() |> 
+  addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
 ```
 
   - LINK RIVER AT KLAMATH FALLS, OR	11507500
@@ -119,6 +124,11 @@ all_points <- bind_rows(sprague, william, wood, canal, klamath_fl, keno, jackson
   - KLAMATH R NR KLAMATH CA	11530500
   - KLAMATH R A ORLEANS	11523000
   - KLAMATH RIVER AT KENO, OR	11509500
+  - KLAMATH RIVER ABOVE KENO DAM, AT KENO, OR	11509370
+  - KLAMATH RIVER ABV KENO DAM, AT KENO - BOTTOM	420741121554001
+  - KLAMATH STRAITS DRAIN NEAR HIGHWAY 97, OR	420451121510000
+  - KLAMATH STRAITS DRAIN ABOVE F-FF PUMPS, WORDEN, OR	420448121503100
+  - KLAMATH RIVER AT MILLER ISLAND BOAT RAMP, OR	420853121505500
   
 
 ```{r}
@@ -169,7 +179,7 @@ klamath_or <- dataRetrieval::readNWISdv(11523000, "00010") |>
 klamath_keno_or <- dataRetrieval::readNWISdv(11509500, "00010") |> 
   select(date = Date, value =  X_00010_00003) |>  # rename to value
   as_tibble() |>
-  mutate(stream = "link river", # add additional columns for stream, gage info, and parameter
+  mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter
          gage_agency = "USGS",
          gage_number = "11509500",
          parameter = "temperature",
@@ -177,8 +187,74 @@ klamath_keno_or <- dataRetrieval::readNWISdv(11509500, "00010") |>
          latitude = dataRetrieval::readNWISsite("11509500")$dec_lat_va, # directly add lat
          longitude = dataRetrieval::readNWISsite("11509500")$dec_long_va # directly add lon
          )
+klamath_ab_keno_or <- dataRetrieval::readNWISdv(11509370, "00010") |> 
+  select(date = Date, value =  X_00010_00003) |>  # rename to value
+  as_tibble() |>
+  mutate(stream = "klamath river", # add additional columns for stream, gage info, and parameter
+         gage_agency = "USGS",
+         gage_number = "11509370",
+         parameter = "temperature",
+         statistic = "mean", # if query returns instantaneous data then report a min, mean, and max
+         latitude = dataRetrieval::readNWISsite("11509370")$dec_lat_va, # directly add lat
+         longitude = dataRetrieval::readNWISsite("11509370")$dec_long_va # directly add lon
+         )
+klamath_ab_keno_bot <- dataRetrieval::readNWISdv(420741121554001, "00010") |> 
+  select(date = Date, value =  X_00010_00003) |>  # rename to value
+  as_tibble() |>
+  mutate(stream = "klamath river", 
+         gage_agency = "USGS",
+         gage_number = "420741121554001",
+         parameter = "temperature",
+         statistic = "mean", 
+         latitude = dataRetrieval::readNWISsite("420741121554001")$dec_lat_va, 
+         longitude = dataRetrieval::readNWISsite("420741121554001")$dec_long_va 
+         )
+klamath_nr_97 <- dataRetrieval::readNWISdv(420451121510000, "00010") |> 
+  select(date = Date, value =  X_00010_00003) |>  # rename to value
+  as_tibble() |>
+  mutate(stream = "klamath river", # TODO should we all it klamath straits drain?
+         gage_agency = "USGS",
+         gage_number = "420451121510000",
+         parameter = "temperature",
+         statistic = "mean", # if query returns instantaneous data then report a min, mean, and max
+         latitude = dataRetrieval::readNWISsite("420451121510000")$dec_lat_va, # directly add lat
+         longitude = dataRetrieval::readNWISsite("420451121510000")$dec_long_va # directly add lon
+         )
+klamath_ab_pumps <- dataRetrieval::readNWISdv(420448121503100, "00010") |> 
+  select(date = Date, value =  X_00010_00003) |>  # rename to value
+  as_tibble() |>
+  mutate(stream = "klamath river", # TODO should we all it klamath straits drain?
+         gage_agency = "USGS",
+         gage_number = "420448121503100",
+         parameter = "temperature",
+         statistic = "mean", 
+         latitude = dataRetrieval::readNWISsite("420448121503100")$dec_lat_va, 
+         longitude = dataRetrieval::readNWISsite("420448121503100")$dec_long_va 
+         )
+klamath_mill <- dataRetrieval::readNWISdv(420853121505500, "00010") |> 
+  select(date = Date, value =  X_00010_00003) |>  # rename to value
+  as_tibble() |>
+  mutate(stream = "klamath river", 
+         gage_agency = "USGS",
+         gage_number = "420853121505500",
+         parameter = "temperature",
+         statistic = "mean", 
+         latitude = dataRetrieval::readNWISsite("420853121505500")$dec_lat_va, 
+         longitude = dataRetrieval::readNWISsite("420853121505500")$dec_long_va 
+         )
+klamath_mill_ramp <- dataRetrieval::readNWISdv(420853121505501, "00010") |> 
+  select(date = Date, value =  X_00010_00003) |>  # rename to value
+  as_tibble() |>
+  mutate(stream = "klamath river", 
+         gage_agency = "USGS",
+         gage_number = "420853121505501",
+         parameter = "temperature",
+         statistic = "mean", 
+         latitude = dataRetrieval::readNWISsite("420853121505501")$dec_lat_va, 
+         longitude = dataRetrieval::readNWISsite("420853121505501")$dec_long_va 
+         )
 
-mainsteam <- bind_rows(klamath_fl, klamath_keno, klamath_kl, klamath_or, klamath_keno_or)
+mainsteam <- bind_rows(klamath_fl, klamath_keno, klamath_kl, klamath_or, klamath_keno_or, klamath_ab_keno_or, klamath_ab_keno_bot, klamath_nr_97, klamath_ab_pumps, klamath_mill, klamath_mill_ramp)
 
 ```
 
@@ -188,14 +264,14 @@ all_points_dates <- mainsteam |>
   group_by(gage_number) |> 
   summarise(min_date = min(date), max_date = max(date))
 
-unique_gage_data <- mainsteam |> 
+unique_gage_main <- mainsteam |> 
   distinct(gage_number, latitude, longitude, .keep_all = TRUE) |> 
   left_join(all_points_dates, by = "gage_number")
 
-unique_gage_sf <- unique_gage_data |> 
+unique_gage_main_sf <- unique_gage_main |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
-leaflet(unique_gage_sf) |> 
+leaflet(unique_gage_main_sf) |> 
   addTiles() |> 
   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
 ```
@@ -236,6 +312,10 @@ Other streams
   - WOOD RIVER NEAR KLAMATH AGENCY, OR	11504115
   - SEVENMILE CNL AT DIKE RD BR, NR KLAMATH AGENCY, OR	11504290
   - FOURMILE CANAL NEAR KLAMATH AGENCY, OR	11504260
+  - KLAMATH R AB FALL C NR COPCO CA	11511990
+  - LOST RVR AT ANDERSON ROSE DVRSN DAM AT MALONE, OR	420037121334100
+  - LOST RVR BLW ANDERSON ROSE DVRSN DAM AT MALONE, OR	420036121333700
+  
 
 ```{r}
 sprague <- dataRetrieval::readNWISdv(11501000, "00010") |> 
@@ -294,11 +374,44 @@ fourmile_cl <- dataRetrieval::readNWISdv(11504260, "00010") |>
          gage_number = "11504260",
          parameter = "temperature",
          statistic = "mean", # if query returns instantaneous data then report a min, mean, and max
-         latitude = dataRetrieval::readNWISsite("11504260")$dec_lat_va, # directly add lat
-         longitude = dataRetrieval::readNWISsite("11504260")$dec_long_va # directly add lon
+         latitude = dataRetrieval::readNWISsite("11504260")$dec_lat_va, 
+         longitude = dataRetrieval::readNWISsite("11504260")$dec_long_va 
+         )
+iron_res  <- dataRetrieval::readNWISdv(11511990, "00010") |> 
+  select(date = Date, value =  X_00010_00003) |>  
+  as_tibble() |>
+  mutate(stream = "irongate reservoir", 
+         gage_agency = "USGS",
+         gage_number = "11511990",
+         parameter = "temperature",
+         statistic = "mean", 
+         latitude = dataRetrieval::readNWISsite("11511990")$dec_lat_va, 
+         longitude = dataRetrieval::readNWISsite("11511990")$dec_long_va 
+         )
+lost_rvr  <- dataRetrieval::readNWISdv(420037121334100, "00010") |> 
+  select(date = Date, value =  X_00010_00003) |>  
+  as_tibble() |>
+  mutate(stream = "lost river", 
+         gage_agency = "USGS",
+         gage_number = "420037121334100",
+         parameter = "temperature",
+         statistic = "mean", 
+         latitude = dataRetrieval::readNWISsite("420037121334100")$dec_lat_va, 
+         longitude = dataRetrieval::readNWISsite("420037121334100")$dec_long_va 
+         )
+lost_rvr_and  <- dataRetrieval::readNWISdv(420036121333700, "00010") |> 
+  select(date = Date, value =  X_00010_00003) |>  
+  as_tibble() |>
+  mutate(stream = "lost river", 
+         gage_agency = "USGS",
+         gage_number = "420036121333700",
+         parameter = "temperature",
+         statistic = "mean", 
+         latitude = dataRetrieval::readNWISsite("420036121333700")$dec_lat_va, 
+         longitude = dataRetrieval::readNWISsite("420036121333700")$dec_long_va 
          )
 
-other_temp_points <- bind_rows(sprague, williamsom, wood, fourmile_cl)
+other_temp_points <- bind_rows(sprague, williamsom, wood, fourmile_cl, lost_rvr, lost_rvr_and)
 ```
 
 ```{r}
