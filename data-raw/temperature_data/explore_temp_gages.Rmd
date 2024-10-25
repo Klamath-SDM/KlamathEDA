@@ -528,7 +528,7 @@ wood <- dataRetrieval::readNWISdv(11504115, "00010") |>
 canal <- dataRetrieval::readNWISdv(11504260, "00010") |> 
   select(date = Date, value =  X_00010_00003) |>  # rename to value
   as_tibble() |>
-  mutate(stream = "fourmile canal", # add additional columns for stream, gage info, and parameter
+  mutate(stream = "klamath river canal", # add additional columns for stream, gage info, and parameter
          gage_agency = "USGS",
          gage_number = "11504260",
          parameter = "temperature",
@@ -539,7 +539,7 @@ canal <- dataRetrieval::readNWISdv(11504260, "00010") |>
 iron_res  <- dataRetrieval::readNWISdv(11511990, "00010") |> 
   select(date = Date, value =  X_00010_00003) |>  
   as_tibble() |>
-  mutate(stream = "irongate reservoir", 
+  mutate(stream = "klamath river", 
          gage_agency = "USGS",
          gage_number = "11511990",
          parameter = "temperature",
@@ -561,7 +561,7 @@ link_rv  <- dataRetrieval::readNWISdv(11507501, "00010") |>
 jackson <- dataRetrieval::readNWISdv(11491470, "00010") |> 
   select(date = Date, value =  X_00010_00003) |>  # rename to value
   as_tibble() |>
-  mutate(stream = "jackson creek", # add additional columns for stream, gage info, and parameter
+  mutate(stream = "williamson river", # add additional columns for stream, gage info, and parameter
          gage_agency = "USGS",
          gage_number = "11491470",
          parameter = "temperature",
@@ -572,7 +572,7 @@ jackson <- dataRetrieval::readNWISdv(11491470, "00010") |>
 irving <- dataRetrieval::readNWISdv(11491450, "00010") |> 
   select(date = Date, value =  X_00010_00003) |>  # rename to value
   as_tibble() |>
-  mutate(stream = "irving creek", # add additional columns for stream, gage info, and parameter
+  mutate(stream = "williamson river", # add additional columns for stream, gage info, and parameter
          gage_agency = "USGS",
          gage_number = "11491450",
          parameter = "temperature",
@@ -584,7 +584,7 @@ irving <- dataRetrieval::readNWISdv(11491450, "00010") |>
 link_rv_dam  <- dataRetrieval::readNWISdv(421401121480900, "00010") |> 
   select(date = Date, value =  X_00010_00003) |>  
   as_tibble() |>
-  mutate(stream = "link river dam", 
+  mutate(stream = "link river", 
          gage_agency = "USGS",
          gage_number = "421401121480900",
          parameter = "temperature",
@@ -595,7 +595,7 @@ link_rv_dam  <- dataRetrieval::readNWISdv(421401121480900, "00010") |>
 sand_ck  <- dataRetrieval::readNWISdv(11492550, "00010") |> 
   select(date = Date, value =  X_00010_00003) |>  
   as_tibble() |>
-  mutate(stream = "sand creek", 
+  mutate(stream = "williamson river", 
          gage_agency = "USGS",
          gage_number = "11492550",
          parameter = "temperature",
