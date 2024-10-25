@@ -112,11 +112,11 @@ fluidPage(
                sidebarPanel(style = "background-color: #faf9f7;",
                             h4("Filter by Data Type", style = "color: black;"),
                             # TODO we should update the "choices" to use the data object - eg wnique(water_data_catalog$data_type)
-                            selectInput("water_data_type", "", choices = c("All Types", unique(flow_data$data_type))),
+                            selectInput("water_data_type", "", choices = c("All Types", unique(water_data$data_type))),
                             br(),
                             h4("Filter by Watershed", style = "color: black;"),
                             # TODO we should update the "choices" to use the data object - eg wnique(water_data_catalog$data_type)
-                            selectInput("water_watershed", "", choices = c("All Watersheds", unique(flow_data$stream))),
+                            selectInput("water_watershed", "", choices = c("All Watersheds", unique(water_data$stream))),
                             hr()
                             #downloadButton("downloadData", "Download")
                             

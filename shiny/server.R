@@ -138,16 +138,16 @@ function(input, output) {
   # Filter monitoring data based on selections
   selected_water <- reactive({
     if(input$water_data_type == "All Types" & input$water_watershed == "All Watersheds") {
-      dat <- flow_data
+      dat <- water_data
     }
     else if(input$water_data_type == "All Types" & input$water_watershed != "All Watersheds") {
-      dat <- flow_data |> 
+      dat <- water_data |> 
         filter(stream %in% input$water_watershed)
     } else if(input$water_data_type != "All Types" & input$water_watershed == "All Watersheds") {
-      dat <- flow_data |> 
+      dat <- water_data |> 
         filter(data_type %in% input$water_data_type)
     } else {
-      dat <- flow_data |> 
+      dat <- water_data |> 
         filter(data_type %in% input$water_data_type,
                stream %in% input$water_watershed)
     }
