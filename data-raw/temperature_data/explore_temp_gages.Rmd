@@ -1,5 +1,7 @@
 ---
 title: "Klamath Basin Flow Gage EDA"
+author: "Badhia Yunes Katz"
+date: "`r Sys.Date()`"
 output: 
   html_document:
     toc_depth: 2
@@ -20,6 +22,7 @@ library(SRJPEdata)
 library(lubridate)
 library(sf)
 library(leaflet)
+library(readr)
 
 colors_full <-  c("#9A8822", "#F5CDB4", "#F8AFA8", "#FDDDA0", "#74A089", #Royal 2
                   "#899DA4", "#C93312", "#DC863B", # royal 1 (- 3)
@@ -175,13 +178,13 @@ mainsteam <- bind_rows(klamath_fl, klamath_keno, klamath_kl, klamath_or, klamath
 
 ```{r, echo=FALSE}
 # Filter to keep only one unique gage per location
-all_points_dates <- mainsteam |> 
+all_points_dates_main <- mainsteam |> 
   group_by(gage_number) |> 
   summarise(min_date = min(date), max_date = max(date))
 
 unique_gage_main <- mainsteam |> 
   distinct(gage_number, latitude, longitude, .keep_all = TRUE) |> 
-  left_join(all_points_dates, by = "gage_number")
+  left_join(all_points_dates_main, by = "gage_number")
 
 unique_gage_main_sf <- unique_gage_main |> 
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
@@ -621,20 +624,33 @@ leaflet(unique_gage_other_sf) |>
   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
 ```
 
+### all gages
+
 ```{r}
-# Filter to keep only one unique gage per location
-# all_points_dates <- all_points |> 
-#   group_by(gage_number) |> 
-#   summarise(min_date = min(date), max_date = max(date))
-# 
-# unique_gage_data <- all_points |> 
-#   distinct(gage_number, latitude, longitude, .keep_all = TRUE) |> 
-#   left_join(all_points_dates, by = "gage_number")
-# 
-# unique_gage_sf <- unique_gage_data |> 
-#   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
-# 
-# leaflet(unique_gage_sf) |> 
-#   addTiles() |> 
-#   addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", max_date, "<br>Min Date: ", min_date))
+# binding all points 
+kl_basin_temp <- bind_rows(unique_gage_main, unique_gage_trinity, unique_gage_kl_lake_data, unique_gage_lost_data, unique_gage_other) |> glimpse()
+
+kl_basin_temp_table <- kl_basin_temp |> 
+  mutate(mean_temp_c = value,
+         data_source = gage_agency,
+         earliest_data = min_date,
+         latest_data = max_date) |> 
+  select(c(mean_temp_c, data_source, gage_number, stream, earliest_data, latest_data, latitude, longitude)) |> 
+  glimpse()
+```
+
+```{r, echo=FALSE}
+kl_basin_temp_sf <- kl_basin_temp_table |> 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+leaflet(kl_basin_temp_sf) |> 
+  addTiles() |> 
+    addCircleMarkers(
+    popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Latest Date: ", latest_data, "<br>Earliest Date: ", earliest_data)
+  )
+```
+
+Save clean table
+```{r}
+write.csv(kl_basin_temp_table, "shiny/data/temp_data.csv")
 ```
