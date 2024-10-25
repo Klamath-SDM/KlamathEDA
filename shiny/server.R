@@ -133,4 +133,51 @@ function(input, output) {
     datatable(data)
   })
   
+
+# water data --------------------------------------------------------------
+  # Filter monitoring data based on selections
+  selected_water <- reactive({
+    if(input$water_data_type == "All Types" & input$water_watershed == "All Watersheds") {
+      dat <- flow_data
+    }
+    else if(input$water_data_type == "All Types" & input$water_watershed != "All Watersheds") {
+      dat <- flow_data |> 
+        filter(stream %in% input$water_watershed)
+    } else if(input$water_data_type != "All Types" & input$water_watershed == "All Watersheds") {
+      dat <- flow_data |> 
+        filter(data_type %in% input$water_data_type)
+    } else {
+      dat <- flow_data |> 
+        filter(data_type %in% input$water_data_type,
+               stream %in% input$water_watershed)
+    }
+    dat
+  })
+  
+  output$table_water <- renderDT({
+    data <- selected_water() |> 
+      select(stream, data_type, data_source, gage_number, earliest_data, latest_data) |> 
+      rename(Watershed = stream,
+             `Data Type` = data_type,
+             Source = data_source,
+             `Gage Number` = gage_number,
+             `Date Start` = earliest_data,
+             `Date End` = latest_data) 
+    datatable(data)
+  })
+  
+  
+  
+  output$map_water <- renderLeaflet({
+  
+    color_palette <- colorNumeric(palette = "YlOrRd", domain = c(1, 200))
+    data <- selected_water() |> 
+      st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+    
+    leaflet(data) |> 
+      addTiles() |> 
+      addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", latest_data, "<br>Min Date: ", earliest_data))
+    
+    
+  })
 }
