@@ -57,4 +57,14 @@ monitoring_data_hucs <- left_join(monitoring_data, hucs, by = c("subbasin" = "Wa
 
 # TODO when we merge in temperature data, combine flow and temperature and add a column for data type
 flow_data <- read_csv(here::here("shiny", "data", "flow_table.csv")) |> 
-  mutate(data_type = "flow")
+  mutate(data_type = "flow",
+         value = mean_flow_cfs) |> 
+  select(-mean_flow_cfs)
+
+temp_data <- read_csv(here::here("shiny", "data", "temp_data.csv")) |> 
+  mutate(data_type = "temperature",
+         value = mean_temp_c) |> 
+  select(-mean_temp_c)
+
+water_data <- bind_rows(temp_data, flow_data) |> 
+  glimpse()
