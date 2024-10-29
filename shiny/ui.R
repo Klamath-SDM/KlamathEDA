@@ -105,7 +105,7 @@ fluidPage(
     tabPanel("Water Data",
              titlePanel("Water Data Catalog"),
              h6("This catalog summarizes measured flow, temperature, and water quality data
-                collected within the Basin. Please INSERT LINK (flow Rmd) and INSERT LINK (temp Rmd)
+                collected within the Basin. See INSERT LINK (flow Rmd) and INSERT LINK (temp Rmd)
                 for more detailed data exploration."),
              sidebarLayout(
                # filter by subbasin, data_type, species_group, timeframe

@@ -170,13 +170,13 @@ function(input, output) {
   
   output$map_water <- renderLeaflet({
   
-    color_palette <- colorNumeric(palette = "YlOrRd", domain = c(1, 200))
+    type_palette <- colorFactor(palette = "Set1", domain = levels(water_data$data_type))
     data <- selected_water() |> 
       st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
     
     leaflet(data) |> 
       addTiles() |> 
-      addCircleMarkers(popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", latest_data, "<br>Min Date: ", earliest_data))
+      addCircleMarkers(radius = 4, color = ~type_palette(data_type), popup = ~paste0("Stream name: ", stream, "<br>Gage Number: ", gage_number, "<br>Max Date: ", latest_data, "<br>Min Date: ", earliest_data))
     
     
   })
