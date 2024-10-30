@@ -1,0 +1,33 @@
+
+```{r}
+library(googleCloudStorageR)
+library(tidyverse)
+library(SRJPEdata)
+library(lubridate)
+library(sf)
+library(leaflet)
+```
+
+```{r}
+flow_data <- read_csv(here::here("shiny", "data", "flow_table.csv")) |> 
+  mutate(data_type = "flow",
+         value = mean_flow_cfs) |> 
+  select(-mean_flow_cfs)
+
+temp_data <- read_csv(here::here("shiny", "data", "temp_data.csv")) |> 
+  mutate(data_type = "temperature",
+         value = mean_temp_c) |> 
+  select(-mean_temp_c)
+
+water_data <- bind_rows(temp_data, flow_data) |> 
+  glimpse()
+
+type_palette <- colorFactor(palette = "Set1", domain = levels(water_data$data_type))
+
+leaflet(water_data) |> 
+  addTiles() |> 
+  addCircleMarkers(color = ~type_palette(data_type), popup = ~paste0("Stream name: ", stream, "<br>Data type: ", data_type, "<br>Gage Number: ", gage_number, "<br>Latitude: ", latitude, "<br>Longitude: ", longitude))
+
+
+```
+
