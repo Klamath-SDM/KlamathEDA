@@ -1,5 +1,7 @@
+The goal of this markdown is to have Klamath River basin USGS gages (temperature and flow) plotted in one place.
 
-```{r}
+
+```{r, include=FALSE}
 library(googleCloudStorageR)
 library(tidyverse)
 library(SRJPEdata)
@@ -8,7 +10,7 @@ library(sf)
 library(leaflet)
 ```
 
-```{r}
+```{r, echo=FALSE}
 flow_data <- read_csv(here::here("shiny", "data", "flow_table.csv")) |> 
   mutate(data_type = "flow",
          value = mean_flow_cfs) |> 
@@ -30,4 +32,3 @@ leaflet(water_data) |>
 
 
 ```
-
