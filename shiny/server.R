@@ -1,4 +1,9 @@
 library(shiny)
+library(leaflet)
+library(DT)
+library(dplyr)
+library(dataRetrieval)
+library(ggplot2)
 
 function(input, output) {
   
@@ -180,4 +185,48 @@ function(input, output) {
     
     
   })
+  # Observe marker clicks and display the graph for the selected gage
+  # observeEvent(input$map_water_marker_click, {
+  #   click <- input$map_water_marker_click
+  #   gage_id <- click$id  # Get gage ID from clicked marker
+  #   
+  #   # Define the time range for data retrieval
+  #   start_date <- "1980-01-01"  # Customize this as needed
+  #   end_date <- Sys.Date()
+  #   
+  #   # Use `dataRetrieval` to get flow or temperature data
+  #   gage_data <- tryCatch({
+  #     if (input$water_data_type == "Flow") {
+  #       readNWISdv(siteNumbers = gage_id, parameterCd = "00060", 
+  #                  startDate = start_date, endDate = end_date)
+  #     } else if (input$water_data_type == "Temperature") {
+  #       readNWISdv(siteNumbers = gage_id, parameterCd = "00010", 
+  #                  startDate = start_date, endDate = end_date)
+  #     }
+  #   }, error = function(e) NULL)
+  #   
+  #   # Check if data retrieval was successful
+  #   if (!is.null(gage_data)) {
+  #     # Rename columns to standardize for plotting
+  #     gage_data <- gage_data |> 
+  #       rename(date = Date, value = if (input$water_data_type == "Flow") "X_00060_00003" else "X_00010_00003")
+  #   }
+  #   
+  #   # Render plot if data was successfully retrieved
+  #   output$plot_panel <- renderUI({
+  #     plotOutput("gage_plot")
+  #   })
+  #   
+  #   output$gage_plot <- renderPlot({
+  #     if (!is.null(gage_data)) {
+  #       ggplot(gage_data, aes(x = date, y = value)) +
+  #         geom_line(color = if (input$water_data_type == "Flow") "blue" else "red") +
+  #         labs(title = paste("Data for Gage:", gage_id),
+  #              x = "Date", y = if (input$water_data_type == "Flow") "Flow (cfs)" else "Temperature (°C)")
+  #     } else {
+  #       ggplot() + 
+  #         labs(title = "No data available for the selected gage.")
+  #     }
+  #   })
+  # })
 }

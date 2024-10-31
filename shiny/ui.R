@@ -127,7 +127,8 @@ fluidPage(
                ),
                mainPanel( 
                  # update when we have the map ready
-                 leafletOutput('map_water')
+                 leafletOutput('map_water'),
+                 # uiOutput("plot_panel") 
                )
              ),
              hr(),
