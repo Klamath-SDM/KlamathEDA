@@ -104,9 +104,13 @@ fluidPage(
              ),
     tabPanel("Water Data",
              titlePanel("Water Data Catalog"),
-             h6("This catalog summarizes measured flow, temperature, and water quality data
-                collected within the Basin. See INSERT LINK (flow Rmd) and INSERT LINK (temp Rmd)
-                for more detailed data exploration."),
+             h6("This catalog summarizes measured flow, temperature, and water quality data collected within the Basin. See",
+                tags$a(href = 'https://github.com/Klamath-SDM/KlamathEDA/blob/add-flow-temp-shiny/data-raw/flow_data/explore_flow_gages.Rmd', 
+                       "flow Rmd", target = "_blank"), 
+                "and",
+                tags$a(href = 'https://github.com/Klamath-SDM/KlamathEDA/blob/add-flow-temp-shiny/data-raw/temperature_data/explore_temp_gages.Rmd', 
+                       "temp Rmd", target = "_blank"),
+                "for more detailed data exploration."),
              sidebarLayout(
                # filter by subbasin, data_type, species_group, timeframe
                sidebarPanel(style = "background-color: #faf9f7;",
