@@ -1,0 +1,68 @@
+---
+title: "[Title] - "
+author: "[Your name]"
+date: "[Date]"
+output: rmarkdown::github_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, fig.width=15, fig.height=10)
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+library(scales)
+library(readxl)
+```
+
+The purpose of this markdown is to give an overview of the types of data available, temporal coverage, geographic coverage, and to get an idea of the amount of work that it would take us to clean it up and use it. 
+
+This data was shared by [Name](mailto::email address) and it is publicly available at [Source](Source.link) 
+
+### Overview
+
+
+
+
+## Data Available {.tabset} 
+
+  * Brief description of Dataset 1
+  * Brief description of Dataset 2
+  
+  
+### Dataset 1
+
+ - Title: 
+ - Extent: Survey is located on [Insert location] (i.e. from the confluence with the Klamath River upstream 3.6 miles)
+ - Description: 
+ - Initial collection: 
+ - Final collection: 
+ - Fields included: 
+ 
+```{r, echo=FALSE}
+# data1 <- read_xlsx("path/to_data_file")
+# 
+# str(data1)
+```
+
+ - Name of [xlsx, pdf, csv, etc] file: [insert name of data file]
+ 
+Cleaning implications:
+
+
+### Dataset 2
+
+ - Title: 
+ - Extent: Survey is located on [Insert location] (i.e. from the confluence with the Klamath River upstream 3.6 miles)
+ - Description: 
+ - Initial collection: 
+ - Final collection: 
+ - Fields included: 
+ 
+```{r, echo=FALSE}
+# data2 <- read_xlsx("path/to_data_file")
+# 
+# str(data2)
+```
+
+ - Name of [xlsx, pdf, csv, etc] file: [insert name of data file]
+ 
+Cleaning implications:
