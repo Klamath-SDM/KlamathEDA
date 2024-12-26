@@ -11,6 +11,16 @@ library(lubridate)
 library(ggplot2)
 library(scales)
 library(readxl)
+
+# define AWS data bucket
+# note that you need to set up access keys in R environ
+klamath_project_board <- pins::board_s3(
+  bucket="klamath-sdm",
+  access_key=Sys.getenv("aws_access_key_id"),
+  secret_access_key=Sys.getenv("secret_access_key_id"),
+  session_token = Sys.getenv("session_token_id"),
+  region = "us-east-1"
+)
 ```
 
 The purpose of this markdown is to give an overview of the dataset including specific data types, temporal coverage, and geographic coverage. This document is helpful in developing schemas to bring together disparate datasets and exploring data limitations.
@@ -88,3 +98,12 @@ This section may (or may not) explore every variable in the dataset. It will inc
 # note that in some situations it may be worthwhile to include data summaries for all fields included and other times best to include summary figure
 ```
 
+## Save data
+
+Data files are stored on AWS
+
+```{r, include = F}
+# klamath_project_board |> pin_write(dataset_1,
+#                                type = "csv",
+#                                title = "dataset_1")
+```

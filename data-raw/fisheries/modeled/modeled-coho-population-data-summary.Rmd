@@ -23,6 +23,16 @@ colors_full <-  c("#9A8822", "#F5CDB4", "#F8AFA8", "#FDDDA0", "#74A089", #Royal 
                   "#85D4E3", "#F4B5BD", "#9C964A", "#CDC08C", "#FAD77B" ) # moonrise 3 
 
 colors_two <- c("#D8A499", "#74A089")
+
+# define AWS data bucket
+# note that you need to set up access keys in R environ
+klamath_project_board <- pins::board_s3(
+  bucket="klamath-sdm",
+  access_key=Sys.getenv("aws_access_key_id"),
+  secret_access_key=Sys.getenv("secret_access_key_id"),
+  session_token = Sys.getenv("session_token_id"),
+  region = "us-east-1"
+)
 ```
 
 The purpose of this markdown is to give an overview of the dataset including specific data types, temporal coverage, and geographic coverage. This document is helpful in developing schemas to bring together disparate datasets and exploring data limitations.
@@ -134,4 +144,18 @@ juvenile_raw |>
        color = "") +
   facet_wrap(~lifestage)
 
+```
+
+## Save data
+
+Data files are stored on AWS
+
+```{r, include = F}
+klamath_project_board |> pins::pin_write(spawner_raw,
+                               type = "csv",
+                               title = "coho_adult_abundance")
+
+klamath_project_board |> pins::pin_write(juvenile_raw,
+                               type = "csv",
+                               title = "coho_juvenile_abundance")
 ```
