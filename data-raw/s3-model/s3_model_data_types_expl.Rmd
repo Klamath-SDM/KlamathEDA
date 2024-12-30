@@ -1,0 +1,241 @@
+---
+title: "S3 Model Data Types Exploration"
+author: "Maddee Rubenson (FlowWest)"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## FISH
+
+```{r include=FALSE}
+load('data/FISH.rda') 
+
+FISH <- FISH |> 
+  mutate(first_Rdate = lubridate::as_date(first_Rdate),
+         last_Rdate = lubridate::as_date(last_Rdate)) 
+
+```
+
+The `FISH.rda` data object which is `r nrow(FISH)` rows. See specifics on data below. 
+
+```{r}
+
+FISH |> 
+  head() |> 
+  knitr::kable()
+
+```
+
+**UnitNum**
+
+There are `r length(unique(FISH$UnitNum))` unique unit numbers in the `FISH` dataset
+
+```{r}
+summary(FISH$UnitNum)
+
+unique(FISH$UnitNum)
+```
+
+**Source**
+
+```{r}
+unique(FISH$Source)
+```
+
+**runType**
+
+The only run type is `FACH`
+
+*TODO* get definition 
+
+```{r}
+unique(FISH$runType)
+```
+
+**Total_released**
+
+*TODO* question - data seems inconsistent temporally and the range from 1980-2000 vs. 2000 to 2005
+
+```{r}
+summary(FISH$Total_released)
+```
+
+```{r}
+FISH |> 
+  ggplot() + 
+  geom_line(aes(x = first_Rdate , y = Total_released))
+
+FISH |> 
+  ggplot() + 
+  geom_line(aes(x = last_Rdate , y = Total_released))
+
+```
+
+**avg_length**
+
+```{r}
+summary(FISH$avg_length)
+
+FISH |> 
+  ggplot() + 
+  geom_line(aes(x = first_Rdate , y = avg_length))
+
+```
+
+**avg_weight**
+
+```{r}
+summary(FISH$avg_weight)
+
+FISH |> 
+  ggplot() + 
+  geom_line(aes(x = first_Rdate , y = avg_weight))
+
+```
+
+**brood_year**
+
+```{r}
+summary(FISH$brood_year)
+
+FISH |> 
+  group_by(brood_year) |> 
+  summarize(n = length(brood_year)) |> 
+  ggplot() + 
+  geom_col(aes(x = brood_year, y = n))
+
+```
+
+**first_Rdate and last_Rdate**
+
+```{r}
+summary(FISH$first_Rdate)
+
+summary(FISH$last_Rdate)
+
+```
+
+## FLOWS
+
+```{r include = FALSE}
+load('data/FLOWS.rda')
+
+FLOWS <- FLOWS |> 
+  mutate(Date = lubridate::as_date(Date)) 
+```
+
+There are `r nrow(FLOWS)` rows of date in the `FLOWS` data object 
+
+```{r}
+FLOWS |> 
+  head(20) |> 
+  knitr::kable()
+
+```
+
+**Date**
+
+```{r}
+summary(FLOWS$Date)
+```
+
+**Location**
+
+```{r}
+unique(FLOWS$Location)
+```
+
+**Location_km**
+
+```{r}
+summary(FLOWS$Location_km)
+```
+
+**Flow**
+
+```{r}
+FLOWS |> 
+  ggplot() + 
+  geom_line(aes(x = Date, y = Flow)) + 
+  facet_wrap(~Location)
+```
+
+
+## HABAREA
+
+```{r include = FALSE}
+load('data/HABAREA.rda')
+```
+
+There are `r nrow(HABAREA)` rows of data in `HABAREA` data object 
+
+```{r}
+HABAREA |> head(20) |> knitr::kable()
+```
+
+**UnitNum**
+
+*TODO* are these unit numbers the same as those in `FISH`? This dataset contains sequential unit numbers from 1 to 2635
+
+```{r}
+summary(HABAREA$UnitNum)
+```
+
+**FLow_cfs**
+
+```{r}
+summary(HABAREA$Flow_cfs)
+
+HABAREA |> 
+  ggplot() + 
+  geom_line(aes(x = UnitNum, y = Flow_cfs))
+```
+
+**totArea_m2**
+
+```{r}
+summary(HABAREA$totArea_m2)
+
+HABAREA |> 
+  ggplot() + 
+  geom_line(aes(x = UnitNum, y = totArea_m2))
+```
+
+**spn_m2**
+
+```{r}
+summary(HABAREA$spn_m2)
+
+HABAREA |> 
+  ggplot() + 
+  geom_line(aes(x = UnitNum, y = spn_m2))
+```
+
+**fry_m2**
+
+```{r}
+summary(HABAREA$fry_m2)
+
+HABAREA |> 
+  ggplot() + 
+  geom_line(aes(x = UnitNum, y = fry_m2))
+```
+
+**juv_m2**
+
+```{r}
+summary(HABAREA$juv_m2)
+
+HABAREA |> 
+  ggplot() + 
+  geom_line(aes(x = UnitNum, y = juv_m2))
+```
+
+## HABITAT
+
