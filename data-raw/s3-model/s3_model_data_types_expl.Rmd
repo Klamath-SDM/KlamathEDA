@@ -239,3 +239,186 @@ HABAREA |>
 
 ## HABITAT
 
+```{r include = FALSE}
+load('data/HABITAT.rda')
+```
+
+```{r}
+HABITAT |> head(20) |> knitr::kable()
+```
+
+**UnitNum**
+
+`UnitNum` aligns perfectly with `HABAREA`
+
+```{r}
+summary(HABITAT$UnitNum)
+
+any(unique(HABITAT$UnitNum) == unique(HABAREA$UnitNum))
+```
+
+**rkm.up**
+
+```{r}
+summary(HABITAT$rkm.up)
+
+HABITAT |> 
+  ggplot() + 
+  geom_histogram(aes(x = rkm.up))
+
+```
+
+## SPAWNERS 
+
+```{r include = FALSE}
+load('data/SPAWNERS.rda')
+```
+
+```{r}
+SPAWNERS <- SPAWNERS |> 
+  mutate(wk_start_date = lubridate::as_date(wk_start_date),
+         wk_end_date = lubridate::as_date(wk_end_date))
+
+SPAWNERS |> head(20) |> knitr::kable()
+```
+
+**species**
+
+```{r}
+unique(SPAWNERS$species)
+```
+
+**Source**
+
+```{r}
+unique(SPAWNERS$Source)
+```
+
+**wk_start_date & wk_end_date**
+
+```{r}
+summary(SPAWNERS$wk_start_date)
+
+summary(SPAWNERS$wk_end_date)
+```
+
+**wk.calendar**
+
+```{r}
+summary(SPAWNERS$wk.calendar)
+```
+
+**Reach**
+
+```{r}
+unique(SPAWNERS$Reach)
+```
+
+**Abundance**
+
+```{r}
+summary(SPAWNERS$Abundance)
+```
+
+## SPAWNLOC
+
+```{r include = FALSE}
+load('data/SPAWNLOC.rda')
+```
+
+```{r}
+SPAWNLOC |> head(20) |> knitr::kable()
+```
+
+**Reach**
+
+```{r}
+unique(SPAWNLOC$Reach)
+```
+
+**Start_rkm**
+
+```{r}
+min(SPAWNLOC$Start_rkm)
+max(SPAWNLOC$Start_rkm)
+```
+
+**End_rkm**
+
+```{r}
+min(SPAWNLOC$End_rkm)
+max(SPAWNLOC$End_rkm)
+```
+
+## SPOREDATA
+
+```{r include = FALSE}
+load('data/SPOREDATA.rda')
+
+SPOREDATA <- SPOREDATA |> 
+  mutate(Date = lubridate::as_date(Date))
+```
+
+```{r}
+SPOREDATA |> head(20) |> knitr::kable()
+```
+
+**Date**
+
+```{r}
+summary(SPOREDATA$Date)
+```
+
+**spCon**
+
+```{r}
+summary(SPOREDATA$spCon)
+```
+
+```{r}
+SPOREDATA |> 
+  ggplot(aes(x = Date, y = spCon)) +
+  geom_line()
+```
+
+## TEMPS
+
+```{r include = FALSE}
+load('data/TEMPS.rda')
+
+TEMPS <- TEMPS |> 
+  mutate(Date = lubridate::as_date(Date))
+```
+
+```{r}
+TEMPS |> head(20) |> knitr::kable()
+```
+
+**Date**
+
+```{r}
+summary(TEMPS$Date)
+```
+
+**Location**
+
+```{r}
+unique(TEMPS$Location)
+```
+
+**Location_km**
+
+```{r}
+min(TEMPS$Location_km)
+max(TEMPS$Location_km)
+```
+
+**Temp**
+
+```{r}
+TEMPS |> 
+  ggplot(aes(x = Date, y = Temp)) + 
+  geom_line() + 
+  facet_wrap(~Location)
+
+```

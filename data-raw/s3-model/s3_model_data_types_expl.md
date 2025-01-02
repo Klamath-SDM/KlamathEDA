@@ -1,7 +1,7 @@
 S3 Model Data Types Exploration
 ================
 Maddee Rubenson (FlowWest)
-2024-12-30
+2025-01-02
 
 ## FISH
 
@@ -368,3 +368,358 @@ HABAREA |>
 ![](s3_model_data_types_expl_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
 
 ## HABITAT
+
+``` r
+HABITAT |> head(20) |> knitr::kable()
+```
+
+| UnitNum |   rkm.up |
+|--------:|---------:|
+|       1 | 378.2373 |
+|       2 | 378.1245 |
+|       3 | 378.0398 |
+|       4 | 377.9849 |
+|       5 | 377.9602 |
+|       6 | 377.8617 |
+|       7 | 377.8138 |
+|       8 | 377.7041 |
+|       9 | 377.6325 |
+|      10 | 377.5974 |
+|      11 | 377.5681 |
+|      12 | 377.5455 |
+|      13 | 377.4928 |
+|      14 | 377.4331 |
+|      15 | 377.3709 |
+|      16 | 377.2807 |
+|      17 | 377.2475 |
+|      18 | 377.1948 |
+|      19 | 376.9244 |
+|      20 | 376.8817 |
+
+**UnitNum**
+
+`UnitNum` aligns perfectly with `HABAREA`
+
+``` r
+summary(HABITAT$UnitNum)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##     1.0   659.5  1318.0  1318.0  1976.5  2635.0
+
+``` r
+any(unique(HABITAT$UnitNum) == unique(HABAREA$UnitNum))
+```
+
+    ## [1] TRUE
+
+**rkm.up**
+
+``` r
+summary(HABITAT$rkm.up)
+```
+
+    ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+    ##   0.3075 139.0462 251.7888 231.2842 331.9396 378.2373
+
+``` r
+HABITAT |> 
+  ggplot() + 
+  geom_histogram(aes(x = rkm.up))
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](s3_model_data_types_expl_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+
+## SPAWNERS
+
+``` r
+SPAWNERS <- SPAWNERS |> 
+  mutate(wk_start_date = lubridate::as_date(wk_start_date),
+         wk_end_date = lubridate::as_date(wk_end_date))
+
+SPAWNERS |> head(20) |> knitr::kable()
+```
+
+| species | Source  | wk_start_date | wk_end_date | wk.calendar | Reach    | Abundance |
+|:--------|:--------|:--------------|:------------|------------:|:---------|----------:|
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_1  |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_2  |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_3  |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_4  |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_5  |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_6  |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_7  |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_8  |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_9  |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_10 |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_11 |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_12 |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_13 |        NA |
+| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_1  |        NA |
+| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_2  |        NA |
+| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_3  |        NA |
+| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_4  |        NA |
+| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_5  |        NA |
+| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_6  |        NA |
+| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_7  |        NA |
+
+**species**
+
+``` r
+unique(SPAWNERS$species)
+```
+
+    ## [1] "FACH"
+
+**Source**
+
+``` r
+unique(SPAWNERS$Source)
+```
+
+    ## [1] "Klamath"
+
+**wk_start_date & wk_end_date**
+
+``` r
+summary(SPAWNERS$wk_start_date)
+```
+
+    ##         Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
+    ## "2001-08-26" "2005-09-11" "2009-11-01" "2009-10-24" "2013-12-01" "2017-12-24"
+
+``` r
+summary(SPAWNERS$wk_end_date)
+```
+
+    ##         Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
+    ## "2001-09-01" "2005-09-17" "2009-11-07" "2009-10-30" "2013-12-07" "2017-12-30"
+
+**wk.calendar**
+
+``` r
+summary(SPAWNERS$wk.calendar)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##   34.00   38.00   43.00   42.99   48.00   52.00
+
+**Reach**
+
+``` r
+unique(SPAWNERS$Reach)
+```
+
+    ##  [1] "Reach_1"  "Reach_2"  "Reach_3"  "Reach_4"  "Reach_5"  "Reach_6" 
+    ##  [7] "Reach_7"  "Reach_8"  "Reach_9"  "Reach_10" "Reach_11" "Reach_12"
+    ## [13] "Reach_13"
+
+**Abundance**
+
+``` r
+summary(SPAWNERS$Abundance)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    ##    0.00    6.00   21.09   58.80   66.00 1115.72    2781
+
+## SPAWNLOC
+
+``` r
+SPAWNLOC |> head(20) |> knitr::kable()
+```
+
+| Reach | Start_rkm |  End_rkm |
+|------:|----------:|---------:|
+|     1 |  311.9765 | 311.4029 |
+|     2 |  311.4029 | 308.5917 |
+|     3 |  308.5917 | 307.4239 |
+|     4 |  307.4239 | 305.1690 |
+|     5 |  305.1690 | 302.4102 |
+|     6 |  302.4102 | 297.3962 |
+|     7 |  297.3962 | 294.5707 |
+|     8 |  294.5707 | 289.4123 |
+|     9 |  289.4123 | 266.6561 |
+|    10 |  266.6561 | 237.1690 |
+|    11 |  237.1690 | 218.3677 |
+|    12 |  218.3677 | 196.3680 |
+|    13 |  196.3680 | 178.4202 |
+
+**Reach**
+
+``` r
+unique(SPAWNLOC$Reach)
+```
+
+    ##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13
+
+**Start_rkm**
+
+``` r
+min(SPAWNLOC$Start_rkm)
+```
+
+    ## [1] 196.368
+
+``` r
+max(SPAWNLOC$Start_rkm)
+```
+
+    ## [1] 311.9765
+
+**End_rkm**
+
+``` r
+min(SPAWNLOC$End_rkm)
+```
+
+    ## [1] 178.4202
+
+``` r
+max(SPAWNLOC$End_rkm)
+```
+
+    ## [1] 311.4029
+
+## SPOREDATA
+
+``` r
+SPOREDATA |> head(20) |> knitr::kable()
+```
+
+| Date       | spCon |
+|:-----------|------:|
+| 2004-08-14 |     0 |
+| 2004-08-15 |     0 |
+| 2004-08-16 |     0 |
+| 2004-08-17 |     0 |
+| 2004-08-18 |     0 |
+| 2004-08-19 |     0 |
+| 2004-08-20 |     0 |
+| 2004-08-21 |     0 |
+| 2004-08-22 |     0 |
+| 2004-08-23 |     0 |
+| 2004-08-24 |     0 |
+| 2004-08-25 |     0 |
+| 2004-08-26 |     0 |
+| 2004-08-27 |     0 |
+| 2004-08-28 |     0 |
+| 2004-08-29 |     0 |
+| 2004-08-30 |     0 |
+| 2004-08-31 |     0 |
+| 2004-09-01 |     0 |
+| 2004-09-02 |     0 |
+
+**Date**
+
+``` r
+summary(SPOREDATA$Date)
+```
+
+    ##         Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
+    ## "2004-08-14" "2008-03-19" "2011-10-23" "2011-10-23" "2015-05-28" "2019-01-01"
+
+**spCon**
+
+``` r
+summary(SPOREDATA$spCon)
+```
+
+    ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+    ##    0.000    0.000    0.100    9.122    3.403 1092.240
+
+``` r
+SPOREDATA |> 
+  ggplot(aes(x = Date, y = spCon)) +
+  geom_line()
+```
+
+![](s3_model_data_types_expl_files/figure-gfm/unnamed-chunk-47-1.png)<!-- -->
+
+## TEMPS
+
+``` r
+TEMPS |> head(20) |> knitr::kable()
+```
+
+| Date       | Location | Location_km | Temp |
+|:-----------|:---------|------------:|-----:|
+| 1980-01-01 | Keno_Dam |    378.2373 |  2.8 |
+| 1980-01-02 | Keno_Dam |    378.2373 |  2.7 |
+| 1980-01-03 | Keno_Dam |    378.2373 |  3.0 |
+| 1980-01-04 | Keno_Dam |    378.2373 |  3.2 |
+| 1980-01-05 | Keno_Dam |    378.2373 |  3.6 |
+| 1980-01-06 | Keno_Dam |    378.2373 |  3.9 |
+| 1980-01-07 | Keno_Dam |    378.2373 |  4.1 |
+| 1980-01-08 | Keno_Dam |    378.2373 |  4.1 |
+| 1980-01-09 | Keno_Dam |    378.2373 |  3.7 |
+| 1980-01-10 | Keno_Dam |    378.2373 |  3.2 |
+| 1980-01-11 | Keno_Dam |    378.2373 |  2.8 |
+| 1980-01-12 | Keno_Dam |    378.2373 |  3.1 |
+| 1980-01-13 | Keno_Dam |    378.2373 |  3.6 |
+| 1980-01-14 | Keno_Dam |    378.2373 |  4.8 |
+| 1980-01-15 | Keno_Dam |    378.2373 |  4.9 |
+| 1980-01-16 | Keno_Dam |    378.2373 |  4.8 |
+| 1980-01-17 | Keno_Dam |    378.2373 |  4.8 |
+| 1980-01-18 | Keno_Dam |    378.2373 |  4.5 |
+| 1980-01-19 | Keno_Dam |    378.2373 |  4.2 |
+| 1980-01-20 | Keno_Dam |    378.2373 |  3.7 |
+
+**Date**
+
+``` r
+summary(TEMPS$Date)
+```
+
+    ##         Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
+    ## "1980-01-01" "1989-07-01" "1998-12-31" "1998-12-31" "2008-07-01" "2017-12-31"
+
+**Location**
+
+``` r
+unique(TEMPS$Location)
+```
+
+    ##  [1] "Keno_Dam"                     "Upstream_end_of_JC_Boyle_Res"
+    ##  [3] "JC_Boyle_Dam"                 "Copco_Dam"                   
+    ##  [5] "Iron_Gate_Dam"                "Below_Bogus_Ck"              
+    ##  [7] "Below_Willow_Ck"              "Below_Cottonwood_Ck"         
+    ##  [9] "Below_Shasta_R"               "Below_Humbug_Ck"             
+    ## [11] "Below_Beaver_Ck"              "Below_Dona_Ck"               
+    ## [13] "Below_Horse_Ck"               "Below_Scott_R"               
+    ## [15] "Seiad_Valley_gage"            "Below_Indian_Ck"             
+    ## [17] "Below_Elk_Ck"                 "Below_Clear_Ck"              
+    ## [19] "Below_Salmon_R"               "Orleans"                     
+    ## [21] "Below_Red_Cap_Ck"             "Below_Bluff_Ck"              
+    ## [23] "Below_Trinity_R"              "Below_Blue_Ck"               
+    ## [25] "Klamath"
+
+**Location_km**
+
+``` r
+min(TEMPS$Location_km)
+```
+
+    ## [1] 13.6511
+
+``` r
+max(TEMPS$Location_km)
+```
+
+    ## [1] 378.2373
+
+**Temp**
+
+``` r
+TEMPS |> 
+  ggplot(aes(x = Date, y = Temp)) + 
+  geom_line() + 
+  facet_wrap(~Location)
+```
+
+    ## Warning: Removed 3014 rows containing missing values or values outside the scale range
+    ## (`geom_line()`).
+
+![](s3_model_data_types_expl_files/figure-gfm/unnamed-chunk-53-1.png)<!-- -->
