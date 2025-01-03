@@ -1,12 +1,26 @@
 S3 Model Data Types Exploration
 ================
 Maddee Rubenson (FlowWest)
-2025-01-02
+2025-01-03
 
 ## FISH
 
-The `FISH.rda` data object which is 2798 rows. See specifics on data
-below.
+S3 allows for inputs of fish from tributary or hatchery sources.
+
+The fish input is mapped to the model domain using the ‘Unit Number’
+identifying the habitat unit at which to add fish (`FISH$UnitNum`).
+These inputs can be stratified by brood year, run type, and life stage.
+Fish inputs are required to have an average length (in mm) and weight
+(in g).
+
+Simulations in S3 are stratified by ‘source populations’ which are
+individual groups of fish to be tracked. `FISH$Source` and
+`FISH$runType` are combined within S3 to define the ‘source
+populations’. Inputs are also stratified by time, discritized into weeks
+of the year by `FISH$first_Rdate` and `FISH$last_Rdate`. These columns
+define the starting date and ending dat of each week. The abundance of
+fish each week is defined using the `FISH$Total_released` column and
+these individuals are spread evenly across the week.
 
 ``` r
 FISH |> 
@@ -22,6 +36,8 @@ FISH |>
 |     932 | Bogus Cr | FACH    |         230956 |         41 |        0.6 |       2001 | 2002-04-14  | 2002-04-20 |
 |     932 | Bogus Cr | FACH    |          35273 |         42 |        0.7 |       2001 | 2002-04-21  | 2002-04-27 |
 |     932 | Bogus Cr | FACH    |         183328 |         42 |        0.7 |       2001 | 2002-04-28  | 2002-05-04 |
+
+*The `FISH.rda` data object is 2798 rows*
 
 **UnitNum**
 
@@ -241,7 +257,35 @@ FLOWS |>
 
 ## HABAREA
 
-There are 263500 rows of data in `HABAREA` data object
+Weighted Useable Area (WUA data). This dataset contains WUA estimates.
+
+One of the fundamental concepts of S3 is that daily discharge influences
+available habitat for different life stages, which in turn drives
+density-dependent processes that affect population dynamics. The model
+requires a *H* by *T* matrix of available habitat areas or a *H* by *T*
+matrix of habitat capacities for each life stage.
+
+The structure of S3 gives users the flexibility to define habitat area
+or capacity using a wide variety of techniques. For examples see:
+
+- [Perry et al. 2018](https://doi.org/10.3133/ofr20181174) - Trinity
+  River Habitat Capacity
+- [Perry et al. 2019](https://doi.org/10.3133/ofr20191107) - Klamath
+  River WUA
+
+`HABAREA` contains either the WUA or capacity estimates and is
+structured by habitat units `HABAREA$UnitNum`. Other inputs include
+`HABAREA$Flow_cfs`, defining the flows (cfs), and estimates of area for
+various life stages or spawning.
+
+| Data       | Description                    |
+|------------|--------------------------------|
+| UnitNum    | Habitat unit number            |
+| Flow_cfs   | Discharge (cfs)                |
+| totArea_m2 | Total area unit (meters^2)     |
+| spn_m2     | Spawning area (meters^2)       |
+| fry_m2     | Fry area (meters^2)            |
+| juv_m2     | Parr and smolt area (meters^2) |
 
 ``` r
 HABAREA |> head(20) |> knitr::kable()
@@ -269,6 +313,8 @@ HABAREA |> head(20) |> knitr::kable()
 |       1 |   500.00 |   2202.266 | 1202.7634 |  9.803071 | 4.561688 |
 |       1 |   517.00 |   2228.810 | 1209.8199 |  9.756839 | 4.607903 |
 |       1 |   538.00 |   2269.988 | 1225.5849 |  9.826637 | 4.682390 |
+
+*There are 263500 rows of data in `HABAREA` data object*
 
 **UnitNum**
 
@@ -369,8 +415,13 @@ HABAREA |>
 
 ## HABITAT
 
+| Data    | Description                                |
+|---------|--------------------------------------------|
+| UnitNum | Habitat unit number                        |
+| rkm.up  | River kilometer - upper bound of unit (km) |
+
 ``` r
-HABITAT |> head(20) |> knitr::kable()
+HABITAT |> head() |> knitr::kable()
 ```
 
 | UnitNum |   rkm.up |
@@ -381,20 +432,8 @@ HABITAT |> head(20) |> knitr::kable()
 |       4 | 377.9849 |
 |       5 | 377.9602 |
 |       6 | 377.8617 |
-|       7 | 377.8138 |
-|       8 | 377.7041 |
-|       9 | 377.6325 |
-|      10 | 377.5974 |
-|      11 | 377.5681 |
-|      12 | 377.5455 |
-|      13 | 377.4928 |
-|      14 | 377.4331 |
-|      15 | 377.3709 |
-|      16 | 377.2807 |
-|      17 | 377.2475 |
-|      18 | 377.1948 |
-|      19 | 376.9244 |
-|      20 | 376.8817 |
+
+*There are 2635 rows of data in `HABITAT` data object*
 
 **UnitNum**
 
@@ -433,6 +472,19 @@ HABITAT |>
 ![](s3_model_data_types_expl_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
 ## SPAWNERS
+
+To simulate the spatiotemporal distribution of emerging fry from natural
+production, information from spawning surveys can be incorporated into
+S3. Spawning data is optional and not required (see `process_spawn()`).
+
+Much like the `FISH` inputs spawning data is structured in weeks with
+`SPAWNERS$wk_start_date` and `SPAWNERS$wk_end_date` signifying the start
+and end of each week. The abundance of spawners (`SPAWNERS$Abundance`)
+is then distributed across days in each week. `SPAWNERS$wk.calendar` is
+the calendar week represented by each of the weeks and can be calculated
+using the S3 function `calWeek()`. `SPAWNERS$Reach` is used to map the
+number of spawning fish to locations (see `SPAWNLOC`). Simulating
+spawning dynamics is optional, therefore this input is optional.
 
 ``` r
 SPAWNERS <- SPAWNERS |> 
@@ -527,6 +579,15 @@ summary(SPAWNERS$Abundance)
 
 ## SPAWNLOC
 
+Known spawning locations can be added to S3 (?SPAWNLOC). This
+information can be combined with spawner surveys (?SPAWNERS) to
+distribute spawners uniformly across available habitat.
+
+This input is structured by defining reaches, each with a starting and
+ending river kilometer. The data structure has only three columns:
+`SPAWNLOC$Reach`, `SPAWNLOC$Start_rkm`, `SPAWNLOC$End_rkm`. Simulating
+spawning dynamics is optional, therefore this input is optional.
+
 ``` r
 SPAWNLOC |> head(20) |> knitr::kable()
 ```
@@ -585,6 +646,13 @@ max(SPAWNLOC$End_rkm)
 
 ## SPOREDATA
 
+To model disease dynamics, primarily C. Shasta in the Klamath, S3
+incorporates spore concentration data (?SPOREDATA).
+
+This input is structured as a time series of spore concentrations, with
+two columns: SPOREDATA$Date and SPOREDATA$spCon. Simulating disease
+dynamics is an option in S3, therefore this input is optional.
+
 ``` r
 SPOREDATA |> head(20) |> knitr::kable()
 ```
@@ -639,6 +707,16 @@ SPOREDATA |>
 ![](s3_model_data_types_expl_files/figure-gfm/unnamed-chunk-47-1.png)<!-- -->
 
 ## TEMPS
+
+A dataset containing 50 year data set of historical temperatures from
+RBM10 historical simulation
+
+| Data        | Description                                |
+|-------------|--------------------------------------------|
+| Date        | Date, format = yyyy-mm-dd                  |
+| Location    | Name of location                           |
+| Location_km | Location, river kilometers from mouth (km) |
+| Temp        | Water temperature, degrees C               |
 
 ``` r
 TEMPS |> head(20) |> knitr::kable()

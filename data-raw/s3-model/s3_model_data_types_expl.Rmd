@@ -13,6 +13,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## FISH
 
+S3 allows for inputs of fish from tributary or hatchery sources.
+
+The fish input is mapped to the model domain using the 'Unit Number' identifying the habitat unit at which to add fish (`FISH$UnitNum`). These inputs can be stratified by brood year, run type, and life stage. Fish inputs are required to have an average length (in mm) and weight (in g).
+
+Simulations in S3 are stratified by 'source populations' which are individual groups of fish to be tracked. `FISH$Source` and `FISH$runType` are combined within S3 to define the 'source populations'. Inputs are also stratified by time, discritized into weeks of the year by `FISH$first_Rdate` and `FISH$last_Rdate`. These columns define the starting date and ending dat of each week. The abundance of fish each week is defined using the `FISH$Total_released` column and these individuals are spread evenly across the week.
+
 ```{r include=FALSE}
 load('data/FISH.rda') 
 
@@ -22,8 +28,6 @@ FISH <- FISH |>
 
 ```
 
-The `FISH.rda` data object which is `r nrow(FISH)` rows. See specifics on data below. 
-
 ```{r}
 
 FISH |> 
@@ -31,6 +35,8 @@ FISH |>
   knitr::kable()
 
 ```
+
+*The `FISH.rda` data object is `r nrow(FISH)` rows*
 
 **UnitNum**
 
@@ -52,7 +58,7 @@ unique(FISH$Source)
 
 The only run type is `FACH`
 
-*TODO* get definition 
+*TODO* get definition
 
 ```{r}
 unique(FISH$runType)
@@ -130,7 +136,7 @@ FLOWS <- FLOWS |>
   mutate(Date = lubridate::as_date(Date)) 
 ```
 
-There are `r nrow(FLOWS)` rows of date in the `FLOWS` data object 
+There are `r nrow(FLOWS)` rows of date in the `FLOWS` data object
 
 ```{r}
 FLOWS |> 
@@ -166,18 +172,37 @@ FLOWS |>
   facet_wrap(~Location)
 ```
 
-
 ## HABAREA
 
 ```{r include = FALSE}
 load('data/HABAREA.rda')
 ```
 
-There are `r nrow(HABAREA)` rows of data in `HABAREA` data object 
+Weighted Useable Area (WUA data). This dataset contains WUA estimates.
+
+One of the fundamental concepts of S3 is that daily discharge influences available habitat for different life stages, which in turn drives density-dependent processes that affect population dynamics. The model requires a *H* by *T* matrix of available habitat areas or a *H* by *T* matrix of habitat capacities for each life stage.
+
+The structure of S3 gives users the flexibility to define habitat area or capacity using a wide variety of techniques. For examples see:
+
+-   [Perry et al. 2018](https://doi.org/10.3133/ofr20181174) - Trinity River Habitat Capacity
+-   [Perry et al. 2019](https://doi.org/10.3133/ofr20191107) - Klamath River WUA
+
+`HABAREA` contains either the WUA or capacity estimates and is structured by habitat units `HABAREA$UnitNum`. Other inputs include `HABAREA$Flow_cfs`, defining the flows (cfs), and estimates of area for various life stages or spawning.
+
+| Data       | Description                     |
+|------------|---------------------------------|
+| UnitNum    | Habitat unit number             |
+| Flow_cfs   | Discharge (cfs)                 |
+| totArea_m2 | Total area unit (meters\^2)     |
+| spn_m2     | Spawning area (meters\^2)       |
+| fry_m2     | Fry area (meters\^2)            |
+| juv_m2     | Parr and smolt area (meters\^2) |
 
 ```{r}
 HABAREA |> head(20) |> knitr::kable()
 ```
+
+*There are `r nrow(HABAREA)` rows of data in `HABAREA` data object*
 
 **UnitNum**
 
@@ -239,13 +264,19 @@ HABAREA |>
 
 ## HABITAT
 
+| Data    | Description                                |
+|---------|--------------------------------------------|
+| UnitNum | Habitat unit number                        |
+| rkm.up  | River kilometer - upper bound of unit (km) |
+
 ```{r include = FALSE}
 load('data/HABITAT.rda')
 ```
 
 ```{r}
-HABITAT |> head(20) |> knitr::kable()
+HABITAT |> head() |> knitr::kable()
 ```
+*There are `r nrow(HABITAT)` rows of data in `HABITAT` data object*
 
 **UnitNum**
 
@@ -268,7 +299,11 @@ HABITAT |>
 
 ```
 
-## SPAWNERS 
+## SPAWNERS
+
+To simulate the spatiotemporal distribution of emerging fry from natural production, information from spawning surveys can be incorporated into S3. Spawning data is optional and not required (see `process_spawn()`).
+
+Much like the `FISH` inputs spawning data is structured in weeks with `SPAWNERS$wk_start_date` and `SPAWNERS$wk_end_date` signifying the start and end of each week. The abundance of spawners (`SPAWNERS$Abundance`) is then distributed across days in each week. `SPAWNERS$wk.calendar` is the calendar week represented by each of the weeks and can be calculated using the S3 function `calWeek()`. `SPAWNERS$Reach` is used to map the number of spawning fish to locations (see `SPAWNLOC`). Simulating spawning dynamics is optional, therefore this input is optional.
 
 ```{r include = FALSE}
 load('data/SPAWNERS.rda')
@@ -322,6 +357,10 @@ summary(SPAWNERS$Abundance)
 
 ## SPAWNLOC
 
+Known spawning locations can be added to S3 (?SPAWNLOC). This information can be combined with spawner surveys (?SPAWNERS) to distribute spawners uniformly across available habitat.
+
+This input is structured by defining reaches, each with a starting and ending river kilometer. The data structure has only three columns: `SPAWNLOC$Reach`, `SPAWNLOC$Start_rkm`, `SPAWNLOC$End_rkm`. Simulating spawning dynamics is optional, therefore this input is optional.
+
 ```{r include = FALSE}
 load('data/SPAWNLOC.rda')
 ```
@@ -351,6 +390,10 @@ max(SPAWNLOC$End_rkm)
 ```
 
 ## SPOREDATA
+
+To model disease dynamics, primarily C. Shasta in the Klamath, S3 incorporates spore concentration data (?SPOREDATA).
+
+This input is structured as a time series of spore concentrations, with two columns: SPOREDATA$Date and SPOREDATA$spCon. Simulating disease dynamics is an option in S3, therefore this input is optional.
 
 ```{r include = FALSE}
 load('data/SPOREDATA.rda')
@@ -382,6 +425,15 @@ SPOREDATA |>
 ```
 
 ## TEMPS
+
+A dataset containing 50 year data set of historical temperatures from RBM10 historical simulation 
+
+| Data    | Description                                |
+|---------|--------------------------------------------|
+| Date | Date, format = yyyy-mm-dd                        |
+| Location  | Name of location |
+| Location_km | Location, river kilometers from mouth (km) |
+| Temp | Water temperature, degrees C |
 
 ```{r include = FALSE}
 load('data/TEMPS.rda')
