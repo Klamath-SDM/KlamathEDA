@@ -1,7 +1,16 @@
 S3 Model Data Types Exploration
 ================
 Maddee Rubenson (FlowWest)
-2025-01-03
+2025-01-08
+
+- [FISH](#fish)
+- [FLOWS](#flows)
+- [HABAREA](#habarea)
+- [HABITAT](#habitat)
+- [SPAWNERS](#spawners)
+- [SPAWNLOC](#spawnloc)
+- [SPOREDATA](#sporedata)
+- [TEMPS](#temps)
 
 ## FISH
 
@@ -37,7 +46,7 @@ FISH |>
 |     932 | Bogus Cr | FACH    |          35273 |         42 |        0.7 |       2001 | 2002-04-21  | 2002-04-27 |
 |     932 | Bogus Cr | FACH    |         183328 |         42 |        0.7 |       2001 | 2002-04-28  | 2002-05-04 |
 
-*The `FISH.rda` data object is 2798 rows*
+*…with 2788 additional rows*
 
 **UnitNum**
 
@@ -176,11 +185,9 @@ summary(FISH$last_Rdate)
 
 ## FLOWS
 
-There are 509448 rows of date in the `FLOWS` data object
-
 ``` r
 FLOWS |> 
-  head(20) |> 
+  head() |> 
   knitr::kable()
 ```
 
@@ -192,20 +199,8 @@ FLOWS |>
 | 1960-10-04 | Klamath.Near.Keno |    378.2373 | 1030 |
 | 1960-10-05 | Klamath.Near.Keno |    378.2373 | 1020 |
 | 1960-10-06 | Klamath.Near.Keno |    378.2373 | 1020 |
-| 1960-10-07 | Klamath.Near.Keno |    378.2373 | 1020 |
-| 1960-10-08 | Klamath.Near.Keno |    378.2373 | 1030 |
-| 1960-10-09 | Klamath.Near.Keno |    378.2373 | 1040 |
-| 1960-10-10 | Klamath.Near.Keno |    378.2373 | 1090 |
-| 1960-10-11 | Klamath.Near.Keno |    378.2373 | 1130 |
-| 1960-10-12 | Klamath.Near.Keno |    378.2373 | 1140 |
-| 1960-10-13 | Klamath.Near.Keno |    378.2373 | 1160 |
-| 1960-10-14 | Klamath.Near.Keno |    378.2373 | 1180 |
-| 1960-10-15 | Klamath.Near.Keno |    378.2373 | 1210 |
-| 1960-10-16 | Klamath.Near.Keno |    378.2373 | 1210 |
-| 1960-10-17 | Klamath.Near.Keno |    378.2373 | 1190 |
-| 1960-10-18 | Klamath.Near.Keno |    378.2373 | 1160 |
-| 1960-10-19 | Klamath.Near.Keno |    378.2373 | 1000 |
-| 1960-10-20 | Klamath.Near.Keno |    378.2373 | 1150 |
+
+*…with 5.09438^{5} additional rows*
 
 **Date**
 
@@ -288,33 +283,19 @@ various life stages or spawning.
 | juv_m2     | Parr and smolt area (meters^2) |
 
 ``` r
-HABAREA |> head(20) |> knitr::kable()
+HABAREA |> head() |> knitr::kable()
 ```
 
 | UnitNum | Flow_cfs | totArea_m2 |    spn_m2 |    fry_m2 |   juv_m2 |
 |--------:|---------:|-----------:|----------:|----------:|---------:|
-|       1 |     0.00 |      0.000 |    0.0000 |  0.000000 | 0.000000 |
-|       1 |   206.00 |   1727.870 |  984.5681 | 10.117282 | 3.735946 |
-|       1 |   249.00 |   1841.270 | 1057.2326 | 10.524197 | 3.959563 |
-|       1 |   259.00 |   1687.338 |  983.0289 |  9.191307 | 3.590523 |
-|       1 |   272.00 |   1676.386 |  982.5201 |  8.944078 | 3.551479 |
-|       1 |   283.00 |   1720.930 | 1005.4288 |  9.108645 | 3.641905 |
-|       1 |   298.76 |   1785.453 | 1041.3440 |  9.410795 | 3.776352 |
-|       1 |   321.00 |   1864.428 | 1085.1389 |  9.776988 | 3.940719 |
-|       1 |   335.68 |   1916.035 | 1113.4960 | 10.010507 | 4.047819 |
-|       1 |   352.00 |   1967.048 | 1140.8667 | 10.226765 | 4.152907 |
-|       1 |   376.00 |   2041.415 | 1181.7079 | 10.562787 | 4.307214 |
-|       1 |   403.00 |   2121.387 | 1225.1804 | 10.914260 | 4.472625 |
-|       1 |   416.00 |   2148.411 | 1235.6457 | 10.939685 | 4.523542 |
-|       1 |   433.00 |   2160.632 | 1230.3757 | 10.730188 | 4.534780 |
-|       1 |   450.00 |   2172.964 | 1225.2064 | 10.522065 | 4.546297 |
-|       1 |   465.40 |   2162.818 | 1201.8663 | 10.083653 | 4.504308 |
-|       1 |   481.00 |   2171.366 | 1194.1740 |  9.848609 | 4.507448 |
-|       1 |   500.00 |   2202.266 | 1202.7634 |  9.803071 | 4.561688 |
-|       1 |   517.00 |   2228.810 | 1209.8199 |  9.756839 | 4.607903 |
-|       1 |   538.00 |   2269.988 | 1225.5849 |  9.826637 | 4.682390 |
+|       1 |        0 |      0.000 |    0.0000 |  0.000000 | 0.000000 |
+|       1 |      206 |   1727.870 |  984.5681 | 10.117282 | 3.735946 |
+|       1 |      249 |   1841.270 | 1057.2326 | 10.524197 | 3.959563 |
+|       1 |      259 |   1687.338 |  983.0289 |  9.191307 | 3.590523 |
+|       1 |      272 |   1676.386 |  982.5201 |  8.944078 | 3.551479 |
+|       1 |      283 |   1720.930 | 1005.4288 |  9.108645 | 3.641905 |
 
-*There are 263500 rows of data in `HABAREA` data object*
+*…with 2.6349^{5} additional rows*
 
 **UnitNum**
 
@@ -433,7 +414,7 @@ HABITAT |> head() |> knitr::kable()
 |       5 | 377.9602 |
 |       6 | 377.8617 |
 
-*There are 2635 rows of data in `HABITAT` data object*
+*…with 2625 additional rows*
 
 **UnitNum**
 
@@ -491,31 +472,19 @@ SPAWNERS <- SPAWNERS |>
   mutate(wk_start_date = lubridate::as_date(wk_start_date),
          wk_end_date = lubridate::as_date(wk_end_date))
 
-SPAWNERS |> head(20) |> knitr::kable()
+SPAWNERS |> head() |> knitr::kable()
 ```
 
-| species | Source  | wk_start_date | wk_end_date | wk.calendar | Reach    | Abundance |
-|:--------|:--------|:--------------|:------------|------------:|:---------|----------:|
-| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_1  |        NA |
-| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_2  |        NA |
-| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_3  |        NA |
-| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_4  |        NA |
-| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_5  |        NA |
-| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_6  |        NA |
-| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_7  |        NA |
-| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_8  |        NA |
-| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_9  |        NA |
-| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_10 |        NA |
-| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_11 |        NA |
-| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_12 |        NA |
-| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_13 |        NA |
-| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_1  |        NA |
-| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_2  |        NA |
-| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_3  |        NA |
-| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_4  |        NA |
-| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_5  |        NA |
-| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_6  |        NA |
-| FACH    | Klamath | 2001-09-02    | 2001-09-08  |          35 | Reach_7  |        NA |
+| species | Source  | wk_start_date | wk_end_date | wk.calendar | Reach   | Abundance |
+|:--------|:--------|:--------------|:------------|------------:|:--------|----------:|
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_1 |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_2 |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_3 |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_4 |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_5 |        NA |
+| FACH    | Klamath | 2001-08-26    | 2001-09-01  |          34 | Reach_6 |        NA |
+
+*…with 4163 additional rows*
 
 **species**
 
@@ -589,7 +558,7 @@ ending river kilometer. The data structure has only three columns:
 spawning dynamics is optional, therefore this input is optional.
 
 ``` r
-SPAWNLOC |> head(20) |> knitr::kable()
+SPAWNLOC |> head() |> knitr::kable()
 ```
 
 | Reach | Start_rkm |  End_rkm |
@@ -600,13 +569,8 @@ SPAWNLOC |> head(20) |> knitr::kable()
 |     4 |  307.4239 | 305.1690 |
 |     5 |  305.1690 | 302.4102 |
 |     6 |  302.4102 | 297.3962 |
-|     7 |  297.3962 | 294.5707 |
-|     8 |  294.5707 | 289.4123 |
-|     9 |  289.4123 | 266.6561 |
-|    10 |  266.6561 | 237.1690 |
-|    11 |  237.1690 | 218.3677 |
-|    12 |  218.3677 | 196.3680 |
-|    13 |  196.3680 | 178.4202 |
+
+*…with 3 additional rows*
 
 **Reach**
 
@@ -654,7 +618,7 @@ two columns: SPOREDATA$Date and SPOREDATA$spCon. Simulating disease
 dynamics is an option in S3, therefore this input is optional.
 
 ``` r
-SPOREDATA |> head(20) |> knitr::kable()
+SPOREDATA |> head() |> knitr::kable()
 ```
 
 | Date       | spCon |
@@ -665,20 +629,8 @@ SPOREDATA |> head(20) |> knitr::kable()
 | 2004-08-17 |     0 |
 | 2004-08-18 |     0 |
 | 2004-08-19 |     0 |
-| 2004-08-20 |     0 |
-| 2004-08-21 |     0 |
-| 2004-08-22 |     0 |
-| 2004-08-23 |     0 |
-| 2004-08-24 |     0 |
-| 2004-08-25 |     0 |
-| 2004-08-26 |     0 |
-| 2004-08-27 |     0 |
-| 2004-08-28 |     0 |
-| 2004-08-29 |     0 |
-| 2004-08-30 |     0 |
-| 2004-08-31 |     0 |
-| 2004-09-01 |     0 |
-| 2004-09-02 |     0 |
+
+*…with 5244 additional rows*
 
 **Date**
 
@@ -719,7 +671,7 @@ RBM10 historical simulation
 | Temp        | Water temperature, degrees C               |
 
 ``` r
-TEMPS |> head(20) |> knitr::kable()
+TEMPS |> head() |> knitr::kable()
 ```
 
 | Date       | Location | Location_km | Temp |
@@ -730,20 +682,8 @@ TEMPS |> head(20) |> knitr::kable()
 | 1980-01-04 | Keno_Dam |    378.2373 |  3.2 |
 | 1980-01-05 | Keno_Dam |    378.2373 |  3.6 |
 | 1980-01-06 | Keno_Dam |    378.2373 |  3.9 |
-| 1980-01-07 | Keno_Dam |    378.2373 |  4.1 |
-| 1980-01-08 | Keno_Dam |    378.2373 |  4.1 |
-| 1980-01-09 | Keno_Dam |    378.2373 |  3.7 |
-| 1980-01-10 | Keno_Dam |    378.2373 |  3.2 |
-| 1980-01-11 | Keno_Dam |    378.2373 |  2.8 |
-| 1980-01-12 | Keno_Dam |    378.2373 |  3.1 |
-| 1980-01-13 | Keno_Dam |    378.2373 |  3.6 |
-| 1980-01-14 | Keno_Dam |    378.2373 |  4.8 |
-| 1980-01-15 | Keno_Dam |    378.2373 |  4.9 |
-| 1980-01-16 | Keno_Dam |    378.2373 |  4.8 |
-| 1980-01-17 | Keno_Dam |    378.2373 |  4.8 |
-| 1980-01-18 | Keno_Dam |    378.2373 |  4.5 |
-| 1980-01-19 | Keno_Dam |    378.2373 |  4.2 |
-| 1980-01-20 | Keno_Dam |    378.2373 |  3.7 |
+
+*…with 3.4699^{5} additional rows*
 
 **Date**
 

@@ -2,11 +2,17 @@
 title: "S3 Model Data Types Exploration"
 author: "Maddee Rubenson (FlowWest)"
 date: "`r Sys.Date()`"
-output: github_document
+output: 
+  github_document:
+    toc: true
+    toc_depth: 3
+    number_sections: false
 ---
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+
+theme_set(theme_bw())
 
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -35,8 +41,7 @@ FISH |>
   knitr::kable()
 
 ```
-
-*The `FISH.rda` data object is `r nrow(FISH)` rows*
+*...with `r nrow(FISH) - 10` additional rows*
 
 **UnitNum**
 
@@ -136,14 +141,14 @@ FLOWS <- FLOWS |>
   mutate(Date = lubridate::as_date(Date)) 
 ```
 
-There are `r nrow(FLOWS)` rows of date in the `FLOWS` data object
-
 ```{r}
 FLOWS |> 
-  head(20) |> 
+  head() |> 
   knitr::kable()
 
 ```
+*...with `r nrow(FLOWS) - 10` additional rows*
+
 
 **Date**
 
@@ -199,10 +204,10 @@ The structure of S3 gives users the flexibility to define habitat area or capaci
 | juv_m2     | Parr and smolt area (meters\^2) |
 
 ```{r}
-HABAREA |> head(20) |> knitr::kable()
+HABAREA |> head() |> knitr::kable()
 ```
+*...with `r nrow(HABAREA) - 10` additional rows*
 
-*There are `r nrow(HABAREA)` rows of data in `HABAREA` data object*
 
 **UnitNum**
 
@@ -276,7 +281,7 @@ load('data/HABITAT.rda')
 ```{r}
 HABITAT |> head() |> knitr::kable()
 ```
-*There are `r nrow(HABITAT)` rows of data in `HABITAT` data object*
+*...with `r nrow(HABITAT) - 10` additional rows*
 
 **UnitNum**
 
@@ -314,8 +319,10 @@ SPAWNERS <- SPAWNERS |>
   mutate(wk_start_date = lubridate::as_date(wk_start_date),
          wk_end_date = lubridate::as_date(wk_end_date))
 
-SPAWNERS |> head(20) |> knitr::kable()
+SPAWNERS |> head() |> knitr::kable()
 ```
+*...with `r nrow(SPAWNERS) - 10` additional rows*
+
 
 **species**
 
@@ -366,8 +373,10 @@ load('data/SPAWNLOC.rda')
 ```
 
 ```{r}
-SPAWNLOC |> head(20) |> knitr::kable()
+SPAWNLOC |> head() |> knitr::kable()
 ```
+*...with `r nrow(SPAWNLOC) - 10` additional rows*
+
 
 **Reach**
 
@@ -403,8 +412,10 @@ SPOREDATA <- SPOREDATA |>
 ```
 
 ```{r}
-SPOREDATA |> head(20) |> knitr::kable()
+SPOREDATA |> head() |> knitr::kable()
 ```
+*...with `r nrow(SPOREDATA) - 10` additional rows*
+
 
 **Date**
 
@@ -443,8 +454,9 @@ TEMPS <- TEMPS |>
 ```
 
 ```{r}
-TEMPS |> head(20) |> knitr::kable()
+TEMPS |> head() |> knitr::kable()
 ```
+*...with `r nrow(TEMPS) - 10` additional rows*
 
 **Date**
 
