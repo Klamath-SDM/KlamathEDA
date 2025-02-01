@@ -83,7 +83,8 @@ rivers <- c('Klamath River', 'Trinity River', 'Sprague River',
 
 nhd_flowline_filtered <- nhd_flowline |> 
   filter(gnis_name %in% rivers) |> 
-  st_transform(crs = "+proj=longlat +datum=WGS84")
+  st_transform(crs = "+proj=longlat +datum=WGS84") |> 
+  st_zm()
 
 ggplot() +
   geom_sf(data = hucs) +
@@ -95,7 +96,107 @@ ggplot() +
 ```{r}
 leaflet(data = nhd_flowline_filtered) |> 
   addTiles() |> 
-  addPolylines()
+  addPolylines(popup = ~gnis_name)
+
+```
+
+### Assign River Miles 
+
+```{r}
+# start with bogus creek
+
+bogus_crk <- nhd_flowline_filtered |> 
+  filter(gnis_name == "Bogus Creek")
+
+bogus_crk_combinded <- bogus_crk |> 
+  arrange(desc(hydro_seq)) |> # or reach_code?
+  st_combine() |> 
+  st_line_merge() |> 
+  st_transform(crs = 32610)
+
+river_points <- st_line_sample(bogus_crk_combinded, n = 100)  |> 
+  st_cast("POINT")
+
+river_points <- st_sf(geometry = river_points, crs = st_crs(bogus_crk_combinded))
+
+# units are in meters
+distances <- sapply(1:(length(river_points$geometry) - 1), function(i) {
+  st_distance(river_points$geometry[i], river_points$geometry[i + 1])
+}) 
+cumulative_distances <- c(0, cumsum(distances)) |> sort(decreasing = TRUE)
+
+river_mile_points <- river_points  |> 
+  mutate(river_meter = cumulative_distances,
+         river_km = river_meter/1000,
+         river_mile = river_meter/1609.34) |> 
+   st_transform(crs = "+proj=longlat +datum=WGS84") 
+
+ggplot() +
+  geom_sf(data = river_mile_points, aes(size = river_mile), alpha = 0.5) +
+  theme_minimal()
+
+  
+leaflet() |> 
+  addTiles() |> 
+  addCircleMarkers(data = river_mile_points,
+                   radius = ~river_mile / max(river_mile) * 10,
+                   popup = ~as.character(round(river_mile, 2))) 
+
+
+```
+
+```{r eval=FALSE, include=FALSE}
+# Filter for Bogus Creek
+bogus_crk <- nhd_flowline_filtered |> 
+  filter(gnis_name == "Bogus Creek") |> 
+  arrange(desc(hydro_seq)) |>  # Arrange by hydro_seq for logical order
+  mutate(segment_id = row_number())
+
+# Transform to UTM for distance calculations
+bogus_crk <- st_transform(bogus_crk, crs = 32610)
+
+# Function to calculate river mile points for each segment
+calculate_river_miles <- function(segment) {
+  
+  segment <- segment |> 
+    st_cast("LINESTRING")
+  
+  # Sample points along the segment
+  river_points <- st_line_sample(segment, density = units::set_units(1, 1/km)) |> 
+    st_cast("POINT")
+  
+  # Convert to sf object
+  river_points <- st_sf(geometry = river_points, crs = st_crs(segment))
+  
+  # Calculate distances between consecutive points
+  distances <- sapply(1:(length(river_points$geometry) - 1), function(i) {
+    st_distance(river_points$geometry[i], river_points$geometry[i + 1])
+  })
+  
+  # Calculate cumulative distances
+  cumulative_distances <- c(0, cumsum(distances))
+  
+  # Add attributes to the points
+  river_points <- river_points |> 
+    mutate(
+      river_meter = cumulative_distances,
+      river_km = river_meter / 1000,
+      river_mile = river_meter / 1609.34
+    )
+  
+  return(river_points)
+}
+
+river_mile_points_list <- lapply(1:nrow(bogus_crk), function(i) {
+  calculate_river_miles(bogus_crk[i, ])
+})
+
+# Combine the results
+river_mile_points <- do.call(rbind, river_mile_points_list)
+
+bogus_crk <- st_transform(bogus_crk, st_crs(river_mile_points)) |> 
+  st_cast("POINT") |> 
+  mutate(vertex_id = row_number()) 
 
 ```
 
