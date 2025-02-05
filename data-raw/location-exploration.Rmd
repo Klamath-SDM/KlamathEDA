@@ -149,16 +149,6 @@ leaflet() |>
 ### Assign River Miles 
 
 ```{r}
-# pre-processing: 
-bogus_crk <- nhd_flowline_filtered |> 
-  filter(gnis_name == "Bogus Creek")
-
-bogus_crk_combinded <- bogus_crk |> 
-  #arrange(desc(hydro_seq)) |> # this doesn't matter because we collapse it into a line
-  st_combine() |> 
-  st_line_merge() |> 
-  st_transform(crs = 32610)
-
 get_river_miles <- function(river_layer, interval_no = 10) {
   
   interval <- interval_no #interval_no is 10 meters by default
@@ -186,7 +176,17 @@ get_river_miles <- function(river_layer, interval_no = 10) {
   
 }
 
-river_mile_points <- get_river_miles(bogus_crk_combinded, interval_no = 10)
+```
+
+```{r}
+# pre-processing: 
+river <- nhd_flowline_filtered |> 
+  filter(gnis_name == "Bogus Creek") |> 
+  st_combine() |> 
+  st_line_merge() |> 
+  st_transform(crs = 32610)
+
+river_mile_points <- get_river_miles(river, interval_no = 10)
 
 leaflet() |> 
   addTiles() |> 
