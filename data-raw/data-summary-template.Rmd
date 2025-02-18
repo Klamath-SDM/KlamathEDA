@@ -11,58 +11,99 @@ library(lubridate)
 library(ggplot2)
 library(scales)
 library(readxl)
+
+# define AWS data bucket
+# note that you need to set up access keys in R environ
+klamath_project_board <- pins::board_s3(
+  bucket="klamath-sdm",
+  access_key=Sys.getenv("aws_access_key_id"),
+  secret_access_key=Sys.getenv("secret_access_key_id"),
+  session_token = Sys.getenv("session_token_id"),
+  region = "us-east-1"
+)
 ```
 
-The purpose of this markdown is to give an overview of the types of data available, temporal coverage, geographic coverage, and to get an idea of the amount of work that it would take us to clean it up and use it. 
+The purpose of this markdown is to give an overview of the dataset including specific data types, temporal coverage, and geographic coverage. This document is helpful in developing schemas to bring together disparate datasets and exploring data limitations.
 
 This data was shared by [Name](mailto::email address) and it is publicly available at [Source](Source.link) 
 
 ### Overview
 
-
+**Data type:**
 
 
 ## Data Available {.tabset} 
 
-  * Brief description of Dataset 1
-  * Brief description of Dataset 2
-  
+**Dataset 1**
+
+- Brief description of dataset 1
+
+**Dataset 2**
+
+- Brief description of dataset 2
   
 ### Dataset 1
 
- - Title: 
- - Extent: Survey is located on [Insert location] (i.e. from the confluence with the Klamath River upstream 3.6 miles)
- - Description: 
- - Initial collection: 
- - Final collection: 
- - Fields included: 
- 
-```{r, echo=FALSE}
+```{r, include=FALSE}
 # data1 <- read_xlsx("path/to_data_file")
-# 
-# str(data1)
 ```
 
- - Name of [xlsx, pdf, csv, etc] file: [insert name of data file]
+ - Title: 
+ - Spatial extent: 
+ - Description:
+ - Fields included: `r colnames()`
+ - Name of data file: 
  
-Cleaning implications:
+**Data processing implications:**
 
+**Questions:**
+
+**Action items:**
+
+#### Data summary
+
+This section may (or may not) explore every variable in the dataset. It will include high level summaries of the data to communicate the primary story of the data.
+ 
+```{r, echo = FALSE}
+# insert plot
+
+# note that in some situations it may be worthwhile to include data summaries for all fields included and other times best to include summary figure
+```
 
 ### Dataset 2
 
- - Title: 
- - Extent: Survey is located on [Insert location] (i.e. from the confluence with the Klamath River upstream 3.6 miles)
- - Description: 
- - Initial collection: 
- - Final collection: 
- - Fields included: 
- 
-```{r, echo=FALSE}
-# data2 <- read_xlsx("path/to_data_file")
-# 
-# str(data2)
+```{r, include=FALSE}
+# data1 <- read_xlsx("path/to_data_file")
 ```
 
- - Name of [xlsx, pdf, csv, etc] file: [insert name of data file]
+ - Title: 
+ - Spatial extent: 
+ - Description:
+ - Fields included: `r colnames()`
+ - Name of data file: 
  
-Cleaning implications:
+**Data processing implications:**
+
+**Questions:**
+
+**Action items:**
+
+#### Data summary
+
+This section may (or may not) explore every variable in the dataset. It will include high level summaries of the data to communicate the primary story of the data.
+ 
+```{r, echo = FALSE}
+# insert plot
+
+# note that in some situations it may be worthwhile to include data summaries for all fields included and other times best to include summary figure
+```
+
+## Save data
+
+Data files are stored on AWS
+
+```{r, include = F}
+# klamath_project_board |> pin_write(dataset_1,
+#                                type = "csv",
+#                                title = "dataset_1")
+```
