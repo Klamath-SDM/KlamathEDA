@@ -17,6 +17,10 @@ theme_set(theme_bw())
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Model Diagram
+
+![Figure 1. Draft diagram of the S3 Coho model to aid in understanding the S3 model as a resource for the Klamath Basin Science Collaborative](s3_model_diagram.png)
+
 ## FISH
 
 S3 allows for inputs of fish from tributary or hatchery sources.
@@ -41,6 +45,7 @@ FISH |>
   knitr::kable()
 
 ```
+
 *...with `r nrow(FISH) - 10` additional rows*
 
 **UnitNum**
@@ -147,8 +152,8 @@ FLOWS |>
   knitr::kable()
 
 ```
-*...with `r nrow(FLOWS) - 10` additional rows*
 
+*...with `r nrow(FLOWS) - 10` additional rows*
 
 **Date**
 
@@ -206,8 +211,8 @@ The structure of S3 gives users the flexibility to define habitat area or capaci
 ```{r}
 HABAREA |> head() |> knitr::kable()
 ```
-*...with `r nrow(HABAREA) - 10` additional rows*
 
+*...with `r nrow(HABAREA) - 10` additional rows*
 
 **UnitNum**
 
@@ -281,6 +286,7 @@ load('data/HABITAT.rda')
 ```{r}
 HABITAT |> head() |> knitr::kable()
 ```
+
 *...with `r nrow(HABITAT) - 10` additional rows*
 
 **UnitNum**
@@ -321,8 +327,8 @@ SPAWNERS <- SPAWNERS |>
 
 SPAWNERS |> head() |> knitr::kable()
 ```
-*...with `r nrow(SPAWNERS) - 10` additional rows*
 
+*...with `r nrow(SPAWNERS) - 10` additional rows*
 
 **species**
 
@@ -375,8 +381,8 @@ load('data/SPAWNLOC.rda')
 ```{r}
 SPAWNLOC |> head() |> knitr::kable()
 ```
-*...with `r nrow(SPAWNLOC) - 10` additional rows*
 
+*...with `r nrow(SPAWNLOC) - 10` additional rows*
 
 **Reach**
 
@@ -414,8 +420,8 @@ SPOREDATA <- SPOREDATA |>
 ```{r}
 SPOREDATA |> head() |> knitr::kable()
 ```
-*...with `r nrow(SPOREDATA) - 10` additional rows*
 
+*...with `r nrow(SPOREDATA) - 10` additional rows*
 
 **Date**
 
@@ -437,14 +443,14 @@ SPOREDATA |>
 
 ## TEMPS
 
-A dataset containing 50 year data set of historical temperatures from RBM10 historical simulation 
+A dataset containing 50 year data set of historical temperatures from RBM10 historical simulation
 
-| Data    | Description                                |
-|---------|--------------------------------------------|
-| Date | Date, format = yyyy-mm-dd                        |
-| Location  | Name of location |
+| Data        | Description                                |
+|-------------|--------------------------------------------|
+| Date        | Date, format = yyyy-mm-dd                  |
+| Location    | Name of location                           |
 | Location_km | Location, river kilometers from mouth (km) |
-| Temp | Water temperature, degrees C |
+| Temp        | Water temperature, degrees C               |
 
 ```{r include = FALSE}
 load('data/TEMPS.rda')
@@ -456,6 +462,7 @@ TEMPS <- TEMPS |>
 ```{r}
 TEMPS |> head() |> knitr::kable()
 ```
+
 *...with `r nrow(TEMPS) - 10` additional rows*
 
 **Date**

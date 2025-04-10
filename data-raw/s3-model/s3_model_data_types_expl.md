@@ -1,8 +1,9 @@
 S3 Model Data Types Exploration
 ================
 Maddee Rubenson (FlowWest)
-2025-01-08
+2025-04-10
 
+- [Model Diagram](#model-diagram)
 - [FISH](#fish)
 - [FLOWS](#flows)
 - [HABAREA](#habarea)
@@ -11,6 +12,16 @@ Maddee Rubenson (FlowWest)
 - [SPAWNLOC](#spawnloc)
 - [SPOREDATA](#sporedata)
 - [TEMPS](#temps)
+
+## Model Diagram
+
+<figure>
+<img src="s3_model_diagram.png"
+alt="Figure 1. Draft diagram of the S3 Coho model to aid in understanding the S3 model as a resource for the Klamath Basin Science Collaborative" />
+<figcaption aria-hidden="true">Figure 1. Draft diagram of the S3 Coho
+model to aid in understanding the S3 model as a resource for the Klamath
+Basin Science Collaborative</figcaption>
+</figure>
 
 ## FISH
 
@@ -37,14 +48,14 @@ FISH |>
   knitr::kable()
 ```
 
-| UnitNum | Source   | runType | Total_released | avg_length | avg_weight | brood_year | first_Rdate | last_Rdate |
-|--------:|:---------|:--------|---------------:|-----------:|-----------:|-----------:|:------------|:-----------|
-|     932 | Bogus Cr | FACH    |         222816 |         39 |        0.5 |       2001 | 2002-03-24  | 2002-03-30 |
-|     932 | Bogus Cr | FACH    |        1112391 |         38 |        0.5 |       2001 | 2002-03-31  | 2002-04-06 |
-|     932 | Bogus Cr | FACH    |        1306329 |         39 |        0.5 |       2001 | 2002-04-07  | 2002-04-13 |
-|     932 | Bogus Cr | FACH    |         230956 |         41 |        0.6 |       2001 | 2002-04-14  | 2002-04-20 |
-|     932 | Bogus Cr | FACH    |          35273 |         42 |        0.7 |       2001 | 2002-04-21  | 2002-04-27 |
-|     932 | Bogus Cr | FACH    |         183328 |         42 |        0.7 |       2001 | 2002-04-28  | 2002-05-04 |
+| UnitNum | Source | runType | Total_released | avg_length | avg_weight | brood_year | first_Rdate | last_Rdate |
+|---:|:---|:---|---:|---:|---:|---:|:---|:---|
+| 932 | Bogus Cr | FACH | 222816 | 39 | 0.5 | 2001 | 2002-03-24 | 2002-03-30 |
+| 932 | Bogus Cr | FACH | 1112391 | 38 | 0.5 | 2001 | 2002-03-31 | 2002-04-06 |
+| 932 | Bogus Cr | FACH | 1306329 | 39 | 0.5 | 2001 | 2002-04-07 | 2002-04-13 |
+| 932 | Bogus Cr | FACH | 230956 | 41 | 0.6 | 2001 | 2002-04-14 | 2002-04-20 |
+| 932 | Bogus Cr | FACH | 35273 | 42 | 0.7 | 2001 | 2002-04-21 | 2002-04-27 |
+| 932 | Bogus Cr | FACH | 183328 | 42 | 0.7 | 2001 | 2002-04-28 | 2002-05-04 |
 
 *…with 2788 additional rows*
 
