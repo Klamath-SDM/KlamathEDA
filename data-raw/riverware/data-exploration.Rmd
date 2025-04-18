@@ -1,0 +1,24 @@
+---
+title: "Riverware Initial Data Exploration - Distribution Percent"
+author: "Badhia Yunes Katz"
+date: "04/02/2025"
+output: rmarkdown::html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, fig.width=15, fig.height=10)
+library(tidyverse)
+library(lubridate)
+library(readxl)
+library(janitor)
+library(dplyr)
+library(stringr)
+library(sf)
+library(leaflet)
+library(httr)
+```
+
+```{r}
+dist_percent <- readxl::read_excel("data-raw/riverware/KPOM_DistributionPercent.xlsx")
+#TODO do data wrangling 
+```
+
