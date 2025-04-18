@@ -1,7 +1,7 @@
 ---
 title: "Riverware Initial Data Exploration - Distribution Percent"
 author: "Badhia Yunes Katz"
-date: "04/02/2025"
+date: "04/18/2025"
 output: rmarkdown::html_document
 ---
 ```{r setup, include=FALSE}
@@ -17,8 +17,137 @@ library(leaflet)
 library(httr)
 ```
 
-```{r}
-dist_percent <- readxl::read_excel("data-raw/riverware/KPOM_DistributionPercent.xlsx")
-#TODO do data wrangling 
+The goal of this markdown is to read in one of the spreadsheets from Riverware, try to understand the values, challenges, and potential use of the data.
+
+This file was grabbed from the KPOM-main zip folder, on the following path location: 
+`KPOM-main.zip\KPOM-main\Database\KPOM_DistributionPercent`
+
+```{r include=FALSE}
+# reading in data
+all_data <- read_excel("data-raw/riverware/KPOM_DistributionPercent.xlsx", skip = 5) |> 
+  clean_names() |> glimpse()
+
+normal <- all_data |> select(1:11) |> 
+  rename_with(~ str_remove(., "_\\d+$")) |> 
+  mutate(water_conditions = "normal") |> 
+  glimpse()
+dry <- all_data |> select(1:3, 14:21) |> mutate(water_conditions = "dry") |> 
+  rename_with(~ str_remove(., "_\\d+$")) |> 
+  glimpse()
+wet <- all_data |> select(1:3, 24:31) |> mutate(water_conditions = "wet") |> 
+  rename_with(~ str_remove(., "_\\d+$")) |> 
+  glimpse()
 ```
+
+Binding data after initial read and light cleaning
+
+```{r echo=FALSE}
+dist_percent <- bind_rows(normal, dry, wet) |> glimpse() 
+```
+
+
+Exploring fields
+
+```{r}
+long_data <- dist_percent |> 
+  pivot_longer(cols = c(a_canal, ady_canal_to_ag, miller_hill_pp_spill, north_canal,
+                        station_48, f_ff_pp, lost_river_diversion_channel, ady_canal_to_lknwr),
+               names_to = "canal",
+               values_to = "value") |> 
+  glimpse()
+
+summary(long_data)
+```
+Summary of values per water conditions
+
+```{r include=FALSE}
+dry_long_data <- long_data |>
+  filter(water_conditions == "dry")
+
+normal_long_data <- long_data |>
+  filter(water_conditions == "normal")
+
+
+wet_long_data <- long_data |>
+  filter(water_conditions == "wet")
+summary(normal_long_data$value)
+```
+  - dry
+  
+```{r echo=FALSE}
+summary(dry_long_data$value)
+```
+
+  - normal
+  
+```{r echo=FALSE}
+summary(normal_long_data$value)
+```
+
+  - wet
+  
+```{r echo=FALSE}
+summary(wet_long_data$value)
+```
+
+Observations/Questions of this plot:
+
+  - ady canal seems to have an outlier during dry conditions
+  - I noticed some negative values, most noticible on miller hill pump, is that an error?
+
+```{r echo=FALSE}
+ggplot(long_data, aes(x = date, y = value, color = water_conditions)) +
+  geom_line() +
+  facet_wrap(~ canal, scales = "free_y") +
+  labs(title = "Values of Canals Over Time by Water Condition", x = "Date", y = "Value") +
+  theme_minimal()
+```
+
+```{r echo=FALSE}
+ggplot(long_data, aes(x = value, fill = water_conditions)) +
+  geom_histogram(bins = 30, position = "identity", alpha = 0.5) +
+  facet_wrap(~ canal, scales = "free") +
+  labs(title = "Distribution of Flows by Water Condition", x = "Value", y = "Count") +
+  theme_minimal()
+```
+
+Observation: 
+
+  - The high value on adu canal is really throwing off the overall min and max 
+  - Trying the same plot without the outlier 
+  
+```{r echo=FALSE}
+ggplot(long_data, aes(x = water_conditions, y = value, fill = water_conditions)) +
+  geom_boxplot() +
+  facet_wrap(~ canal) +
+  labs(title = "Value by Water Condition", x = "Water Conditions", y = "Value") +
+  theme_minimal()
+```
+
+Looking closer to really high value
+
+```{r echo=FALSE}
+# trying to identify outlier
+long_data |> 
+  filter(water_conditions == "dry") |> 
+  ggplot(aes(x = date, y = value, color = canal)) +
+   geom_line() +
+  labs(title = "Values of Canals Over Time by Water Condition", x = "Date", y = "Value") +
+  theme_minimal()
+```
+
+Same plot than above but removing values over 0.1
+
+```{r echo=FALSE}
+long_data |> 
+  filter(value < 0.1) |> 
+  ggplot(aes(x = water_conditions, y = value, fill = water_conditions)) +
+  geom_boxplot() +
+  facet_wrap(~ canal) +
+  labs(title = "Value by Water Condition", x = "Water Conditions", y = "Value") +
+  theme_minimal()
+```
+
+
+
 
