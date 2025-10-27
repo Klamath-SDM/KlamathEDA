@@ -1,0 +1,63 @@
+---
+title: "USFWS Klamath Falls National Fish Hatchery Reports"
+author: "Badhia Yunes Katz (FlowWest)"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE, 
+  message = FALSE,
+  comment = "#>", 
+  fig.width=8, fig.height=5)
+library(tidyverse)
+library(lubridate)
+library(tabulapdf)
+library(janitor)
+library(dplyr)
+library(tidyr)
+library(readr)
+```
+
+The tables in the Klamath Falls National Fish Hatchery (KFNFH) annual reports are designed to provide detailed documentation of operations and results. These reports were prepared by Prepared by the Klamath Falls National Fish Hatchery.
+
+This markdown will extract and explore the tables on the hatchery table reports. 
+
+It will identify any questions/clarification we might need as we go through the reports.
+
+**Link to Sources**
+
+## Annual Report for Fiscal Year 2021
+
+
+### Table 1
+
+Collection and release information for the Sucker Assisted Rearing Program (SARP) since its inception in 2016 by fiscal years. This table tracks key metrics over time, including Larvae Collected, SARP Release numbers, and Salvage Release numbers.
+
+```{r echo=FALSE}
+# extract tables
+pdf_path_2021 <- "data-raw/fisheries/hatcheries/20240912_FY2021_KFNFH_Annual_Report_Final.pdf"
+tables_2021 <- extract_tables(pdf_path_2021, method = "stream", output = "tibble")
+
+table_1 <- tables_2021[[1]] |>
+  clean_names()
+
+# fixing so col name grabs the first row too
+table_2021_clean <- tables_2021[[1]] |>
+  clean_names() |>
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-1, ] |>
+      setNames(new_names) |>
+      mutate(across(-1, ~parse_number(.x)))
+    })()
+
+knitr::kable(table_2021_clean)
+
+```
+
