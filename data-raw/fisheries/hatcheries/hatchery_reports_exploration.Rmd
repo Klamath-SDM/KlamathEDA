@@ -61,3 +61,112 @@ knitr::kable(table_2021_clean)
 
 ```
 
+### Table 2
+
+*Summary of Lost River Sucker (LRS), Shortnose Sucker (SNS), and Klamath Largescale Sucker (KLS) stocked during the Fiscal Year 2020 (October 1, 2020, to September 30, 2021).* This table breaks down fish stocking activities by date, species, Lot #, weight, density (#/lb.), Total Length (TL) in inches and mm, the ponds the fish originated from, and the Stocking Location.
+
+```{r echo=FALSE}
+table_2 <- tables_2021[[2]] |>
+  clean_names() |> 
+  mutate(is_real_date = grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", date), # fill with date
+         date_lower = tolower(date), # detect full month names 
+         is_month = date_lower %in% tolower(month.name),
+         date_anchor = case_when(is_real_date ~ date,
+                                 is_month ~ date, 
+                                 TRUE ~ NA_character_)) |> 
+  fill(date_anchor, .direction = "down") |> 
+  mutate(date = if_else(is.na(date), date_anchor, date)) |> 
+  select(-is_real_date, -is_month, -date_lower, -date_anchor) 
+
+knitr::kable(table_2)
+```
+
+### Table 3
+
+*Fall 2020 production summary.* This table summarizes activities during the fall of 2020, tracking fish cohorts (Lot #) by Harvest Date and Pond, noting inventory numbers (Paper # and Actual #), survival rates, the number and percentage of fish stocked, the number and percentage of fish graded as "Short," the number of fish designated as broodstock (# Brood), and the disposition of the fish
+
+```{r echo=FALSE}
+table_3 <- tables_2021[[3]] |>
+  clean_names() |> 
+  glimpse()
+```
+
+### Table 4
+
+Spring 2021 production summary. 
+
+```{r echo=FALSE}
+table_4 <- tables_2021[[4]] |>
+  clean_names() 
+```
+
+### Table 5 
+
+Summary of PIT Tag Study Pond stockings in Replicate Block 1 during week of March 22, 2021.
+
+```{r echo=FALSE}
+table_5 <- tables_2021[[5]] |>
+  clean_names() |>
+    (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-1, ] |>
+      setNames(new_names) |>
+      mutate(across(-1, ~parse_number(.x)))
+    })()
+
+knitr::kable(table_5)
+```
+
+### Table 6 
+
+Summary of PIT Tag Study Pond stockings in Replicate Block 2 during week of March 29, 2021. 
+
+```{r echo=FALSE}
+table_6 <- tables_2021[[6]] |>
+  clean_names() |>
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    
+    x[-1, ] |>
+      setNames(new_names) |>
+      mutate(
+        across(
+          # apply parse_number to all except first column and tagged_vs_untagged
+          -c(1, tagged_vs_untagged),
+          ~parse_number(.x)
+        )
+      )
+  })()
+
+knitr::kable(table_6)
+```
+
+### Table 7
+
+Summary of PIT Tag Study Pond stockings in Replicate Block 3 during week of April 5, 2021.
+
+```{r echo=FALSE}
+table_7 <- tables_2021[[7]] |>
+  clean_names() |>
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    
+    x[-1, ] |>
+      setNames(new_names) |>
+      mutate(
+        across(
+          # apply parse_number to all except first column and tagged_vs_untagged
+          -c(1, tagged_vs_untagged),
+          ~parse_number(.x)
+        )
+      )
+  })()
+
+knitr::kable(table_7)
+```
