@@ -63,22 +63,35 @@ knitr::kable(table_2021_clean)
 
 ### Table 2
 
-*Summary of Lost River Sucker (LRS), Shortnose Sucker (SNS), and Klamath Largescale Sucker (KLS) stocked during the Fiscal Year 2020 (October 1, 2020, to September 30, 2021).* This table breaks down fish stocking activities by date, species, Lot #, weight, density (#/lb.), Total Length (TL) in inches and mm, the ponds the fish originated from, and the Stocking Location.
+**Summary of Lost River Sucker (LRS), Shortnose Sucker (SNS), and Klamath Largescale Sucker (KLS) stocked during the Fiscal Year 2020 (October 1, 2020, to September 30, 2021).** This table breaks down fish stocking activities by date, species, Lot #, weight, density (#/lb.), Total Length (TL) in inches and mm, the ponds the fish originated from, and the Stocking Location.
 
+*(showing the first 10 first rows only)*
 ```{r echo=FALSE}
 table_2 <- tables_2021[[2]] |>
   clean_names() |> 
-  mutate(is_real_date = grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", date), # fill with date
-         date_lower = tolower(date), # detect full month names 
+  mutate(is_real_date = grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", date), # dates (mm/dd/yyyy)
+         date_lower = tolower(date),  # full month names
          is_month = date_lower %in% tolower(month.name),
-         date_anchor = case_when(is_real_date ~ date,
-                                 is_month ~ date, 
-                                 TRUE ~ NA_character_)) |> 
+         is_grand_total = grepl("^grand\\s*totals?$", date_lower, ignore.case = TRUE), #"Grand Totals" 
+         date_anchor = case_when(is_real_date   ~ date,
+                                 is_month       ~ date,
+                                 is_grand_total ~ date,
+                                 TRUE           ~ NA_character_)) |> 
   fill(date_anchor, .direction = "down") |> 
   mutate(date = if_else(is.na(date), date_anchor, date)) |> 
-  select(-is_real_date, -is_month, -date_lower, -date_anchor) 
+  select(-is_real_date, -is_month, -is_grand_total, -date_lower, -date_anchor)
 
-knitr::kable(table_2)
+# split to keep the totals on a separate table
+table_2_dates <- table_2 |>
+  filter(grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", date))
+
+table_2_summary <- table_2 |>
+  filter(!grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", date)) |>
+  select(-c(from_ponds, stocking_location)) 
+
+knitr::kable(head(table_2_dates, 10))
+knitr::kable(head(table_2_summary, 10))  
+
 ```
 
 ### Table 3
@@ -88,6 +101,7 @@ knitr::kable(table_2)
 ```{r echo=FALSE}
 table_3 <- tables_2021[[3]] |>
   clean_names() |> 
+  separate(harvest_date_pond, into = c("harvest_date", "pond"), sep = "\\s+", remove = TRUE) |> 
   glimpse()
 ```
 
@@ -97,7 +111,7 @@ Spring 2021 production summary.
 
 ```{r echo=FALSE}
 table_4 <- tables_2021[[4]] |>
-  clean_names() 
+  clean_names() |> glimpse()
 ```
 
 ### Table 5 
