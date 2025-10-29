@@ -73,13 +73,13 @@ table_2 <- tables_2021[[2]] |>
          date_lower = tolower(date),  # full month names
          is_month = date_lower %in% tolower(month.name),
          is_grand_total = grepl("^grand\\s*totals?$", date_lower, ignore.case = TRUE), #"Grand Totals" 
-         date_anchor = case_when(is_real_date   ~ date,
-                                 is_month       ~ date,
+         date_anchor = case_when(is_real_date ~ date,
+                                 is_month ~ date,
                                  is_grand_total ~ date,
-                                 TRUE           ~ NA_character_)) |> 
+                                 TRUE ~ NA_character_)) |> 
   fill(date_anchor, .direction = "down") |> 
   mutate(date = if_else(is.na(date), date_anchor, date)) |> 
-  select(-is_real_date, -is_month, -is_grand_total, -date_lower, -date_anchor)
+  select(-is_real_date, -is_month, -is_grand_total, -date_lower, -date_anchor) 
 
 # split to keep the totals on a separate table
 table_2_dates <- table_2 |>
@@ -102,7 +102,23 @@ knitr::kable(head(table_2_summary, 10))
 table_3 <- tables_2021[[3]] |>
   clean_names() |> 
   separate(harvest_date_pond, into = c("harvest_date", "pond"), sep = "\\s+", remove = TRUE) |> 
-  glimpse()
+    mutate(harvest_lower = tolower(harvest_date),
+           is_month_or_season = harvest_lower %in% c(tolower(month.name), "fall"),
+           anchor = if_else(is_month_or_season, harvest_date, NA_character_)) |>
+  fill(anchor, .direction = "down") |>
+  mutate(harvest_date = if_else(is.na(harvest_date), anchor, harvest_date)) |>
+  select(-harvest_lower, -is_month_or_season, -anchor)
+
+# split to keep the totals on a separate table
+table_3_clean <- table_3 |> 
+  filter(grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", harvest_date))
+
+#TODO merge the first two columns
+table_3_summary <- table_3 |> 
+  filter(!grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", harvest_date))
+
+knitr::kable(head(table_3_clean, 10))
+knitr::kable(head(table_3_summary, 10))  
 ```
 
 ### Table 4
