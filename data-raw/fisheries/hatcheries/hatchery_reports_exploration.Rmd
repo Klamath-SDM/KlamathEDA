@@ -259,7 +259,7 @@ knitr::kable(table_7)
 
 ### 2022 {.tabset}
 
-The numbering of these tables is not consistent with the report #TODO match numbers
+Some of the tables are not being read for now #TODO figure out approach
 
 #### Table 1
 
@@ -322,7 +322,7 @@ knitr::kable(inventory_growth_spring_fall)
 knitr::kable(inventory_growth_spring_fall_summary)
 ```
 
-#### Table 3
+#### Table 5
 
 Number of suckers raised and released by the Klamath Falls National Fish Hatchery during 
 fiscal year 2022, spanning from October 1, 2021 to September 30, 2022. 
@@ -364,7 +364,7 @@ knitr::kable(suckers_raised)
 knitr::kable(suckers_raised_summary)
 ```
 
-#### Table 4
+#### Table 6
 
 Number of individual passive integrated transponder (PIT) tagged suckers 
 released by the Klamath Falls National Fish Hatchery and detected on remote arrays within the Upper 
@@ -387,9 +387,108 @@ separate(detection_year,
     .[-1, ]   # drop the header row
   } |> 
   slice(-1) |> 
+  # pivot this table to assign release year and detection year
+  pivot_longer(cols = matches("^\\d{4}$"),
+               names_to = "Detection_Year",
+               values_to = "Count") |> 
+  mutate(release_year = as.integer(`Release Year`),
+         detection_year = as.integer(Detection_Year),
+         count = as.numeric(Count)) |> 
+  clean_names()
+
+pit_tag <- table_4_2_clean |> 
+  select(release_year, detection_year, count) 
+
+
+pit_tag_totals <- table_4_2_clean |> 
+  select(release_year, release_year_total) 
+
+knitr::kable(pit_tag)
+knitr::kable(pit_tag_totals)
+```
+
+
+```{r eval=FALSE, include=FALSE}
+# these two approaches are failing to read the tables
+#TODO find a different
+
+# usging tabula
+# Extract only pages 10 and 11 - for some reason these two tables are not being read
+# tables_2022_p10_11 <- extract_tables(file = pdf_path_2022,
+#                                      method = "stream",
+#                                      pages = 10:11,
+#                                      output = "tibble")
+
+# using pdftools
+# library(pdftools)
+# page_text <- pdf_text(pdf_path_2022)[10:11]
+# 
+# cat(page_text[1])  # page 10
+# cat(page_text[2])  # page 11
+
+```
+
+### 2023 {.tabset}
+
+
+#### Table 1
+
+Collections and releases from the Klamath Falls National Fish Hatchery since its inception in 
+2016, by federal fiscal years, running from October 1 through the following September 30. All total 
+lengths (TL) and standard lengths (SL) reported are averages based on length-weight conversions from 
+cumulative total weights of each type, production, fingerling, fry, and salvage fish for each year. The line for fiscal year 2024, which includes fish stocked between October 1 through December 31, 2023, is currently in progress at the time of writing and is included so the most current information is available on releases.  
+
+```{r echo=FALSE}
+# extract tables
+pdf_path_2023 <- "data-raw/fisheries/hatcheries/20240801_FY2023 KFNFH Annual Report_Final.pdf"
+tables_2023 <- extract_tables(pdf_path_2023, method = "stream", output = "tibble")
+
+table_1_3 <- tables_2023[[2]] |>
+  clean_names()
+
+table_1_3_clean <- table_1_3 |> 
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-1, ] |>
+      setNames(new_names)
+    })()
+
+collection_release_2023 <- table_1_3_clean |> 
+  rename(tl_1_mm = tl_4_mm,
+         tl_2_mm = tl_6_mm,
+         tl_3_mm = tl_8_mm) 
+
+knitr::kable(collection_release_2023)
+```
+
+
+#### Table 2
+
+Summary of the wild East Side Springs Lost River Suckers handled during spawning activities 
+from Upper Klamath Lake in the spring of 2023. AFTC stands for Abernathy Fish Technology Center.
+
+```{r echo=FALSE}
+table_2_3 <- tables_2023[[3]] |>
+  clean_names() |> 
   glimpse()
-#TODO pivot this table to assign release year and detection year
 
-
-# knitr::kable()
+table_2_3_clean <- table_2_3 |> 
+  separate(
+    col = pit_tag_last_5_sex_fork_length_atfc_genetic_id,
+    into = c("PIT_TAG_LAST_5", "SEX", "FORK_LENGTH", "ATFC_GENETIC_ID"),
+    sep = "\\s+",     # split on one or more spaces
+    remove = TRUE) |> 
+  separate(
+    col = date_spring_name,
+    into = c("date", "spring_name"),
+    sep = "\\s+",     # split on one or more spaces
+    remove = TRUE) |> 
+  select(-c(x2, x4, x5)) |> 
+  clean_names() |> 
+  mutate(fork_length = as.numeric(fork_length),
+         atfc_genetic_id = if_else(str_detect(atfc_genetic_id, "^\\d{4}-\\d{3}$"), atfc_genetic_id, NA_character_),
+         date = as.Date(date, format = "%m/%d/%Y")) |> 
+  glimpse()
 ```
