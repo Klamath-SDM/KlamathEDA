@@ -32,7 +32,7 @@ It will identify any questions/clarification we might need as we go through the 
 
 ## Annual Report for Fiscal Year: {.tabset}
 
-### 2021
+### 2021 {.tabset}
 
 
 #### Table 1
@@ -471,10 +471,9 @@ from Upper Klamath Lake in the spring of 2023. AFTC stands for Abernathy Fish Te
 
 ```{r echo=FALSE}
 table_2_3 <- tables_2023[[3]] |>
-  clean_names() |> 
-  glimpse()
+  clean_names()
 
-table_2_3_clean <- table_2_3 |> 
+summary_esp_lrs <- table_2_3 |> 
   separate(
     col = pit_tag_last_5_sex_fork_length_atfc_genetic_id,
     into = c("PIT_TAG_LAST_5", "SEX", "FORK_LENGTH", "ATFC_GENETIC_ID"),
@@ -487,8 +486,295 @@ table_2_3_clean <- table_2_3 |>
     remove = TRUE) |> 
   select(-c(x2, x4, x5)) |> 
   clean_names() |> 
-  mutate(fork_length = as.numeric(fork_length),
-         atfc_genetic_id = if_else(str_detect(atfc_genetic_id, "^\\d{4}-\\d{3}$"), atfc_genetic_id, NA_character_),
-         date = as.Date(date, format = "%m/%d/%Y")) |> 
-  glimpse()
+  mutate(atfc_genetic_id = case_when(atfc_genetic_id == "LABELED" ~ "3960-019",
+                                     atfc_genetic_id == "(DID" ~ " 3960-028",
+                                     TRUE ~ atfc_genetic_id),
+         date = as.Date(date, format = "%m/%d/%Y"),
+         pit_tag_last_5 = case_when(pit_tag_last_5 %in% c("SAMPLE", "TWO") ~ NA_character_,
+                                    TRUE ~ pit_tag_last_5),
+         sex = case_when(sex %in% c("NO", "FISH") ~ NA_character_,
+                                    TRUE ~ sex),
+         fork_length = as.numeric(fork_length)) 
+
+knitr::kable(head(summary_esp_lrs, 10)) 
+```
+
+#### Table 3
+
+Summary of the wild East Side Springs Lost River Suckers handled during spawning activities 
+from Upper Klamath Lake in the spring of 2023. AFTC stands for Abernathy Fish Technology Center.
+
+```{r echo=FALSE}
+table_3_4 <- tables_2023[[4]] |>
+  clean_names() |> 
+  rename(observed = observed_4,
+         observed_2 = observed_7) |> glimpse()
+
+table_3_4_clean <- table_3_4 %>% 
+  {
+    if (nrow(.) >= 2) {
+      header <- purrr::map_chr(seq_along(.), function(i) {
+        parts <- c(
+          names(.)[i],
+          as.character(.[1, i]),
+          as.character(.[2, i])
+        )
+        parts <- parts[!is.na(parts) & parts != ""]
+        trimws(paste(parts, collapse = " "))
+      }) %>%
+        gsub("\\s+", " ", .)
+
+      names(.) <- header
+      .[-c(1, 2), ] 
+    } else {
+      .
+    }
+  }|> 
+  clean_names()
+
+table_3_4_clean <- table_3_4_clean |> 
+    mutate(collection_date = as.Date(collection_date, format = "%m/%d/%Y"),
+           collected_number = readr::parse_number(collected_number),
+           collected_number = as.numeric(collected_number),
+           observed_mortality_number = readr::parse_number(observed_mortality_number),
+           observed_mortality_number = as.numeric(observed_mortality_number),
+           stocked_number = readr::parse_number(stocked_number),
+           stocked_number = as.numeric(stocked_number),
+           overall_survival_percent = as.numeric(overall_survival_percent),
+           observed_2_mortality_percent = as.numeric(observed_2_mortality_percent),
+           unobserved_mortality_percent = as.numeric(unobserved_mortality_percent))
+
+initial_stock <- table_3_4_clean |> 
+  slice(1:14) |> 
+  mutate(collection_date = as.Date(collection_date, format = "%m/%d/%Y"),
+         collected_number = as.numeric(collected_number),
+         observed_mortality_number = as.numeric(observed_mortality_number),
+         stocked_number = as.numeric(stocked_number),
+         overall_survival_percent = as.numeric(overall_survival_percent),
+         observed_2_mortality_percent = as.numeric(observed_2_mortality_percent),
+         unobserved_mortality_percent = as.numeric(unobserved_mortality_percent)) 
+
+initial_stock_totals <- table_3_4_clean |> 
+  slice(15) 
+
+knitr::kable(head(initial_stock, 10)) 
+knitr::kable(head(initial_stock_totals, 10)) 
+```
+
+#### Table 4
+
+ Historical catches of larval suckers from the lower Williamson River, near Chiloquin, Oregon. (*) 
+Note that 2023 was the first year when collections were limited in the number of fry available during the 
+collection season. 
+
+```{r echo=FALSE}
+table_4_4 <- tables_2023[[5]] |>
+  clean_names() 
+
+historical_catches <- table_4_4 |> 
+  mutate(number_collected = readr::parse_number(number_collected),
+         year_spring = as.numeric(year_spring)) |> 
+  slice(1:8) 
+
+historical_catches_total <- table_4_4 |> 
+  mutate(number_collected = readr::parse_number(number_collected)) |> 
+  select(-primary_collection_method) |> 
+  slice(9) 
+
+knitr::kable(head(historical_catches, 10)) 
+knitr::kable(head(historical_catches_total, 10)) 
+```
+
+#### Table 5
+
+Pond, collection year, stocking date, number of suckers on stocking date, average weight per fish, total weight of all fish in each pond (used to derive feeding amounts), average total length on stocking date (mm, measured or derived from length weight relationships, date harvested, number of suckers on harvest date, growth, and survival for ponds during the production cycle starting in the Spring of 2022 through the Fall of 2022 at the Klamath Falls National Fish Hatchery. The last seven rows in the table are summary numbers for each year class on station and the overall for the harvest season. 
+
+This table details the pond performance during the production cycle starting in the Spring of 2022 through the Fall of 2022
+
+```{r echo=FALSE}
+# similar than table 2 from 2022
+table_5_4 <- tables_2023[[6]] |>
+  clean_names() |> 
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-1, ] |>
+      setNames(new_names)
+    })()
+
+table_5_4_clean <- table_5_4 |> 
+  mutate(year_split = str_split(lot, "/")) |> #creating two rows for lot 2021/2019
+  unnest(year_split) |> 
+  mutate(lot = as.integer(year_split)) |> 
+  select(-year_split) 
+
+inventory_clean_2023 <- table_5_4_clean |> 
+  mutate(stocked = as.Date(stocked, format = "%m/%d/%Y"),
+         total_number_1 = as.numeric(total_4_number),
+         average_g_fish = as.numeric(average_5_g_fish),
+         weight_g_1 = as.numeric(weight_6_g),
+         weight_lbs_1 = as.numeric(weight_7_lbs),
+         tl_mm_1 = as.numeric(tl_8_mm),
+         harvested = as.Date(harvested, format = "%m/%d/%Y"),
+         total_number_2 = as.numeric(total_10_number),
+         average_g_fish_2 = as.numeric(average_11_g_fish),
+         weight_g_2 = as.numeric(weight_12_g),
+         weight_lbs_2 = as.numeric(weight_13_lbs),
+         tl_mm_2 = as.numeric(tl_14_mm),
+         growth_mm_day = as.numeric(growth_17_mm_day),
+         growth_g_fish_mon = as.numeric(growth_18_g_fish_mon),
+         weight_gain_lbs = as.numeric(weight_gain_lbs),
+         harvest_morts_number = as.numeric(harvest_morts_number),
+         survival_percent = as.numeric(survival_percent)) |> 
+  select(pond, lot, stocked, total_number_1, average_g_fish, weight_g_1, weight_lbs_1, tl_mm_1,
+         harvested, total_number_2, average_g_fish_2, weight_g_2, weight_lbs_2, tl_mm_2, days, months, growth_mm_day,
+         growth_g_fish_mon, weight_gain_lbs, harvest_morts_number, survival_percent) 
+
+inventory_2023 <- inventory_clean_2023 |> 
+  slice(1:41) 
+
+inventory_2023_summary <- inventory_clean_2023 |> 
+  slice(42:48) |> 
+  mutate(lot = case_when(is.na(lot) ~ "overall",
+                         TRUE ~ as.character(lot))) |> 
+  select(lot, total_number_1, total_number_2, harvest_morts_number, survival_percent)
+
+knitr::kable(head(inventory_2023, 10)) 
+knitr::kable(head(inventory_2023_summary, 10)) 
+```
+
+#### Table 6
+
+Pond, collection year, stocking date, number of suckers on stocking date, average weight per fish, total weight of all fish in each pond (used to derive feeding amounts), average total length on stocking date (mm, measured or derived from length weight relationships, date harvested, number of suckers on harvest date, growth, and survival for ponds during the production cycle starting in the Summer/Fall of 2022 through the Spring of 2023 at the Klamath Falls National Fish Hatchery. The last eight rows in the table are summary numbers for each year class on station and the overall for the harvest season.  
+This table summarizes the pond performance during the production cycle starting in the Summer/Fall of 2022 through the Spring of 2023
+
+```{r echo=FALSE}
+# this table can probably be mixed with table 5
+table_6_4 <- tables_2023[[7]] |>
+  clean_names() |>
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-1, ] |>
+      setNames(new_names)
+    })()
+
+table_6_4_clean <- table_6_4 |> 
+  mutate(year_split = str_split(lot, "-")) |> #creating two rows for lot 2021/2019
+  unnest(year_split) |> 
+  mutate(lot = as.integer(year_split)) |> 
+  select(-year_split) |>
+  rename(tl_8_mm = start_tl_8_mm, # renaming just to match to last table & be able to use same code
+         tl_14_mm = start_tl_14_mm) 
+
+
+inventory_clean_2022_2023 <- table_6_4_clean |> 
+  mutate(stocked = as.Date(stocked, format = "%m/%d/%Y"),
+         total_number_1 = as.numeric(total_4_number),
+         average_g_fish = as.numeric(average_5_g_fish),
+         weight_g_1 = as.numeric(weight_6_g),
+         weight_lbs_1 = as.numeric(weight_7_lbs),
+         tl_mm_1 = as.numeric(tl_8_mm),
+         harvested = as.Date(harvested, format = "%m/%d/%Y"),
+         total_number_2 = as.numeric(total_10_number),
+         average_g_fish_2 = as.numeric(average_11_g_fish),
+         weight_g_2 = as.numeric(weight_12_g),
+         weight_lbs_2 = as.numeric(weight_13_lbs),
+         tl_mm_2 = as.numeric(tl_14_mm),
+         growth_mm_day = as.numeric(growth_17_mm_day),
+         growth_g_fish_mon = as.numeric(growth_18_g_fish_mon),
+         weight_gain_lbs = as.numeric(weight_gain_lbs),
+         harvest_morts_number = as.numeric(harvest_morts_number),
+         survival_percent = as.numeric(survival_percent)) |> 
+  select(pond, lot, stocked, total_number_1, average_g_fish, weight_g_1, weight_lbs_1, tl_mm_1,
+         harvested, total_number_2, average_g_fish_2, weight_g_2, weight_lbs_2, tl_mm_2, days, months, growth_mm_day,
+         growth_g_fish_mon, weight_gain_lbs, harvest_morts_number, survival_percent)
+
+inventory_2022_2023 <- inventory_clean_2022_2023 |> 
+  slice(1:25)
+
+inventory_2022_2023_summary <- inventory_clean_2022_2023 |> 
+  slice(26:33) |>
+  mutate(lot = case_when(total_number_1 == 1090 ~ "mixed",
+                         total_number_1 == 36058 ~ "overall",
+                         TRUE ~ as.character(lot))) |>
+  select(lot, total_number_1, total_number_2, harvest_morts_number, survival_percent) 
+
+knitr::kable(head(inventory_2022_2023, 10)) 
+knitr::kable(head(inventory_2022_2023_summary, 10)) 
+```
+
+
+#### Table 7
+
+Pond, collection year, stocking date, number of suckers on stocking date, average weight per fish, total weight of all fish in each pond (used to derive feeding amounts), average total length on stocking date (mm, measured or derived from length weight relationships, date harvested, number of suckers on harvest date, growth, and survival for ponds during the production cycle starting in the Spring of 2023 through the Fall of 2023 at the Klamath Falls National Fish Hatchery. The last nine rows in the table are summary numbers for each year class on station and the overall for the harvest season.
+This table covers the pond performance during the production cycle starting in the Spring of 2023 through the Fall of 2023. Notably, Table 7 also includes a column for Feed Conversion (Feed Conv.) data, which is not explicitly listed in the column descriptions of the prior two tables.
+
+```{r echo=FALSE}
+# this table can probably be mixed with table 5
+table_7_4 <- tables_2023[[8]] |>
+  clean_names() |> 
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-1, ] |>
+      setNames(new_names)
+    })()
+
+#TODO use similar togic thN Table 6 and 5
+```
+
+
+#### Table 8
+
+Historical survival rates from the Upper Klamath Lake net pens since the initial deployments, first at Rattlesnake Point, in Upper Klamath Lake in 2019-2020 and also at Four Mile Canal, in Agency Lake, near Chiloquin, Oregon in 2021.
+
+```{r echo=FALSE}
+# this table can probably be mixed with table 5
+table_8_4 <- tables_2023[[9]] |>
+  clean_names() 
+
+historical_survival_ukl_clean <- table_8_4 |>
+  rename(tl_mm = tl_mm_5,
+         tl_mm_2 = tl_mm_7)
+
+historical_survival_ukl <- historical_survival_ukl_clean |> 
+  slice(1:11) |> 
+  mutate(operation_year = as.numeric(operation_year)) 
+
+historical_survival_ukl_summary <- historical_survival_ukl_clean |> 
+  slice(12) |>
+  select(operation_year, number_stocked, number_harvested, survival_percent) 
+
+knitr::kable(historical_survival_ukl)
+knitr::kable(historical_survival_ukl_summary)
+```
+
+#### Table 9
+
+Historical survival rates from the Gerber Reservoir net pens since the initial deployments, near Bonanza, Oregon.
+
+```{r echo=FALSE}
+# this table can probably be mixed with table 5
+table_9_4 <- tables_2023[[10]] |>
+  clean_names() |> glimpse()
+
+# 
+# historical_survival_ukl_clean <- table_8_4 |>
+#   rename(tl_mm = tl_mm_5,
+#          tl_mm_2 = tl_mm_7)
+# 
+# historical_survival_ukl <- historical_survival_ukl_clean |> 
+#   slice(1:11) |> 
+#   mutate(operation_year = as.numeric(operation_year)) 
+# 
+# historical_survival_ukl_summary <- historical_survival_ukl_clean |> 
+#   slice(12) |>
+#   select(operation_year, number_stocked, number_harvested, survival_percent) 
+# 
+# knitr::kable(historical_survival_ukl)
+# knitr::kable(historical_survival_ukl_summary)
 ```
