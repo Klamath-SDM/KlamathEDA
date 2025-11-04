@@ -118,10 +118,12 @@ table_3_clean <- table_3 |>
            convert = TRUE) 
 
 # split into two tables - separating totals to another table
-production_summary <- table_3_clean |> 
-  filter(grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", harvest_date))
+fall_production_summary <- table_3_clean |> 
+  filter(grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", harvest_date)) |> 
+  mutate(harvest_date = as.Date(harvest_date, format = "%m/%d/%Y")) |> 
+  glimpse()
 
-production_summary_totals <- table_3_clean |> 
+fall_production_summary_totals <- table_3_clean |> 
   filter(!grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", harvest_date)) |> 
   mutate(harvest_date = ifelse(!is.na(pond), paste(harvest_date, pond), harvest_date)) |> 
   select(-c(pond, disposition, tl_mm_7, tl_mm_9, tl_mm_12)) |> 
@@ -130,8 +132,8 @@ production_summary_totals <- table_3_clean |>
                                   harvest_date == "December" ~ "December Totals",
                                   TRUE ~ harvest_date))
 
-knitr::kable(head(production_summary, 10))
-knitr::kable(head(production_summary_totals, 10))  
+knitr::kable(head(fall_production_summary, 10))
+knitr::kable(head(fall_production_summary_totals, 10))  
 ```
 
 ### Table 4
@@ -140,7 +142,40 @@ Spring 2021 production summary.
 
 ```{r echo=FALSE}
 table_4 <- tables_2021[[4]] |>
-  clean_names() |> glimpse()
+  clean_names() |> 
+    separate(harvest_date_pond, into = c("harvest_date", "pond"), sep = "\\s+", remove = TRUE) |> 
+    mutate(harvest_lower = tolower(harvest_date),
+           is_month_or_season = harvest_lower %in% c(tolower(month.name), "spring"),
+           anchor = if_else(is_month_or_season, harvest_date, NA_character_)) |>
+  fill(anchor, .direction = "down") |>
+  mutate(harvest_date = if_else(is.na(harvest_date), anchor, harvest_date)) |>
+  select(-harvest_lower, -is_month_or_season, -anchor, -x2, -tl_mm_10, -number_short_percent_short, -x12, -tl_mm_13, -number_brood) |>
+  separate(number_stocked_percent_stocked,
+           into = c("number_stocked", "percent_stocked"),
+           sep = "\\s+",
+           fill = "right",
+           extra = "drop",
+           convert = TRUE) 
+
+# split into two tables - separating totals to another table
+spring_production_summary <- table_4 |> 
+  filter(grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", harvest_date)) |> 
+  mutate(harvest_date = as.Date(harvest_date, format = "%m/%d/%Y"))
+
+spring_production_summary_totals <- table_4 |> 
+  filter(!grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", harvest_date)) |> 
+  mutate(harvest_date = ifelse(!is.na(pond), paste(harvest_date, pond), harvest_date)) |>
+  select(-disposition_stocked_to, -tl_mm_8, -pond) |>
+ mutate(harvest_date = case_when(
+   str_detect(harvest_date, regex("February", ignore_case = TRUE)) ~ "February 2021 Totals",
+   str_detect(harvest_date, regex("March", ignore_case = TRUE)) ~ "March 2021 Totals",
+   str_detect(harvest_date, regex("April", ignore_case = TRUE)) ~ "April 2021 Totals",
+   str_detect(harvest_date, regex("May", ignore_case = TRUE)) ~ "May 2021 Totals",
+   str_detect(harvest_date, regex("Spring", ignore_case = TRUE)) ~ "Spring 2021 Overall",
+   TRUE ~ harvest_date))
+  
+knitr::kable(head(fall_production_summary, 10))
+knitr::kable(head(fall_production_summary_totals, 10))  
 ```
 
 ### Table 5 
