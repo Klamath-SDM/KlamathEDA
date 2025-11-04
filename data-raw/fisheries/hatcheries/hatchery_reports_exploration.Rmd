@@ -2,7 +2,7 @@
 title: "USFWS Klamath Falls National Fish Hatchery Reports"
 author: "Badhia Yunes Katz (FlowWest)"
 date: "`r Sys.Date()`"
-output: github_document
+output: html_document
 ---
 
 
@@ -30,10 +30,12 @@ It will identify any questions/clarification we might need as we go through the 
 
 **Link to Sources**
 
-## Annual Report for Fiscal Year 2021
+## Annual Report for Fiscal Year: {.tabset}
+
+### 2021
 
 
-### Table 1
+#### Table 1
 
 Collection and release information for the Sucker Assisted Rearing Program (SARP) since its inception in 2016 by fiscal years. This table tracks key metrics over time, including Larvae Collected, SARP Release numbers, and Salvage Release numbers.
 
@@ -61,7 +63,7 @@ knitr::kable(table_2021_clean)
 
 ```
 
-### Table 2
+#### Table 2
 
 **Summary of Lost River Sucker (LRS), Shortnose Sucker (SNS), and Klamath Largescale Sucker (KLS) stocked during the Fiscal Year 2020 (October 1, 2020, to September 30, 2021).** This table breaks down fish stocking activities by date, species, Lot #, weight, density (#/lb.), Total Length (TL) in inches and mm, the ponds the fish originated from, and the Stocking Location.
 
@@ -94,7 +96,7 @@ knitr::kable(head(table_2_summary, 10))
 
 ```
 
-### Table 3
+#### Table 3
 
 *Fall 2020 production summary.* This table summarizes activities during the fall of 2020, tracking fish cohorts (Lot #) by Harvest Date and Pond, noting inventory numbers (Paper # and Actual #), survival rates, the number and percentage of fish stocked, the number and percentage of fish graded as "Short," the number of fish designated as broodstock (# Brood), and the disposition of the fish
 
@@ -120,8 +122,7 @@ table_3_clean <- table_3 |>
 # split into two tables - separating totals to another table
 fall_production_summary <- table_3_clean |> 
   filter(grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", harvest_date)) |> 
-  mutate(harvest_date = as.Date(harvest_date, format = "%m/%d/%Y")) |> 
-  glimpse()
+  mutate(harvest_date = as.Date(harvest_date, format = "%m/%d/%Y"))
 
 fall_production_summary_totals <- table_3_clean |> 
   filter(!grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", harvest_date)) |> 
@@ -136,7 +137,7 @@ knitr::kable(head(fall_production_summary, 10))
 knitr::kable(head(fall_production_summary_totals, 10))  
 ```
 
-### Table 4
+#### Table 4
 
 Spring 2021 production summary. 
 
@@ -178,26 +179,33 @@ knitr::kable(head(fall_production_summary, 10))
 knitr::kable(head(fall_production_summary_totals, 10))  
 ```
 
-### Table 5 
+#### Table 5 
 
 Summary of PIT Tag Study Pond stockings in Replicate Block 1 during week of March 22, 2021.
 
 ```{r echo=FALSE}
 table_5 <- tables_2021[[5]] |>
   clean_names() |>
-    (\(x) {
+  (\(x) {
     new_names <- paste(names(x), x[1, ], sep = "_") |>
       gsub("_NA", "", x = _) |>
       make_clean_names()
+    
     x[-1, ] |>
       setNames(new_names) |>
-      mutate(across(-1, ~parse_number(.x)))
-    })()
+      mutate(
+        across(
+          # apply parse_number to all except first column and tagged_vs_untagged
+          -c(1, tagged_vs_untagged),
+          ~parse_number(.x)
+        )
+      )
+  })()
 
 knitr::kable(table_5)
 ```
 
-### Table 6 
+#### Table 6 
 
 Summary of PIT Tag Study Pond stockings in Replicate Block 2 during week of March 29, 2021. 
 
@@ -223,7 +231,7 @@ table_6 <- tables_2021[[6]] |>
 knitr::kable(table_6)
 ```
 
-### Table 7
+#### Table 7
 
 Summary of PIT Tag Study Pond stockings in Replicate Block 3 during week of April 5, 2021.
 
@@ -247,4 +255,141 @@ table_7 <- tables_2021[[7]] |>
   })()
 
 knitr::kable(table_7)
+```
+
+### 2022 {.tabset}
+
+The numbering of these tables is not consistent with the report #TODO match numbers
+
+#### Table 1
+
+Collection and release information for the Klamath Falls National Fish Hatchery since its 
+inception in 2016 by fiscal years; federal fiscal years run from October 1st through the following 
+September 30th of each year. During fiscal year 2022, 12,768 production fish and 4,655 fingerlings were released, and 19,993 experimentally hatched fry were transferred to another hatchery, totaling 37,416 produced in FY22. 
+
+```{r echo=FALSE}
+# extract tables
+pdf_path_2022 <- "data-raw/fisheries/hatcheries/20240830_FY2022 KFNFH Annual Report_Final.pdf"
+tables_2022 <- extract_tables(pdf_path_2022, method = "stream", output = "tibble")
+
+table_1_2 <- tables_2022[[2]] |>
+  clean_names()
+
+table_1_2_clean <- table_1_2 |> 
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-1, ] |>
+      setNames(new_names)
+    })()
+
+collection_release <- table_1_2_clean |> 
+  rename(tl_1_mm = tl_4_mm,
+         tl_2_mm = tl_6_mm,
+         tl_3_mm = tl_8_mm) 
+
+knitr::kable(collection_release)
+```
+
+#### Table 2
+
+Inventory, growth, and survival for ponds during the production cycle starting in the 
+Spring of 2021 through the Fall of 2021 at the Klamath Falls National Fish Hatchery.
+
+```{r echo=FALSE}
+table_2_2 <- tables_2022[[3]] |>
+  clean_names()
+
+table_2_2_clean <- table_2_2 |>
+  separate(growth_mm_day_total_growth_mm,
+           into = c("growth_mm_day", "total_growth_mm"),
+           sep = "\\s+",
+           fill = "right",
+           extra = "drop",
+           convert = TRUE)
+  
+inventory_growth_spring_fall <- table_2_2_clean |> 
+  slice(1:46) |> 
+  mutate(stocked_to_pond  = as.Date(stocked_to_pond, format = "%m/%d/%Y"),
+         harvest_date = as.Date(harvest_date, format = "%m/%d/%Y")) 
+
+inventory_growth_spring_fall_summary <- table_2_2_clean |> 
+  slice(47:52) |>
+  select(-c(pond, stocked_to_pond, start_tl_mm, harvest_date, end_tl_mm, total_days, total_growth_mm, growth_mm_day))
+
+knitr::kable(inventory_growth_spring_fall)
+knitr::kable(inventory_growth_spring_fall_summary)
+```
+
+#### Table 3
+
+Number of suckers raised and released by the Klamath Falls National Fish Hatchery during 
+fiscal year 2022, spanning from October 1, 2021 to September 30, 2022. 
+
+```{r echo=FALSE}
+table_3_2 <- tables_2022[[4]] |>
+  clean_names()
+
+table_3_2_clean <- table_3_2 |> 
+   mutate(is_real_date = grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", date),
+          date_lower = tolower(date),
+          is_month = date_lower %in% tolower(month.name),
+          is_period = str_detect(date_lower,
+                                 "^(fall|spring|summer|winter)(\\s+of)?\\s+\\d{4}$") |
+            str_detect(date_lower, "fiscal year\\s*\\d{4}$") |
+            str_detect(date_lower, "all of fiscal year\\s*\\d{4}$"),
+          is_grand_total = grepl("^grand\\s*totals?$", date_lower, ignore.case = TRUE),
+          date_anchor = case_when(is_real_date ~ date,
+                                  is_month ~ date,
+                                  is_period ~ date,
+                                  is_grand_total ~ date,
+                                  TRUE ~ NA_character_)) |> 
+  fill(date_anchor, .direction = "down") |> 
+  mutate(date = if_else(is.na(date), date_anchor, date)) |>
+  select(-is_real_date, -is_month, -is_period, -is_grand_total, -date_lower, -date_anchor) |>
+  glimpse()
+
+# split to keep the totals on a separate table
+suckers_raised <- table_3_2_clean |>
+  filter(grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", date)) |> 
+  mutate(date = as.Date(date, format = "%m/%d/%Y")) |> glimpse()
+
+suckers_raised_summary <- table_3_2_clean |>
+  filter(!grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", date)) |>
+  select(-c(stocking_location, actual_tl_mm)) |> glimpse()
+
+
+knitr::kable(suckers_raised)
+knitr::kable(suckers_raised_summary)
+```
+
+#### Table 4
+
+Number of individual passive integrated transponder (PIT) tagged suckers 
+released by the Klamath Falls National Fish Hatchery and detected on remote arrays within the Upper 
+Klamath Lake Basin for each release and detection year through April of 2022 as the last data release. 
+```{r echo=FALSE}
+table_4_2 <- tables_2022[[5]] |>
+  clean_names()
+
+table_4_2_clean <- table_4_2 |> 
+separate(detection_year,
+           into = c("2014", "2015"),
+           sep = "\\s+",
+           fill = "right",
+           extra = "drop",
+           convert = TRUE) %>%
+  {
+    header <- as.character(.[1, ])
+    fallback <- as.character(.[2, ])
+    names(.) <- ifelse(is.na(header) | header == "", fallback, header)
+    .[-1, ]   # drop the header row
+  } |> 
+  slice(-1) |> 
+  glimpse()
+#TODO pivot this table to assign release year and detection year
+
+
+# knitr::kable()
 ```
