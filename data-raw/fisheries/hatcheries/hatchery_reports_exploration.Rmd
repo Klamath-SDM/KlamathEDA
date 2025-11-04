@@ -100,25 +100,38 @@ knitr::kable(head(table_2_summary, 10))
 
 ```{r echo=FALSE}
 table_3 <- tables_2021[[3]] |>
-  clean_names() |> 
+  clean_names() 
+  
+table_3_clean <- table_3 |> 
   separate(harvest_date_pond, into = c("harvest_date", "pond"), sep = "\\s+", remove = TRUE) |> 
     mutate(harvest_lower = tolower(harvest_date),
            is_month_or_season = harvest_lower %in% c(tolower(month.name), "fall"),
            anchor = if_else(is_month_or_season, harvest_date, NA_character_)) |>
   fill(anchor, .direction = "down") |>
   mutate(harvest_date = if_else(is.na(harvest_date), anchor, harvest_date)) |>
-  select(-harvest_lower, -is_month_or_season, -anchor)
+  select(-harvest_lower, -is_month_or_season, -anchor, -x3) |> 
+  separate(number_stocked_percent_stocked,
+           into = c("number_stocked", "percent_stocked"),
+           sep = "\\s+",
+           fill = "right",
+           extra = "drop",
+           convert = TRUE) 
 
-# split to keep the totals on a separate table
-table_3_clean <- table_3 |> 
+# split into two tables - separating totals to another table
+production_summary <- table_3_clean |> 
   filter(grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", harvest_date))
 
-#TODO merge the first two columns
-table_3_summary <- table_3 |> 
-  filter(!grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", harvest_date))
+production_summary_totals <- table_3_clean |> 
+  filter(!grepl("^\\d{1,2}/\\d{1,2}/\\d{4}$", harvest_date)) |> 
+  mutate(harvest_date = ifelse(!is.na(pond), paste(harvest_date, pond), harvest_date)) |> 
+  select(-c(pond, disposition, tl_mm_7, tl_mm_9, tl_mm_12)) |> 
+  mutate(harvest_date = case_when(harvest_date == "September" ~ "September Totals",
+                                  harvest_date == "November" ~ "November Totals",
+                                  harvest_date == "December" ~ "December Totals",
+                                  TRUE ~ harvest_date))
 
-knitr::kable(head(table_3_clean, 10))
-knitr::kable(head(table_3_summary, 10))  
+knitr::kable(head(production_summary, 10))
+knitr::kable(head(production_summary_totals, 10))  
 ```
 
 ### Table 4
