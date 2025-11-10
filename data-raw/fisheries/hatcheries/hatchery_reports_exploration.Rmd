@@ -40,6 +40,7 @@ It will identify any questions/clarification we might need as we go through the 
 Collection and release information for the Sucker Assisted Rearing Program (SARP) since its inception in 2016 by fiscal years. This table tracks key metrics over time, including Larvae Collected, SARP Release numbers, and Salvage Release numbers.
 
 ```{r echo=FALSE}
+# TODO tables with historical data - for example table 1. Just pull the most up to date one. In this case 2024
 # extract tables
 pdf_path_2021 <- "data-raw/fisheries/hatcheries/20240912_FY2021_KFNFH_Annual_Report_Final.pdf"
 tables_2021 <- extract_tables(pdf_path_2021, method = "stream", output = "tibble")
@@ -759,22 +760,139 @@ Historical survival rates from the Gerber Reservoir net pens since the initial d
 
 ```{r echo=FALSE}
 # this table can probably be mixed with table 5
+# TODO confirm how we wan tot treat 2022 "Low Water - Not Operational"
 table_9_4 <- tables_2023[[10]] |>
-  clean_names() |> glimpse()
+  clean_names() |>
+  separate(
+    col = number_stocked_tl_mm ,
+    into = c("number_stocked", "tl_mm"),
+    sep = "\\s+",     # split on one or more spaces
+    remove = TRUE) |> 
+  mutate(number_stocked = as.numeric(number_stocked),
+         tl_mm = as.numeric(tl_mm)) |> 
+  select(-x6) 
 
-# 
-# historical_survival_ukl_clean <- table_8_4 |>
-#   rename(tl_mm = tl_mm_5,
-#          tl_mm_2 = tl_mm_7)
-# 
-# historical_survival_ukl <- historical_survival_ukl_clean |> 
-#   slice(1:11) |> 
-#   mutate(operation_year = as.numeric(operation_year)) 
-# 
-# historical_survival_ukl_summary <- historical_survival_ukl_clean |> 
-#   slice(12) |>
-#   select(operation_year, number_stocked, number_harvested, survival_percent) 
-# 
-# knitr::kable(historical_survival_ukl)
-# knitr::kable(historical_survival_ukl_summary)
+historical_survival_gr <- table_9_4 |>
+  slice(1:7) |> 
+  mutate(operation_year = as.numeric(operation_year)) 
+
+# TODO this can be combined with historical_survival_ukl_summary
+historical_survival_gr_summary <- table_9_4 |>
+  slice(8) |>
+  select(-year_class, -pen_id, -tl_mm) 
+  
+knitr::kable(historical_survival_gr)
+knitr::kable(historical_survival_gr_summary)
+```
+
+#### Table 10
+
+Summary of all fish distributions for repatriation or transfer from the Klamath Falls National Fish Hatchery during the fiscal year of 2023, dating from October 1, 2022 through September 30, 2023.
+
+```{r echo=FALSE}
+# TODO this table can probably be mixed with table 11
+# we can add column called fiscal_year - this data would be 2023, next table would be 2024
+table_10_4 <- tables_2023[[11]] |>
+  clean_names() 
+
+fish_dist_2023 <- table_10_4 |> 
+  slice(1:63) |> 
+  mutate(date = as.Date(date, format = "%m/%d/%Y")) 
+
+#TODO clean last part of table
+fish_dist_2023_summary <- table_10_4 |> 
+  slice(64:101) |> 
+  select(-stocking_location, -from_ponds, -actual_tl_mm) 
+
+knitr::kable(fish_dist_2023)
+# knitr::kable(fish_dist_2023_summary)
+```
+
+
+#### Table 11
+
+Summary of all fish distributions for repatriation or transfer from the Klamath Falls National Fish Hatchery during the fiscal year of 2024, dating from October 1, 2023 through September 30, 2024.
+
+```{r echo=FALSE}
+# this table can probably be mixed with table 10
+table_11_4 <- tables_2023[[12]] |>
+  clean_names() 
+
+fish_dist_2024 <- table_11_4 |> 
+  slice(1:20) |> 
+  mutate(date = as.Date(date, format = "%m/%d/%Y")) |> glimpse()
+
+
+#TODO figure out how to handle date col
+fish_dist_2024_summary <- table_11_4 |> 
+  slice(21:30) |> 
+  select(-stocking_location, -from_ponds, -actual_tl_mm) 
+
+knitr::kable(fish_dist_2024)
+# knitr::kable(fish_dist_2024_summary)
+```
+
+#### Table 12
+
+Nutrition of the four commercial diets used in the long term feed diet trial.   
+
+```{r eval=FALSE, include=FALSE}
+table_12_4 <- tables_2023[[13]] 
+
+table_12_4_clean <- table_12_4 |>
+  rename(Diet = nutrition_comparison) |>
+  mutate(Diet = ifelse(grepl("%", Diet), NA, Diet)) |>
+  fill(Diet, .direction = "down") |>
+  filter(!Diet %in% c("Diet  Protein", "%")) |>
+  rename(`Protein %` = Diet,  
+         `Fat %` = x2,
+         `Fiber %` = x3,
+         `Ash %` = x4) |>
+  mutate(across(everything(), \(x) trimws(x))) |>
+  mutate(`Diet` = case_when(
+    grepl("Razorback", `Protein %`) ~ "Razorback",
+    grepl("June", `Protein %`) ~ "June",
+    grepl("Shri", `Protein %`) ~ "Shrimp",
+    TRUE ~ `Protein %`)) |>
+  mutate(`Protein %` = readr::parse_number(`Protein %`)) |>
+  select(Diet, `Protein %`, `Fat %`, `Fiber %`, `Ash %`)
+
+fish_diet <- table_12_4_clean |> 
+  clean_names()
+  
+knitr::kable(fish_diet)
+```
+
+#### Table 13
+
+Comparison of performance between the 4 diets at the completion of the fingerling stage. Included are the mean and standard deviation for total length and weight, and the condition factor and percent survival are also included.  
+
+```{r echo=FALSE}
+table_13_4 <- tables_2023[[14]] |> 
+  clean_names() |> 
+  glimpse()
+
+```
+
+#### Table 14
+
+Comparison of performance between the 4 diets at the completion of the juvenile 
+stage. Included are the mean and standard deviation for total length and weight, and the condition factor and percent survival are also included. 
+
+```{r echo=FALSE}
+# end results of juvenile stage
+table_14_4 <- tables_2023[[15]] |> 
+  clean_names() |> 
+  row_to_names(row_number = 1) |> 
+  glimpse() #TODO fix condition factor
+```
+
+#### Table 15
+
+Percent of population at the end of each stage that had observed deformities. Scale loss and hemorrhaging not included in analysis.
+
+```{r echo=FALSE}
+# table_15_4 <- tables_2023[[16]] |>
+# clean_names() |>
+# glimpse()
 ```
