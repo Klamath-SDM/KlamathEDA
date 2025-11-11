@@ -1,0 +1,256 @@
+---
+title: "Most Recent USFWS Klamath Falls National Fish Hatchery Report - 2024"
+author: "Badhia Yunes Katz (FlowWest)"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE, 
+  message = FALSE,
+  comment = "#>", 
+  fig.width=8, fig.height=5)
+library(tidyverse)
+library(lubridate)
+library(tabulapdf)
+library(janitor)
+library(dplyr)
+library(tidyr)
+library(readr)
+```
+
+The purpose of this markdown is to understand the data available in the most recent Hatchery report, identify questions or data gaps. 
+
+```{r include=FALSE}
+pdf_path <- "data-raw/fisheries/hatcheries/20250619_FY2024 KFNFH Annual Report_Final Draft.pdf"
+tables_raw <- extract_tables(pdf_path, method = "stream", output = "tibble")
+
+table_1_raw <- tables_raw[[2]] |>
+  clean_names() |> 
+  glimpse()
+```
+
+
+## KFNFH Historical Collections and Releases Summary (2016–FY24)
+
+ - Larvae collected: The total number of wild larval suckers collected, primarily from the lower Williamson River, for production purposes
+ - SARP release: The number of "Production Fish" released. These are fish raised to the target size of approximately 200 mm total length (TL), typically taking 18–24 months
+ - Fingerling release: The number of smaller, excess fish stocks (beyond rearing capacity) that were transferred or released into off-channel rearing locations
+ - Fry release: The number of small fish released, generally produced from experimental or wild-spawning activities on the lake and river side, or transferred to other facilities
+ - Salvage release: The number of suckers salvaged during the year (e.g., from Klamath Project Operations or dam removal efforts) that were rehabilitated, tagged, and then repatriated (released back to the wild)
+ - TL vs SL: The average Standard Length (SL) or Total Length (TL) are both in millimeters for the salvaged fish, however, they are inconsistently collected- SL in earlier years (2018–2021) and TL in later years (2023–2024)
+
+```{r include=FALSE}
+table_1 <- table_1_raw |>
+  clean_names() |>
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-1, ] |>
+      setNames(new_names) |>
+      mutate(across(-1, ~parse_number(.x)))
+    })()
+
+historical_collections_releases <- table_1 |> 
+  rename(sarp_tl_mm = tl_4_mm,
+         fingerling_tl_mm = tl_6_mm,
+         fry_tl_mm = tl_8_mm,
+         salvage_sl_mm = sl_or_tl_mm) |> 
+  slice(-10) |> # removing the total 
+  mutate(fiscal_year = as.numeric(fiscal_year),
+         salvage_tl_mm = case_when(salvage_sl_mm == 129 ~ salvage_sl_mm,
+                                   salvage_sl_mm == 126 ~ salvage_sl_mm,
+                                   TRUE ~ NA),
+         salvage_sl_mm = case_when(salvage_tl_mm == 129 ~ NA,
+                                   salvage_tl_mm == 126 ~ NA,
+                                   TRUE ~ salvage_sl_mm))|> 
+  glimpse()
+```
+
+
+```{r echo=FALSE}
+knitr::kable(historical_collections_releases)
+```
+
+## Wild Adult LRS Handled
+
+Inventory of the individual wild adult Lost River Suckers (LRS) handled by KFNFH staff during the spawning collection efforts at the East Side Springs (ESS) of Upper Klamath Lake in 2024.
+The table summarizes the wild LRS captured, identifying their physical characteristics, tagging information, and how their gametes were used.
+
+ - Lists the four dates when gamete collection occurred: April 17, April 24, May 1, and May 8, 2024.
+ - documents the total of 43 wild adult LRS handled (13 females and 30 males). All these fish were returned safely to the water thereafter.
+ - confirms the sex of the fish and whether they were "Spawned" or "Not Spawned". Twenty-four of the 30 males were spawned.
+  - gamete_use column notes they were "Cryo Preservation" or "Spawned/Cryopreservation," indicating that excess milt was used for cryopreservation trials.
+  - family_groups: most females were crossed with four males, though one female was crossed with two, totaling 50 family groups collected overall. This column applies only to the females.
+
+```{r include=FALSE}
+table_2_raw <- tables_raw[[3]]
+```
+
+```{r echo=FALSE}
+wild_lrs_adults <- table_2_raw |> 
+  clean_names() |> 
+  mutate(date = as.Date(date, format = "%m/%d/%Y")) |> 
+  glimpse()
+```
+
+## Summary of Incubation and Hatch Results
+
+Quantitative results of the fertilization and incubation trials conducted using the gametes collected from the wild LRS documented in wild_lrs_adults table.
+
+```{r include=FALSE}
+table_3_raw <- tables_raw[[4]]
+```
+
+```{r echo=FALSE}
+incubation_hatch_raw <- table_3_raw |> 
+  clean_names() |> 
+  mutate(spawning_date = as.Date(spawning_date, format = "%m/%d/%Y"),
+         hatch_date = as.Date(hatch_date, format = "%m/%d/%Y")) |>
+  select(-x6) |> 
+  slice(-15) |> # removing the totals for now
+  rename(male_1 = male_3,
+         male_2 = male_4,
+         male_3 = male_male) |> 
+  glimpse()
+```
+
+```{r echo=FALSE}
+incubation_hatch_raw |>
+  ggplot(aes(hatch_percent)) +
+  geom_histogram() +
+  theme_minimal()
+```
+
+Mean Hatch (%) grouped by the four Spawning Dates (April 17, 24, May 1, May 8)
+
+```{r echo=FALSE}
+incubation_hatch_raw |>
+  group_by(spawning_date) |> 
+  summarize(mean_hatch = mean(hatch_percent)) |> 
+  ggplot(aes(spawning_date, mean_hatch)) +
+  geom_col() +
+  theme_minimal()
+```
+
+Egg Volume vs. Fry Production (Scatter Plot)
+
+```{r echo=FALSE}
+incubation_hatch_raw |>
+  ggplot(aes(egg_volume_m_l, total_fry)) +
+  geom_point() +
+  theme_minimal()
+```
+
+Total Eggs ovs Total Fry hatched 
+ 
+```{r echo=FALSE}
+incubation_hatch_raw |>
+  ggplot(aes(total_eggs, total_fry)) +
+  geom_point() +
+  theme_minimal()
+```
+
+## Historical Larval Sucker Collection Summary (2016–2024)
+
+Historical timeline of the wild larval suckers collected from the lower Williamson River near Chiloquin, Oregon, used for production purposes at the Klamath Falls National Fish Hatchery (KFNFH)
+
+```{r include=FALSE}
+table_4_raw <- tables_raw[[5]] |> 
+  glimpse()
+```
+
+```{r echo=FALSE}
+sucker_larval_catch <- table_4_raw |> 
+  clean_names() |> 
+  slice(-10) |> 
+  mutate(year_spring = as.numeric(year_spring),
+         number_collected = readr::parse_number(number_collected)) |> 
+  glimpse()
+```
+
+Annual Larval Collection Trend 
+
+```{r echo=FALSE}
+# Collected plotted against Year (Spring)
+sucker_larval_catch |> 
+  ggplot(aes(x = year_spring, y = number_collected, color = primary_collection_method)) +
+  geom_point() +
+  theme_minimal()
+
+```
+
+## Larval Early Rearing Mortality and Survival by Tank (FY24)
+
+ - culture_unit: specific tank the fish were placed in (e.g., C3, C4). rows marked "Restock" indicate instances where a culture unit was used for a second or subsequent batch of collected fish
+ - collected: initial number of fish placed in the unit (Total: 30,150)
+ - stocked: final number of fish transferred or stocked out of the tank 
+ - unobserved_mortality_percent: calculated based on the difference between collected fish and the sum of observed mortality and stocked fish 
+
+```{r include=FALSE}
+table_5_raw <- tables_raw[[6]] |> 
+  clean_names() |> 
+  glimpse()
+```
+
+```{r echo=FALSE}
+rearing_performance <- table_5_raw |> 
+  mutate(date= as.Date(date, format = "%m/%d/%Y")) |> 
+  slice(-26) |>  #removing total for now
+  glimpse()
+```
+
+```{r eval=FALSE, include=FALSE}
+# Mortality and Loss Breakdown by Culture Unit (Stacked Bar Chart):
+# The collected fish count, stacked or broken down by three categories: Stocked, Observed Mortality, and Unobserved Mortality for each Culture Unit.
+
+rearing_performance |> 
+  group_by(culture_unit) |> 
+  summarise(total_collected = sum(collected)) |> view()
+  ggplot()
+
+```
+
+Mortality and Loss Breakdown by Culture Unit
+
+```{r echo=FALSE}
+ggplot(rearing_performance, aes(x = culture_unit)) +
+  geom_bar(aes(y = stocked, fill = "Stocked"), stat = "identity") +
+  geom_bar(aes(y = observed_mortality_percent, fill = "Observed Mortality"), stat = "identity") +
+  geom_bar(aes(y = unobserved_mortality_percent, fill = "Unobserved Mortality"), stat = "identity") +
+  scale_fill_manual(name = "Category",
+                    values = c("Stocked" = "gray",
+                               "Observed Mortality" = "black",
+                               "Unobserved Mortality" = "salmon")) +
+  labs(title = "",
+       x = "Culture Unit",
+       y = "Value (Count or %)") +
+  theme_minimal(base_size = 8) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Observed Mortality, Unobserved Mortality, and Survival Over Date
+
+```{r echo=FALSE}
+rearing_performance |> 
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = observed_mortality_percent, color = "Observed Mortality")) +
+  geom_line(aes(y = survival_percent, color = "Survival")) +
+  geom_line(aes(y = unobserved_mortality_percent, color = "Unobserved Mortality")) +
+  scale_color_manual(values = c("Observed Mortality" = "#5DA899",
+                                "Unobserved Mortality" = "#2E2585",
+                                "Survival" = "#DCCD7D")) +
+  theme_minimal()
+```
+
+```{r echo=FALSE}
+# rearing_performance |> 
+#   ggplot(aes(x = culture_unit)) +
+#  
+#   theme_minimal()
+```
+
