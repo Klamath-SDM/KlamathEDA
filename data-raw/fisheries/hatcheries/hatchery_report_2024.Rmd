@@ -272,7 +272,7 @@ pond_monitoring <- table_6_raw |>
   mutate(stocked_date = as.Date(stocked_date, format = "%m/%d/%Y"),
          harvest_date = as.Date(harvest_date, format = "%m/%d/%Y"),
          start_number = as.numeric(start_number),
-         start_weight_fish = as.numeric(g_fish),
+         start_g_fish = as.numeric(g_fish),
          start_wt_g = as.numeric(g),
          start_wt_lb = as.numeric(lb),
          start_tl_mm = as.numeric(mm),
@@ -326,4 +326,46 @@ pond_monitoring |>
   ggplot(aes(x = days, y = growth_mm_day)) +
   geom_point() +
   theme_minimal()
+```
+
+## table
+
+```{r include=FALSE}
+table_7_raw <- tables_raw[[9]] |> 
+  clean_names() |>
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-1, ] |>
+      setNames(new_names)
+    })()
+
+table_7 <- table_7_raw |> 
+  slice(1:16) |> 
+  mutate(pond = x1_pond,
+         lot = x2_lot,
+         stocked_date = as.Date(x3_stocked_date, format = "%m/%d/%Y"),
+         harvest_date = as.Date(x9_harvest_date, format = "%m/%d/%Y"),
+         start_number = as.numeric(x4_start_number),
+         start_g_fish = as.numeric(start_g_fish),
+         start_wt_g = as.numeric(start_wt_g),
+         start_wt_lb = as.numeric(start_wt_2_lb),
+         start_tl_mm = as.numeric(start_tl_mm),
+         end_number = as.numeric(x10_end_number),
+         end_g_fish = as.numeric(end_g_fish),
+         end_wt_g = as.numeric(end_wt_12_g),
+         end_gt_lb = as.numeric(end_wt_13_lb),
+         end_tl_mm = as.numeric(end_tl_mm),
+         days = as.numeric(x15_days),
+         months = as.numeric(x16_months),
+         growth_mm_day = as.numeric(growth_mm_day),
+         weight_gain_lb = as.numeric(weight_gain_lb),
+         harvest_mortality_number = as.numeric(harvest_mortality_number),
+         survival_percent = as.numeric(survival_percent)) |> 
+  select(pond, lot, stocked_date, start_number, start_g_fish, start_wt_g, start_wt_lb, start_tl_mm,
+         harvest_date, end_number, end_g_fish, end_wt_g, end_gt_lb, end_tl_mm, days, months, growth_mm_day,
+         weight_gain_lb, harvest_mortality_number, survival_percent) |> 
+  glimpse()
+
 ```
