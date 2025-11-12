@@ -247,10 +247,83 @@ rearing_performance |>
   theme_minimal()
 ```
 
-```{r echo=FALSE}
-# rearing_performance |> 
-#   ggplot(aes(x = culture_unit)) +
-#  
-#   theme_minimal()
+## Pond Monitoring - Spring 2023 – Fall 2023 - Main Growout Season (pre-FY24)
+
+Pond, collection year, stocking date, number of suckers on stocking date, average weight per fish, total weight of all fish in each pond (used to derive feeding amounts), average total length on stocking date (mm, measured or derived from length weight relationships, date harvested, number of suckers on harvest date, growth, and survival for ponds during the production cycle starting in the Spring of 2023 through the Fall of 2023 at the Klamath Falls National Fish Hatchery.
+
+- P-series vs A-series ponds: two sets of outdoor rearing spaces distinguished primarly by size and operational status
+- P-Series pond: Small ponds, typically 0.03-acre each, 
+  - Primary growout space. 
+  - Twenty-two P-series ponds remained operational throughout most of FY24
+  
+- A-series ponds: Larger ponds, typically 0.25-acre each
+  - Demolished early in FY24
+  
+- "start_weight_fish" (Average Weight Per Fish in Grams): This column records the average weight of a single sucker within a given pond lot at the time the fish were initially stocked into that pond
+- "start_wt_g" (Total Weight of All Fish in Grams): This column records the cumulative total weight (biomass) of all the suckers in that specific pond lot at the time they were stocked ("Start Date"). This total weight is the critical metric used by staff to derive daily feeding amounts for the fish in that pond
+
+```{r include=FALSE}
+table_6_raw <- tables_raw[[8]] |> 
+  row_to_names(row_number = 1) |> 
+  clean_names() |> 
+  slice(1:25) 
+
+pond_monitoring <- table_6_raw |> 
+  mutate(stocked_date = as.Date(stocked_date, format = "%m/%d/%Y"),
+         harvest_date = as.Date(harvest_date, format = "%m/%d/%Y"),
+         start_number = as.numeric(start_number),
+         start_weight_fish = as.numeric(g_fish),
+         start_wt_g = as.numeric(g),
+         start_wt_lb = as.numeric(lb),
+         start_tl_mm = as.numeric(mm),
+         end_number = as.numeric(end_number),
+         end_g_fish = as.numeric(g_fish_2),
+         end_wt_g = as.numeric(g_2),
+         end_gt_lb = as.numeric(lb_2),
+         end_tl_mm = as.numeric(mm_2),
+         days = as.numeric(days),
+         months = as.numeric(months),
+         growth_mm_day = as.numeric(mm_day),
+         weight_gain_lb = as.numeric(lb_3),
+         harvest_mortality_number = as.numeric(number),
+         survival_percent = as.numeric(percent)) |> 
+  glimpse()
 ```
 
+Growth rate vs start total length in mm
+
+```{r echo=FALSE}
+# see growth rates- younger vs older fish?
+pond_monitoring |> 
+  ggplot(aes(x = start_tl_mm, y = growth_mm_day)) +
+  geom_point() +
+  theme_minimal()
+```
+
+Start and end weight per pond
+
+```{r echo=FALSE}
+# see growth rates- younger vs older fish?
+# represent the success of the pond as a production unit during that cycle, as start_wt is the total weight used to derive feeding amounts, and the difference between start and end weight shows the total weight gain. The plot could highlight ponds, such as the large A-series ponds (A1, A2, A3), which, despite having been demolished early in FY24, are still represented in this data and likely produced high biomass gains due to their large size
+ggplot(pond_monitoring, aes(x = pond)) +
+  geom_bar(aes(y = start_wt_g, fill = "start weight (g)"), 
+           stat = "identity", position = position_nudge(x = -0.15), width = 0.3) +
+  geom_bar(aes(y = end_wt_g, fill = "end weight (g)"), 
+           stat = "identity", position = position_nudge(x = 0.15), width = 0.3) +
+  scale_fill_manual(values = c("start weight (g)" = "#DCCD7D", "end weight (g)" = "#5DA899")) +
+  labs(title = "Start vs End Weight by Pond",
+       x = "Pond",
+       y = "Weight (g)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+Days in the pond vs growth per day (mm)
+
+```{r echo=FALSE}
+# see growth rates- younger vs older fish?
+pond_monitoring |> 
+  ggplot(aes(x = days, y = growth_mm_day)) +
+  geom_point() +
+  theme_minimal()
+```
