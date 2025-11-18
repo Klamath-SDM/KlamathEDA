@@ -33,6 +33,12 @@ table_1_raw <- tables_raw[[2]] |>
   glimpse()
 ```
 
+**Failure indicators:**
+
+-  Acute Pond Mortality: "Unusually cooler water temperatures caused zooplankton crashes and subsequent lethal dissolved oxygen levels in mid-to-late August, leading to the acute loss of several thousand fish. This resulted in fish mortality being much higher in the summer months of FY24 than previously observed, likely due to crowding caused by limited pond space"
+- High Intensive Rearing Losses: "Since larval pond space was limited, nearly 5,000–6,000 fry were kept indoors for over two months. This extended intensive rearing period resulted in an overall survival rate of 67.5% for wild-caught larval suckers, with 23.0% recorded as unobserved mortality, likely due to cumulative human error"
+- Captive SNS Spawning Failure: "Experimental efforts to spawn captive Shortnose Suckers (SNS) were unsuccessful because pond temperatures increased too quickly (from under 12°C to over 18–19°C), causing milt volume to diminish and eggs to begin being reabsorbed"
+- UKL Net Pen Program Suspension: "Production fish were not stocked into the Upper Klamath Lake net pen for grow out due to multiple years of low survival (historical average of 28.2%) at that location"
 
 ## KFNFH Historical Collections and Releases Summary (2016–FY24)
 
@@ -42,6 +48,11 @@ table_1_raw <- tables_raw[[2]] |>
  - Fry release: The number of small fish released, generally produced from experimental or wild-spawning activities on the lake and river side, or transferred to other facilities
  - Salvage release: The number of suckers salvaged during the year (e.g., from Klamath Project Operations or dam removal efforts) that were rehabilitated, tagged, and then repatriated (released back to the wild)
  - TL vs SL: The average Standard Length (SL) or Total Length (TL) are both in millimeters for the salvaged fish, however, they are inconsistently collected- SL in earlier years (2018–2021) and TL in later years (2023–2024)
+ 
+**Failure indicators:**
+- Facility construction resulted in an all-time record low availability of pond space. The demolition of the A-series and B-series ponds reduced the original rearing space (2.38 acres) to only 0.66 acres
+- Hence, the average size of fish released declined during both of these years 
+- Reduced Overall Volume: The grand total of all fish released and transferred (17,866) was "down from previous years"
 
 ```{r include=FALSE}
 table_1 <- table_1_raw |>
@@ -88,13 +99,15 @@ The table summarizes the wild LRS captured, identifying their physical character
   - family_groups: most females were crossed with four males, though one female was crossed with two, totaling 50 family groups collected overall. This column applies only to the females.
   
   
-Success indicators:
+**Success indicators:**
 -  Incubation Improvement: KFNFH staff achieved a significant milestone by increasing onsite hatching rates from around 20% to over 70%. This table shows information on the male and female Lost River Suckers used in the spawning effort and the incubation results for each female
 - Successful captive LRS spawning: hatchery pawned and hatched an estimated 56,458 larval Lost River Suckers on station from gametes collected from the East Side Springs population. (this number is at the very bottom of the table but was not read in here. It is the sum of all rows under total_fry)
+-  Monitoring Success: A pilot effort deploying PIT tag monitoring arrays detected 416 unique PIT tagged fish, with 246 (59.1%) having originated from the hatchery (as reared fish or rehabilitated salvage fish)
 
-Failure indicators: 
+**Failure indicators:**
 
 ```{r include=FALSE}
+# table 2
 table_2_raw <- tables_raw[[3]]
 ```
 
@@ -109,10 +122,10 @@ wild_lrs_adults <- table_2_raw |>
 
 Quantitative results of the fertilization and incubation trials conducted using the gametes collected from the wild LRS documented in wild_lrs_adults table.
 
-Success indicators:
+**Success indicators:**
 -  Incubation Improvement: KFNFH staff achieved a significant milestone by increasing onsite hatching rates from around 20% to over 70%
 
-Failure indicators: 
+**Failure indicators:**
 
 ```{r include=FALSE}
 #table 3
@@ -172,10 +185,22 @@ incubation_hatch_raw |>
 
 Historical timeline of the wild larval suckers collected from the lower Williamson River near Chiloquin, Oregon, used for production purposes at the Klamath Falls National Fish Hatchery (KFNFH)
 
+**Success indicators:**
+- collection of 30,150 Klamath sucker fry. This was much higher than the previous year's and provided enough larvae to meet the year's production goals despite the lack of space
+
+**Failure indicators:**
+
 ```{r include=FALSE}
+# table 4
 table_4_raw <- tables_raw[[5]] |> 
   glimpse()
 ```
+
+```{r echo=FALSE}
+#TODO fix this image
+knitr::include_graphics('data-raw/fisheries/hatcheries/2024_report_figure_5.jpg')
+```
+
 
 ```{r echo=FALSE}
 sucker_larval_catch <- table_4_raw |> 
