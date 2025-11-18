@@ -86,6 +86,13 @@ The table summarizes the wild LRS captured, identifying their physical character
  - confirms the sex of the fish and whether they were "Spawned" or "Not Spawned". Twenty-four of the 30 males were spawned.
   - gamete_use column notes they were "Cryo Preservation" or "Spawned/Cryopreservation," indicating that excess milt was used for cryopreservation trials.
   - family_groups: most females were crossed with four males, though one female was crossed with two, totaling 50 family groups collected overall. This column applies only to the females.
+  
+  
+Success indicators:
+-  Incubation Improvement: KFNFH staff achieved a significant milestone by increasing onsite hatching rates from around 20% to over 70%. This table shows information on the male and female Lost River Suckers used in the spawning effort and the incubation results for each female
+- Successful captive LRS spawning: hatchery pawned and hatched an estimated 56,458 larval Lost River Suckers on station from gametes collected from the East Side Springs population. (this number is at the very bottom of the table but was not read in here. It is the sum of all rows under total_fry)
+
+Failure indicators: 
 
 ```{r include=FALSE}
 table_2_raw <- tables_raw[[3]]
@@ -102,7 +109,13 @@ wild_lrs_adults <- table_2_raw |>
 
 Quantitative results of the fertilization and incubation trials conducted using the gametes collected from the wild LRS documented in wild_lrs_adults table.
 
+Success indicators:
+-  Incubation Improvement: KFNFH staff achieved a significant milestone by increasing onsite hatching rates from around 20% to over 70%
+
+Failure indicators: 
+
 ```{r include=FALSE}
+#table 3
 table_3_raw <- tables_raw[[4]]
 ```
 
@@ -266,8 +279,11 @@ Pond, collection year, stocking date, number of suckers on stocking date, averag
 table_6_raw <- tables_raw[[8]] |> 
   row_to_names(row_number = 1) |> 
   clean_names() |> 
-  slice(1:25) 
+  slice(1:25)
+```
 
+
+```{r echo=FALSE}
 pond_monitoring <- table_6_raw |> 
   mutate(stocked_date = as.Date(stocked_date, format = "%m/%d/%Y"),
          harvest_date = as.Date(harvest_date, format = "%m/%d/%Y"),
@@ -328,7 +344,12 @@ pond_monitoring |>
   theme_minimal()
 ```
 
-## table
+## Pond Monitoring - Fall 2023 – Spring 2023 - Main Growout Season (pre-FY24)
+
+This table covers the production cycle starting in the Fall of 2023 through the Spring of 2023 
+
+- question: would this be fall of 2023 only?
+- there are a lot of missing values on this table
 
 ```{r include=FALSE}
 table_7_raw <- tables_raw[[9]] |> 
@@ -340,8 +361,11 @@ table_7_raw <- tables_raw[[9]] |>
     x[-1, ] |>
       setNames(new_names)
     })()
+```
 
-table_7 <- table_7_raw |> 
+
+```{r echo=FALSE}
+pond_monitoring_fall_to_spring <- table_7_raw |> 
   slice(1:16) |> 
   mutate(pond = x1_pond,
          lot = x2_lot,
@@ -367,5 +391,160 @@ table_7 <- table_7_raw |>
          harvest_date, end_number, end_g_fish, end_wt_g, end_gt_lb, end_tl_mm, days, months, growth_mm_day,
          weight_gain_lb, harvest_mortality_number, survival_percent) |> 
   glimpse()
+```
+
+Growth rate vs start total length in mm
+
+```{r echo=FALSE}
+# see growth rates- younger vs older fish?
+pond_monitoring_fall_to_spring |> 
+  ggplot(aes(x = start_tl_mm, y = growth_mm_day)) +
+  geom_point() +
+  theme_minimal()
+```
+
+Start and end weight per stocked date/pond 
+
+```{r echo=FALSE}
+ggplot(pond_monitoring_fall_to_spring, aes(x = pond)) +
+  geom_bar(aes(y = start_wt_g, fill = "start weight (g)"), 
+           stat = "identity", position = position_nudge(x = -0.15), width = 0.3) +
+  geom_bar(aes(y = end_wt_g, fill = "end weight (g)"), 
+           stat = "identity", position = position_nudge(x = 0.15), width = 0.3) +
+  scale_fill_manual(values = c("start weight (g)" = "#DCCD7D", "end weight (g)" = "#5DA899")) +
+  labs(title = "",
+       x = "Pond",
+       y = "Weight (g)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+```{r echo=FALSE}
+pond_monitoring_fall_to_spring |> 
+  mutate(stocked_date = as.character(stocked_date)) |>
+  ggplot(aes(x = stocked_date)) +
+  geom_bar(aes(y = start_wt_g, fill = "start weight (g)"), 
+           stat = "identity", position = position_nudge(x = -0.15), width = 0.3) +
+  geom_bar(aes(y = end_wt_g, fill = "end weight (g)"), 
+           stat = "identity", position = position_nudge(x = 0.15), width = 0.3) +
+  scale_fill_manual(values = c("start weight (g)" = "#DCCD7D", "end weight (g)" = "#5DA899")) +
+  labs(title = "",
+       x = "Stocked Date",
+       y = "Weight (g)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Days in the pond vs growth per day (mm)
+
+```{r echo=FALSE}
+# see growth rates- younger vs older fish?
+pond_monitoring_fall_to_spring |> 
+  ggplot(aes(x = days, y = growth_mm_day)) +
+  geom_point() +
+  theme_minimal()
+```
+
+## Pond Monitoring - Fall 2023 or Spring 2024 through Fall 2024
+
+Subsequent growing season 2024 (Fall 2023/Spring 2024 through Fall 2024.
+Production cycle starting in the Fall of 2023 or Spring of 2024 through the Fall of 2024 at the Klamath Falls National Fish Hatchery. Please note that Fall inventory work was not completed for most ponds prior to the close of FY 2024.
+
+
+```{r include=FALSE}
+table_8_raw <- tables_raw[[10]] |> 
+  clean_names() |> 
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-1, ] |>
+      setNames(new_names)
+    })()
+```
+
+
+```{r echo=FALSE}
+glimpse(table_8_raw)
+pond_monitoring_fall_to_fall <- table_8_raw |> 
+  # slice(1:16) |> 
+  mutate(pond = x1_pond,
+         lot = x2_lot,
+         stocked_date = as.Date(x3_stocked_date, format = "%m/%d/%Y"),
+         harvest_date = as.Date(x9_harvest_date, format = "%m/%d/%Y"),
+         start_number = as.numeric(x4_start_number),
+         start_g_fish = as.numeric(start_g_fish),
+         start_wt_g = as.numeric(start_wt_g),
+         start_wt_lb = as.numeric(start_wt_2_lb),
+         start_tl_mm = as.numeric(start_tl_mm),
+         end_number = as.numeric(x10_end_number),
+         end_g_fish = as.numeric(end_g_fish),
+         end_wt_g = as.numeric(end_wt_12_g),
+         end_gt_lb = as.numeric(end_wt_13_lb),
+         end_tl_mm = as.numeric(end_tl_mm),
+         days = as.numeric(x15_days),
+         months = as.numeric(x16_months),
+         growth_mm_day = as.numeric(growth_mm_day),
+         weight_gain_lb = as.numeric(weight_gain_lb),
+         harvest_mortality_number = as.numeric(harvest_mortality_number),
+         survival_percent = as.numeric(survival_percent)) |> 
+  select(pond, lot, stocked_date, start_number, start_g_fish, start_wt_g, start_wt_lb, start_tl_mm,
+         harvest_date, end_number, end_g_fish, end_wt_g, end_gt_lb, end_tl_mm, days, months, growth_mm_day,
+         weight_gain_lb, harvest_mortality_number, survival_percent) |> 
+  glimpse()
+```
+
+## Sucker Pen survival 
+
+- Each operation year is divided by the different fish pens (UKLN, UKLS, UKLW, UKLE) and the year the fish were captured as larval fish from the Williamson River (CY). 
+- CY: captured year
+- The average total length (TL) in millimeters (mm): to show survival of each operation year.
+- Operation year 2020 is an outlier year as fish were not stocked until fall and only held for two months
+- no production fish were stocked in 2024 as the future of using the UKL net pen to grow suckers is being assessed by USFWS.
+
+
+```{r include=FALSE}
+table_9_raw <- tables_raw[[11]] |> 
+  clean_names() |> 
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-2, ] |>
+      setNames(new_names)
+    })()
+```
+
+
+```{r echo=FALSE}
+pen_survival <- table_9_raw |> 
+  slice(2:12) |> 
+  separate(stock_tl_number, into = c("stock_tl_mm", "number_stocked"), sep = "\\s+", remove = TRUE) |> 
+  mutate(operation_year = as.numeric(operation),
+         captured_year = as.numeric(x2_fish_cy),
+         pen_id = x3_pen_id,
+         stock_tl_mm = as.numeric(stock_tl_mm),
+         number_stocked = as.numeric(number_stocked),
+         harvest_tl_mm = as.numeric(harvest_tl),
+         number_harvested = as.numeric(number),
+         survival_percentage = as.numeric(x8_survival_percent)) |> 
+  select(operation_year, captured_year, pen_id, stock_tl_mm, number_stocked, harvest_tl_mm,
+         number_harvested, survival_percentage) |> 
+  glimpse()
 
 ```
+
+Survival Percentage by Pen and Year
+
+```{r echo=FALSE}
+ggplot(pen_survival, aes(x = factor(operation_year), y = survival_percentage, fill = pen_id)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  # labs(x = "Operation Year",
+  #   y = "Survival Percentage",
+  #   fill = "Pen ID",
+  #   title = "Survival Percentage by Pen and Year"
+  # ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
