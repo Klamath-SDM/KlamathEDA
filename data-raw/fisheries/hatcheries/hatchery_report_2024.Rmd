@@ -27,10 +27,6 @@ The purpose of this markdown is to understand the data available in the most rec
 ```{r include=FALSE}
 pdf_path <- "data-raw/fisheries/hatcheries/20250619_FY2024 KFNFH Annual Report_Final Draft.pdf"
 tables_raw <- extract_tables(pdf_path, method = "stream", output = "tibble")
-
-table_1_raw <- tables_raw[[2]] |>
-  clean_names() |> 
-  glimpse()
 ```
 
 **Failure indicators:**
@@ -39,6 +35,35 @@ table_1_raw <- tables_raw[[2]] |>
 - High Intensive Rearing Losses: "Since larval pond space was limited, nearly 5,000–6,000 fry were kept indoors for over two months. This extended intensive rearing period resulted in an overall survival rate of 67.5% for wild-caught larval suckers, with 23.0% recorded as unobserved mortality, likely due to cumulative human error"
 - Captive SNS Spawning Failure: "Experimental efforts to spawn captive Shortnose Suckers (SNS) were unsuccessful because pond temperatures increased too quickly (from under 12°C to over 18–19°C), causing milt volume to diminish and eggs to begin being reabsorbed"
 - UKL Net Pen Program Suspension: "Production fish were not stocked into the Upper Klamath Lake net pen for grow out due to multiple years of low survival (historical average of 28.2%) at that location"
+
+## Fish distrubution summary 
+
+Summary of all fish distributions for repatriation or transfer from the Klamath Falls National Fish Hatchery during the fiscal year of 2024.
+The distribution efforts are often referred to as "stocking or repatriation events" (distributions), which are considered the "end of the road for the fish". These can be released to into the wild, or transferred for temporary holding.
+
+```{r include=FALSE}
+table_11_raw <- tables_raw[[13]] |>
+  clean_names() |> 
+  mutate(stock_date = tolower(stock_date)) |>
+  glimpse()
+
+table_11 <- table_11_raw |> 
+  mutate(stock_date = as.character(stock_date),
+         stock_date = na_if(stock_date, ""),
+         date_anchor = if_else(!is.na(stock_date), stock_date, NA_character_))|> 
+  fill(date_anchor, .direction = "down") |> 
+  mutate(stock_date = if_else(is.na(stock_date), date_anchor, stock_date)) |> 
+  select(-date_anchor) |> 
+  glimpse()
+```
+
+```{r echo=FALSE}
+knitr::kable(table_11)
+```
+
+
+
+
 
 ## KFNFH Historical Collections and Releases Summary (2016–FY24)
 
@@ -55,6 +80,10 @@ table_1_raw <- tables_raw[[2]] |>
 - Reduced Overall Volume: The grand total of all fish released and transferred (17,866) was "down from previous years"
 
 ```{r include=FALSE}
+table_1_raw <- tables_raw[[2]] |>
+  clean_names() |> 
+  glimpse()
+
 table_1 <- table_1_raw |>
   clean_names() |>
   (\(x) {
@@ -519,7 +548,7 @@ pond_monitoring_fall_to_fall <- table_8_raw |>
   glimpse()
 ```
 
-## Sucker Pen survival 
+## UKL Sucker Pen survival 
 
 - Each operation year is divided by the different fish pens (UKLN, UKLS, UKLW, UKLE) and the year the fish were captured as larval fish from the Williamson River (CY). 
 - CY: captured year
@@ -573,3 +602,38 @@ ggplot(pen_survival, aes(x = factor(operation_year), y = survival_percentage, fi
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+## Gerber net pen sucker survival and growth data
+
+Gerber net pen sucker survival and growth data since the first use of the Gerber net pen in 2021, each operation year is divided by the different fish pens and by the Fish CY (Capture year from the Williamson River as larval fish). The average total length (TL) is in millimeters (mm) of fish stocked in and harvested out of the pen the same year, also shown is number of fish stocked and harvested in the same year for survival of that grow out year. In 2021 fish were pulled out of the net pen early (July) due to low lake levels, and GERE in 2023 show low survival however suckers likely escaped out of multiple holes that were found in net.
+
+```{r include=FALSE}
+table_10_raw <- tables_raw[[12]] |> 
+  clean_names() |> 
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-2, ] |>
+      setNames(new_names)
+    })()
+```
+
+```{r include=FALSE}
+gerber_pen_survival <- table_10_raw |> 
+  slice(2:10) |> 
+  mutate(operation_year = as.numeric(operation),
+         captured_year = as.numeric(fish),
+         pen_id = x3_pen_id,
+         stock_tl_mm = as.numeric(stock_tl),
+         number_stocked = as.numeric(x5_number_stocked),
+         harvest_tl_mm = as.numeric(harvest_tl),
+         number_harvested = as.numeric(x7_number_harvested),
+         survival_percentage = as.numeric(x8_survival_percent)) |> 
+  select(operation_year, captured_year, pen_id, stock_tl_mm, number_stocked, harvest_tl_mm,
+         number_harvested, survival_percentage) |> 
+  glimpse()
+```
+
+```{r echo=FALSE}
+knitr::kable(gerber_pen_survival)
+```
