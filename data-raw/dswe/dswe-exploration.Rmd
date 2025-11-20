@@ -1,0 +1,25 @@
+---
+title: "Exploration of Landsat Collection 2 Level-3 DSWE Product"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(jsonlite)
+library(dplyr)
+library(tibble)
+library(ggplot2)
+library(glue)
+
+# Load JSON
+
+json_data <- fromJSON("data-raw/dswe/LC09_CU_002006_20251110_20251117_02_DSWE.json")
+
+# Inspect top-level structure
+
+names(json_data$LANDSAT_ARD_METADATA_FILE)
+
+```
+

@@ -1,0 +1,261 @@
+{
+    "type": "Feature",
+    "stac_version": "1.0.0",
+    "stac_extensions": [
+        "https://landsat.usgs.gov/stac/landsat-ard-extension/v1.0.0/schema.json",
+        "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+        "https://stac-extensions.github.io/eo/v1.0.0/schema.json",
+        "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json",
+        "https://stac-extensions.github.io/storage/v1.0.0/schema.json",
+        "https://stac-extensions.github.io/file/v1.0.0/schema.json"
+    ],
+    "id": "LC09_CU_003006_20251103_20251108_02_DSWE",
+    "description": "Landsat Collection 2 Level-3 Dynamic Surface Water Extent Product",
+    "bbox": [
+        -121.938062870212,
+        40.814112320814544,
+        -119.85850939542316,
+        42.456601703171415
+    ],
+    "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [
+                    -121.80325416149503,
+                    42.16220055443646
+                ],
+                [
+                    -121.938062870212,
+                    41.729676890309406
+                ],
+                [
+                    -121.59530758829345,
+                    40.814112320814544
+                ],
+                [
+                    -119.85850939542316,
+                    41.158757150879865
+                ],
+                [
+                    -120.31445524306037,
+                    42.456601703171415
+                ],
+                [
+                    -121.80325416149503,
+                    42.16220055443646
+                ]
+            ]
+        ]
+    },
+    "properties": {
+        "start_datetime": "2025-11-03T18:44:49.0664020Z",
+        "end_datetime": "2025-11-03T18:45:36.8399620Z",
+        "datetime": "2025-11-03T18:45:12.953182Z",
+        "platform": "LANDSAT_9",
+        "instruments": [
+            "OLI",
+            "TIRS"
+        ],
+        "landsat:grid_horizontal": "03",
+        "landsat:grid_vertical": "06",
+        "landsat:grid_region": "CU",
+        "landsat:scene_count": 3,
+        "eo:cloud_cover": 42.2022,
+        "landsat:cloud_shadow_cover": 16.1538,
+        "landsat:snow_ice_cover": 1.1115,
+        "landsat:fill": 2.3009,
+        "proj:epsg": null,
+        "proj:shape": [
+            5000,
+            5000
+        ],
+        "proj:transform": [
+            30.0,
+            0.0,
+            -2115585.0,
+            0.0,
+            -30.0,
+            2414805.0
+        ]
+    },
+    "assets": {
+        "index": {
+            "title": "HTML index page",
+            "type": "text/html",
+            "roles": [
+                "metadata"
+            ],
+            "href": "https://landsatlook.usgs.gov/stac-browser/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02"
+        },
+        "json": {
+            "title": "Albers Extensible Metadata File (json)",
+            "description": "Collection 2 Level-3 Albers Extensible Metadata File (json)",
+            "type": "application/json",
+            "roles": [
+                "metadata"
+            ],
+            "href": "https://landsatlook.usgs.gov/level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02.json",
+            "alternate": {
+                "s3": {
+                    "storage:platform": "AWS",
+                    "storage:requester_pays": true,
+                    "href": "s3://usgs-landsat-level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02.json"
+                }
+            }
+        },
+        "intr": {
+            "title": "Interpreted Layer Band",
+            "description": "Collection 2 Level-3 Albers Interpreted Layer Band Dynamic Surface Water Extent",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "roles": [
+                "data"
+            ],
+            "href": "https://landsatlook.usgs.gov/level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02_INTR.TIF",
+            "alternate": {
+                "s3": {
+                    "storage:platform": "AWS",
+                    "storage:requester_pays": true,
+                    "href": "s3://usgs-landsat-level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02_INTR.TIF"
+                }
+            },
+            "file:checksum": "1340c69651d0384dd34bb9661fa6ae31a71bc516c281a92a1c86755c6e61f490f10f809365c77324617400652dd98931bf4a635df1b7b8ee8bcdfe2b058cad48c0ab"
+        },
+        "inwam": {
+            "title": "Interpreted Layer With All Masks Applied",
+            "description": "Collection 2 Level-3 Albers Interpreted Layer With All Masks Applied Dynamic Surface Water Extent",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "roles": [
+                "data"
+            ],
+            "href": "https://landsatlook.usgs.gov/level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02_INWAM.TIF",
+            "alternate": {
+                "s3": {
+                    "storage:platform": "AWS",
+                    "storage:requester_pays": true,
+                    "href": "s3://usgs-landsat-level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02_INWAM.TIF"
+                }
+            },
+            "file:checksum": "1340afdf682621659a2e635b6fa995e6f034fe5569871ec2d16a2d86da634242ecf5ec04c63a6b574391fc557394a628c18ef9ed88c9287df2207160873131535ac6"
+        },
+        "intsm": {
+            "title": "Interpreted Layer With Some Masks Applied",
+            "description": "Collection 2 Level-3 Albers Interpreted Layer With Some Masks Applied Dynamic Surface Water Extent",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "roles": [
+                "data"
+            ],
+            "href": "https://landsatlook.usgs.gov/level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02_INTSM.TIF",
+            "alternate": {
+                "s3": {
+                    "storage:platform": "AWS",
+                    "storage:requester_pays": true,
+                    "href": "s3://usgs-landsat-level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02_INTSM.TIF"
+                }
+            },
+            "file:checksum": "134077fcac5eb01779ba481909fa148ab3cc7883f45139e99a7eac00e1e34f69592e06111baa2a0be539f673ea9404fa1a77ab491289a390370846acd3b5175549bd"
+        },
+        "mask": {
+            "title": "Mask Band",
+            "description": "Collection 2 Level-3 Albers Mask Band Dynamic Surface Water Extent",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "roles": [
+                "data"
+            ],
+            "href": "https://landsatlook.usgs.gov/level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02_MASK.TIF",
+            "alternate": {
+                "s3": {
+                    "storage:platform": "AWS",
+                    "storage:requester_pays": true,
+                    "href": "s3://usgs-landsat-level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02_MASK.TIF"
+                }
+            },
+            "file:checksum": "1340d12c27054a756d9959ac56bbbfc1376238e588649ed71ba61dd2a723d89ae9cbaaad38c7f5b9750df8482ddad5e2679233cc682af2f9e75736d3cfdc50558056"
+        },
+        "diag": {
+            "title": "Diagnostic Layer Band",
+            "description": "Collection 2 Level-3 Albers Diagnostic Layer Band Dynamic Surface Water Extent",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "roles": [
+                "data"
+            ],
+            "href": "https://landsatlook.usgs.gov/level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02_DIAG.TIF",
+            "alternate": {
+                "s3": {
+                    "storage:platform": "AWS",
+                    "storage:requester_pays": true,
+                    "href": "s3://usgs-landsat-level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02_DIAG.TIF"
+                }
+            },
+            "file:checksum": "1340692b80ac70ca71a7facf1c4f80f0e26f79d3867ad198456bfb859a7db8de01efc043ee5b6ab29a2075dbbc972b04decc11402b9bc429124e082983531f11f7ef"
+        },
+        "shade": {
+            "title": "Hillshade Band",
+            "description": "Collection 2 Level-3 Albers Hillshade Band Dynamic Surface Water Extent",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "roles": [
+                "data"
+            ],
+            "href": "https://landsatlook.usgs.gov/level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02_SHADE.TIF",
+            "alternate": {
+                "s3": {
+                    "storage:platform": "AWS",
+                    "storage:requester_pays": true,
+                    "href": "s3://usgs-landsat-level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02_SHADE.TIF"
+                }
+            },
+            "file:checksum": "13400e1db2d05beb157383bb19571c17e8a43b5b1add786c4a8120522a10934f41aa3295589c3e0dc765f6ffbe391b754687ec91f5b73e0c1f451e9d7857bf4ba8a1"
+        },
+        "xml": {
+            "title": "Albers Extensible Metadata File",
+            "description": "Collection 2 Level-3 Albers Extensible Metadata File (xml)",
+            "type": "application/xml",
+            "roles": [
+                "metadata"
+            ],
+            "href": "https://landsatlook.usgs.gov/level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02.xml",
+            "alternate": {
+                "s3": {
+                    "storage:platform": "AWS",
+                    "storage:requester_pays": true,
+                    "href": "s3://usgs-landsat-level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02.xml"
+                }
+            }
+        }
+    },
+    "links": [
+        {
+            "rel": "root",
+            "href": "https://landsatlook.usgs.gov/level-3/catalog.json"
+        },
+        {
+            "rel": "parent",
+            "href": "https://landsatlook.usgs.gov/level-3/collection02/DSWE/2025/CU/003/006/catalog.json"
+        },
+        {
+            "rel": "collection",
+            "href": "https://landsatlook.usgs.gov/level-3/collection02/landsat-c2l3-dswe.json"
+        },
+        {
+            "rel": "self",
+            "href": "https://landsatlook.usgs.gov/level-3/collection02/DSWE/2025/CU/003/006/LC09_CU_003006_20251103_20251108_02_DSWE/LC09_CU_003006_20251103_20251108_02_DSWE_stac.json"
+        },
+        {
+            "rel": "derived_from",
+            "href": "https://landsatlook.usgs.gov/stac-server/collections/landsat-c2ard-sr/items/LC09_CU_003006_20251103_20251108_02_SR"
+        },
+        {
+            "rel": "derived_from",
+            "href": "https://landsatlook.usgs.gov/stac-server/collections/landsat-c2ard-st/items/LC09_CU_003006_20251103_20251108_02_ST"
+        },
+        {
+            "rel": "derived_from",
+            "href": "https://landsatlook.usgs.gov/stac-server/collections/landsat-c2ard-ta/items/LC09_CU_003006_20251103_20251108_02_TOA"
+        },
+        {
+            "rel": "derived_from",
+            "href": "https://landsatlook.usgs.gov/stac-server/collections/landsat-c2ard-bt/items/LC09_CU_003006_20251103_20251108_02_BT"
+        }
+    ],
+    "collection": "landsat-c2l3-dswe"
+}
