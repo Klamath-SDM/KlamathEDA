@@ -1,0 +1,213 @@
+---
+title: "Relevant Data USFWS Klamath Falls National Fish Hatchery Report - 2024"
+author: "Badhia Yunes Katz (FlowWest)"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE, 
+  message = FALSE,
+  comment = "#>", 
+  fig.width=8, fig.height=5)
+library(tidyverse)
+library(lubridate)
+library(tabulapdf)
+library(janitor)
+library(dplyr)
+library(tidyr)
+library(readr)
+library(ggplot2)
+library(plotly)
+```
+
+The purpose of this markdown is to highlight the data that we will use.
+
+```{r include=FALSE}
+pdf_path <- "data-raw/fisheries/hatcheries/20250619_FY2024 KFNFH Annual Report_Final Draft.pdf"
+tables_raw <- extract_tables(pdf_path, method = "stream", output = "tibble")
+```
+
+
+```{r include=FALSE}
+table_11_raw <- tables_raw[[13]] |>
+  clean_names() |> 
+  mutate(stock_date = tolower(stock_date)) |>
+  glimpse()
+
+table_11 <- table_11_raw |> 
+  mutate(stock_date = as.character(stock_date),
+         stock_date = na_if(stock_date, ""),
+         date_anchor = if_else(!is.na(stock_date), stock_date, NA_character_))|> 
+  fill(date_anchor, .direction = "down") |> 
+  mutate(stock_date = if_else(is.na(stock_date), date_anchor, stock_date),
+         stock_date = case_when(stock_date %in% c("overall", "distribution", "total") ~ "overall distrbution total",
+                                TRUE ~ stock_date)) |> 
+  select(-date_anchor)
+```
+
+```{r eval=FALSE, include=FALSE}
+knitr::kable(table_11)
+```
+
+##Release totals 
+
+```{r echo=FALSE}
+# extracting the summaries/totals
+release_totals <- table_11 |> 
+  slice(19:24, 26, 29, 36:40, 42, 49:67) |> 
+  select(-actual_tl_mm, -from_ponds, -stocking_location) |> 
+  mutate(stock_date = stock_date |> 
+      str_remove("\\s*totals?$") |> 
+      str_squish()) 
+```
+
+```{r echo=FALSE}
+knitr::kable(release_totals)
+```
+
+
+```{r echo=FALSE}
+# Tol Muted color palette
+tol_muted <- c("#332288", "#117733", "#44AA99", "#88CCEE",
+               "#DDCC77", "#CC6677", "#AA4499", "#882255")
+
+moth_release_totals <- release_totals |> 
+  slice(1:21) |> 
+  group_by(stock_date, species) |> 
+  summarise(release_total = sum(number)) |> 
+  ungroup()
+```
+
+Summarizing by month
+
+```{r echo=FALSE}
+plot_1 <- ggplot(moth_release_totals |> 
+         slice(1:21),
+       aes(x = stock_date, y = release_total, fill = species)) +
+  geom_col() +
+  # geom_text(aes(label = release_total),
+  #           position = position_stack(vjust = 0.5),
+  #           color = "black",
+  #           size = 3) +
+  labs(title = "Total Fish Released by Species",
+       x = "Month of Release",
+       y = "Number of Fish",
+       fill = "Species") +
+  theme_minimal(base_size = 13) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_manual(values = tol_muted)
+
+ggplotly(plot_1)
+
+```
+
+```{r echo=FALSE}
+knitr::kable(moth_release_totals)
+```
+
+## Upper Klamath Lake sucker net pen survival
+ 
+Overall Survival: 28.2% (Historically) and FY23 Survival: 2.9% and 3.1%
+
+These very low historical survival rates (and the decision not to stock production fish in FY24) indicate the failure of the UKL net pen as a reliable growout and acclimation tool for production fish
+
+
+```{r include=FALSE}
+table_9_raw <- tables_raw[[11]] |> 
+  clean_names() |> 
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-2, ] |>
+      setNames(new_names)
+    })()
+```
+
+```{r echo=FALSE}
+ukl_pen_survival <- table_9_raw |> 
+  slice(2:12) |> 
+  separate(stock_tl_number, into = c("stock_tl_mm", "number_stocked"), sep = "\\s+", remove = TRUE) |> 
+  mutate(operation_year = as.numeric(operation),
+         captured_year = as.numeric(x2_fish_cy),
+         pen_id = x3_pen_id,
+         stock_tl_mm = as.numeric(stock_tl_mm),
+         number_stocked = as.numeric(number_stocked),
+         harvest_tl_mm = as.numeric(harvest_tl),
+         number_harvested = as.numeric(number),
+         survival_percentage = as.numeric(x8_survival_percent)) |> 
+  select(operation_year, captured_year, pen_id, stock_tl_mm, number_stocked, harvest_tl_mm,
+         number_harvested, survival_percentage) 
+
+
+```
+
+```{r echo=FALSE}
+ggplot(ukl_pen_survival, aes(x = factor(operation_year), y = survival_percentage, fill = pen_id)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  labs(x = "Operation Year",
+    y = "Survival Percentage",
+    fill = "Pen ID",
+    title = "Survival Percentage by Pen and Year"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_manual(values = tol_muted)
+```
+
+```{r echo=FALSE}
+knitr::kable(ukl_pen_survival)
+```
+
+## Gerber net pen sucker survival and growth data
+
+Successful external rearing and acclimation in Gerber Reservoir during the FY24 growout season. 96.3% and
+ 94.9%
+
+Overall Survival: 83.9% (Historically, since 2021)
+
+```{r include=FALSE}
+table_10_raw <- tables_raw[[12]] |> 
+  clean_names() |> 
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-2, ] |>
+      setNames(new_names)
+    })()
+
+gerber_pen_survival <- table_10_raw |> 
+  slice(2:10) |> 
+  mutate(operation_year = as.numeric(operation),
+         captured_year = as.numeric(fish),
+         pen_id = x3_pen_id,
+         stock_tl_mm = as.numeric(stock_tl),
+         number_stocked = as.numeric(x5_number_stocked),
+         harvest_tl_mm = as.numeric(harvest_tl),
+         number_harvested = as.numeric(x7_number_harvested),
+         survival_percentage = as.numeric(x8_survival_percent)) |> 
+  select(operation_year, captured_year, pen_id, stock_tl_mm, number_stocked, harvest_tl_mm,
+         number_harvested, survival_percentage) 
+```
+
+```{r echo=FALSE, warning=FALSE}
+ggplot(gerber_pen_survival, aes(x = factor(operation_year), y = survival_percentage, fill = pen_id)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  labs(x = "Operation Year",
+    y = "Survival Percentage",
+    fill = "Pen ID",
+    title = "Survival Percentage by Pen and Year"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_manual(values = tol_muted)
+```
+
+```{r echo=FALSE}
+knitr::kable(gerber_pen_survival)
+```
