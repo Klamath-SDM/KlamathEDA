@@ -53,7 +53,7 @@ table_11 <- table_11_raw |>
 knitr::kable(table_11)
 ```
 
-##Release totals 
+## Release totals 
 
 ```{r echo=FALSE}
 # extracting the summaries/totals
@@ -108,6 +108,38 @@ ggplotly(plot_1)
 ```{r echo=FALSE}
 knitr::kable(moth_release_totals)
 ```
+
+
+```{r echo=FALSE}
+release_totals_type <- release_totals |>
+  slice(22:33) |> 
+  mutate(release_type = case_when(
+    str_detect(lot, regex("prod|production", ignore_case = TRUE)) ~ "Production",
+    str_detect(lot, regex("fry", ignore_case = TRUE)) ~ "Fry",
+    str_detect(lot, regex("salv", ignore_case = TRUE)) ~ "Salvage",
+    TRUE ~ NA_character_)) |> 
+  group_by(stock_date, species) |> 
+  summarise(total_released = sum(number, na.rm = TRUE),
+            .groups = "drop")
+  
+ggplot(release_totals_type,
+       aes(x = species, y = total_released, fill = stock_date)) +
+  geom_col(position = position_dodge(width = 0.8)) +
+  geom_text(aes(label = scales::comma(total_released)),
+            position = position_dodge(width = 0.8),
+            vjust = -0.3,
+            size = 3) +
+  labs(title = "FY24 Species Totals vs Overall Distribution",
+    x = "Species / Category",
+    y = "Number of Fish Released",
+    fill = "Group") +
+  theme_minimal(base_size = 13) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_manual(values = tol_muted)
+
+
+```
+
 
 ## Upper Klamath Lake sucker net pen survival
  
@@ -180,34 +212,92 @@ table_10_raw <- tables_raw[[12]] |>
     x[-2, ] |>
       setNames(new_names)
     })()
-
-gerber_pen_survival <- table_10_raw |> 
-  slice(2:10) |> 
-  mutate(operation_year = as.numeric(operation),
-         captured_year = as.numeric(fish),
-         pen_id = x3_pen_id,
-         stock_tl_mm = as.numeric(stock_tl),
-         number_stocked = as.numeric(x5_number_stocked),
-         harvest_tl_mm = as.numeric(harvest_tl),
-         number_harvested = as.numeric(x7_number_harvested),
-         survival_percentage = as.numeric(x8_survival_percent)) |> 
-  select(operation_year, captured_year, pen_id, stock_tl_mm, number_stocked, harvest_tl_mm,
-         number_harvested, survival_percentage) 
 ```
 
-```{r echo=FALSE, warning=FALSE}
-ggplot(gerber_pen_survival, aes(x = factor(operation_year), y = survival_percentage, fill = pen_id)) +
-  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
-  labs(x = "Operation Year",
-    y = "Survival Percentage",
-    fill = "Pen ID",
-    title = "Survival Percentage by Pen and Year"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_fill_manual(values = tol_muted)
+Plotting both net pens
+
+```{r include=FALSE}
+gerber_pen <- gerber_pen_survival |> 
+  mutate(location = "garber") |> 
+  select(operation_year, captured_year, number_harvested, survival_percentage, location) 
+
+ukl_pen <- ukl_pen_survival |> 
+  mutate(location = "ukl") |> 
+  select(operation_year, captured_year, number_harvested, survival_percentage, location) 
+
+pen <- bind_rows(ukl_pen, gerber_pen) |> glimpse()
+
+
+point_plot <- ggplot(pen, aes(x = operation_year, y = survival_percentage, color = location, 
+                              text = paste0("Operation Year: ", operation_year, "<br>",
+                                            "Captured Year: ", captured_year, "<br>",
+                                            "Number Harvested: ", number_harvested, "<br>",
+                                            "Survival Percentage: ", survival_percentage))) +
+  geom_point() +
+  theme_minimal() 
+
+
+ggplotly(point_plot, tooltip = "text")
+
+```
+
+## Historical Collections and Releases Summary
+
+```{r include=FALSE}
+table_1_raw <- tables_raw[[2]] |>
+  clean_names() |> 
+  glimpse()
+
+table_1 <- table_1_raw |>
+  clean_names() |>
+  (\(x) {
+    new_names <- paste(names(x), x[1, ], sep = "_") |>
+      gsub("_NA", "", x = _) |>
+      make_clean_names()
+    x[-1, ] |>
+      setNames(new_names) |>
+      mutate(across(-1, ~parse_number(.x)))
+    })()
+
+historical_collections_releases <- table_1 |> 
+  rename(sarp_tl_mm = tl_4_mm,
+         fingerling_tl_mm = tl_6_mm,
+         fry_tl_mm = tl_8_mm,
+         salvage_sl_mm = sl_or_tl_mm) |> 
+  slice(-10) |> # removing the total 
+  mutate(fiscal_year = as.numeric(fiscal_year),
+         salvage_tl_mm = case_when(salvage_sl_mm == 129 ~ salvage_sl_mm,
+                                   salvage_sl_mm == 126 ~ salvage_sl_mm,
+                                   TRUE ~ NA),
+         salvage_sl_mm = case_when(salvage_tl_mm == 129 ~ NA,
+                                   salvage_tl_mm == 126 ~ NA,
+                                   TRUE ~ salvage_sl_mm))|> 
+  glimpse()
+```
+
+
+```{r echo=FALSE}
+knitr::kable(historical_collections_releases)
+```
+
+
+## Hatching Rate
+
+```{r include=FALSE}
+#table 3 - unsure on if we should include this table
+table_3_raw <- tables_raw[[4]]
 ```
 
 ```{r echo=FALSE}
-knitr::kable(gerber_pen_survival)
+incubation_hatch_raw <- table_3_raw |> 
+  clean_names() |> 
+  mutate(spawning_date = as.Date(spawning_date, format = "%m/%d/%Y"),
+         hatch_date = as.Date(hatch_date, format = "%m/%d/%Y")) |>
+  # select(-x6) |> 
+  # slice(-15) |> # removing the totals for now
+  # rename(male_1 = male_3,
+  #        male_2 = male_4,
+  #        male_3 = male_male) |> 
+  select(spawning_date, egg_volume_m_l, number_eggs_m_l, total_eggs, total_fry, hatch_percent, hatch_date) |> 
+  glimpse()
 ```
