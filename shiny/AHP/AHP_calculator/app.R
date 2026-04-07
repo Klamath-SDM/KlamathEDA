@@ -12,6 +12,17 @@ RI <- c(0, 0, 0.58, 0.90, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49)
 # ── Tab definitions ────────────────────────────────────────────────────────────
 TABS <- list(
   
+  vehicle = list(
+    id       = "vehicle",
+    label    = "Vehicle Purchase",
+    group    = "Example",
+    desc     = "A classic AHP walkthrough. You want to purchase a vehicle and have identified three attributes: Hauling Capacity, Fuel Efficiency, and Safety. The matrix is pre-filled with the example judgments from the original illustration — Fuel Efficiency is moderately more important than Hauling Capacity (3), Safety is strongly more important than Hauling Capacity (5), and Safety is between strongly and very strongly more important than Fuel Efficiency (6). Try changing values to see how the weights shift, or hit Reset to restore the original example.",
+    criteria = c("Hauling capacity", "Fuel efficiency", "Safety"),
+    preset   = matrix(c(1, 1/3, 1/5,
+                        3,   1, 1/6,
+                        5,   6,   1), nrow = 3, byrow = TRUE)
+  ),
+  
   spring_chin = list(
     id       = "spring_chin",
     label    = "Spring-run Chinook",
@@ -174,11 +185,15 @@ ui <- fluidPage(
       .sub-bar .nav-tabs > li > a:hover { color: #fff; background: transparent; border-bottom: 2px solid #2e86ab; }
       .main-panel { padding: 22px 28px; max-width: 1400px; margin: 0 auto; }
       .info-box { background: #e8f4f8; border-left: 4px solid #2e86ab; border-radius: 6px; padding: 13px 17px; margin-bottom: 18px; font-size: 14px; line-height: 1.6; }
-      .scale-box { background: #fff; border: 1px solid #d0dde5; border-radius: 8px; padding: 14px 18px; margin-bottom: 18px; }
-      .scale-box h4 { margin: 0 0 10px; color: #1a3a4a; font-size: 14px; }
-      .scale-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 6px; }
-      .scale-item { background: #f4f7f9; border-radius: 4px; padding: 6px 9px; font-size: 12px; }
-      .scale-num { font-weight: 700; color: #2e86ab; margin-right: 5px; }
+      .scale-box { background: #fff; border: 1px solid #d0dde5; border-radius: 8px; padding: 16px 20px; margin-bottom: 18px; }
+      .scale-box h4 { margin: 0 0 6px; color: #1a3a4a; font-size: 14px; }
+      .scale-grid-desc { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; margin-top: 10px; }
+      .scale-desc-item { display: flex; align-items: flex-start; gap: 12px; background: #f4f7f9; border-radius: 6px; padding: 10px 12px; }
+      .scale-inverse-item { background: #eef4f8; border: 1px dashed #b0c4ce; }
+      .scale-num-lg { font-size: 22px; font-weight: 800; color: #2e86ab; min-width: 32px; text-align: center; line-height: 1.2; padding-top: 2px; }
+      .scale-inv-num { color: #5a9ab8; font-size: 18px; }
+      .scale-desc-text { font-size: 12px; line-height: 1.5; color: #444; }
+      .scale-desc-text b { color: #1a3a4a; font-size: 12.5px; }
       .section-card { background: #fff; border: 1px solid #d0dde5; border-radius: 8px; padding: 18px 20px; margin-bottom: 18px; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
       .section-card h3 { margin: 0 0 14px; color: #1a3a4a; font-size: 15px; border-bottom: 1px solid #e8eef2; padding-bottom: 9px; }
       .pairwise-table { width: 100%; border-collapse: collapse; }
@@ -212,8 +227,9 @@ ui <- fluidPage(
   
   div(class = "group-bar",
       tabsetPanel(id = "group_tabs", type = "tabs",
-                  tabPanel("\U0001F41F Salmon",              value = "Salmon"),
-                  tabPanel("\U0001F420 Suckers",             value = "Suckers"),
+                  tabPanel("\U0001F4D6 Example",               value = "Example"),
+                  tabPanel("\U0001F41F Salmon",                value = "Salmon"),
+                  tabPanel("\U0001F420 Suckers",               value = "Suckers"),
                   tabPanel("\U0001F4A7 Water for Agriculture", value = "Water")
       )
   ),
@@ -226,6 +242,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   mat_store <- reactiveValues(
+    vehicle          = NULL,
     spring_chin      = NULL,
     fall_chin        = NULL,
     coho             = NULL,
@@ -237,7 +254,10 @@ server <- function(input, output, session) {
   
   get_mat <- function(tid) {
     m <- mat_store[[tid]]
-    if (is.null(m)) m <- init_matrix(length(TABS[[tid]]$criteria))
+    if (is.null(m)) {
+      preset <- TABS[[tid]]$preset
+      m <- if (!is.null(preset)) preset else init_matrix(length(TABS[[tid]]$criteria))
+    }
     m
   }
   set_mat <- function(tid, mat) mat_store[[tid]] <- mat
@@ -279,11 +299,15 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$btn_reset, {
-    tid <- current_tab()
-    n   <- length(TABS[[tid]]$criteria)
-    set_mat(tid, init_matrix(n))
-    for (i in seq_len(n)) for (j in seq_len(n)) if (j > i)
-      updateSelectInput(session, pair_input_id(tid, i, j), selected = "1")
+    tid    <- current_tab()
+    preset <- TABS[[tid]]$preset
+    m      <- if (!is.null(preset)) preset else init_matrix(length(TABS[[tid]]$criteria))
+    set_mat(tid, m)
+    n <- length(TABS[[tid]]$criteria)
+    for (i in seq_len(n)) for (j in seq_len(n)) if (j > i) {
+      val <- round(m[i, j], 6)
+      updateSelectInput(session, pair_input_id(tid, i, j), selected = as.character(val))
+    }
   })
   
   output$btn_download <- downloadHandler(
@@ -396,14 +420,90 @@ server <- function(input, output, session) {
       div(class="info-box", tab$desc),
       
       div(class="scale-box",
-          h4("AHP Scale Reference"),
-          div(class="scale-grid",
-              lapply(1:9, function(v) {
-                div(class="scale-item",
-                    span(class="scale-num", v), AHP_LABELS[v],
-                    if (v>1) tags$small(style="color:#aaa;", paste0(" | 1/",v," = inverse")) else NULL
-                )
-              })
+          h4("How to Score Each Comparison"),
+          p(style="font-size:13px;color:#555;margin:0 0 12px;",
+            "For each pair, ask: \u201CHow much more important is the ROW criterion compared to the COLUMN criterion?\u201D Choose the score that best matches your judgment. Use inverse values (1/2, 1/3\u2026) when the column is more important than the row."),
+          div(class="scale-grid-desc",
+              div(class="scale-desc-item",
+                  span(class="scale-num-lg", "1"),
+                  div(class="scale-desc-text",
+                      tags$b("Equal importance"),
+                      tags$br(),
+                      "Both criteria contribute equally. You have no reason to prefer one over the other."
+                  )
+              ),
+              div(class="scale-desc-item",
+                  span(class="scale-num-lg", "2"),
+                  div(class="scale-desc-text",
+                      tags$b("Weak preference"),
+                      tags$br(),
+                      "The row criterion is slightly more important, but the difference is marginal and hard to justify strongly."
+                  )
+              ),
+              div(class="scale-desc-item",
+                  span(class="scale-num-lg", "3"),
+                  div(class="scale-desc-text",
+                      tags$b("Moderate importance"),
+                      tags$br(),
+                      "Experience and judgment slightly favor the row criterion over the column. A noticeable but not overwhelming difference."
+                  )
+              ),
+              div(class="scale-desc-item",
+                  span(class="scale-num-lg", "4"),
+                  div(class="scale-desc-text",
+                      tags$b("Moderate-strong preference"),
+                      tags$br(),
+                      "Between moderate and strong. Use when you feel the row is clearly more important but can\u2019t quite call it \u201Cstrong.\u201D"
+                  )
+              ),
+              div(class="scale-desc-item",
+                  span(class="scale-num-lg", "5"),
+                  div(class="scale-desc-text",
+                      tags$b("Strong importance"),
+                      tags$br(),
+                      "The row criterion is strongly favored. Its importance is demonstrated in practice and the difference is significant."
+                  )
+              ),
+              div(class="scale-desc-item",
+                  span(class="scale-num-lg", "6"),
+                  div(class="scale-desc-text",
+                      tags$b("Strong-very strong preference"),
+                      tags$br(),
+                      "Between strong and very strong. Use when a score of 5 feels too low but 7 feels too high."
+                  )
+              ),
+              div(class="scale-desc-item",
+                  span(class="scale-num-lg", "7"),
+                  div(class="scale-desc-text",
+                      tags$b("Very strong importance"),
+                      tags$br(),
+                      "The row criterion is very strongly favored and its dominance is demonstrated in practice. The column criterion is far less critical."
+                  )
+              ),
+              div(class="scale-desc-item",
+                  span(class="scale-num-lg", "8"),
+                  div(class="scale-desc-text",
+                      tags$b("Very strong\u2013absolute preference"),
+                      tags$br(),
+                      "Between very strong and absolute. Use when the evidence clearly supports near-absolute dominance of the row criterion."
+                  )
+              ),
+              div(class="scale-desc-item",
+                  span(class="scale-num-lg", "9"),
+                  div(class="scale-desc-text",
+                      tags$b("Absolute importance"),
+                      tags$br(),
+                      "The row criterion is overwhelmingly more important. This is the highest possible difference \u2014 use sparingly and only when fully justified."
+                  )
+              ),
+              div(class="scale-desc-item scale-inverse-item",
+                  span(class="scale-num-lg scale-inv-num", "1/x"),
+                  div(class="scale-desc-text",
+                      tags$b("Inverse scores (1/2 through 1/9)"),
+                      tags$br(),
+                      "If the COLUMN criterion is more important than the ROW, use the inverse. For example, select \u201C1/3\u201D if the column is moderately more important than the row."
+                  )
+              )
           )
       ),
       
