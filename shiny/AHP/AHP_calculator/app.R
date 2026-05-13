@@ -38,10 +38,11 @@ TABS <- list(
       "Adult return timing: mean and range (tails)",
       "Size of outmigrating smolts: mean and range",
       "Prop females with >50% eggs",
-      "% juveniles C. shasta, % returning adults Ich"
+      "% juveniles C. shasta",
+      "% returning adults with Ich"
     )
   ),
-  
+
   fall_chin = list(
     id       = "fall_chin",
     label    = "Fall-run Chinook",
@@ -57,10 +58,11 @@ TABS <- list(
       "Adult return timing: mean and range (tails)",
       "Size of outmigrating smolts: mean and range",
       "Prop females with >50% eggs",
-      "% juveniles C. shasta, % returning adults Ich"
+      "% juveniles C. shasta",
+      "% returning adults with Ich"
     )
   ),
-  
+
   coho = list(
     id       = "coho",
     label    = "Coho Salmon",
@@ -76,10 +78,11 @@ TABS <- list(
       "Adult return timing: mean and range (tails)",
       "Size of outmigrating smolts: mean and range",
       "Prop females with >50% eggs",
-      "% juveniles C. shasta, % returning adults Ich"
+      "% juveniles C. shasta",
+      "% returning adults with Ich"
     )
   ),
-  
+
   lost_riv_sucker = list(
     id       = "lost_riv_sucker",
     label    = "Lost River Sucker",
